@@ -16,6 +16,10 @@ enum SignUpViewsEnum: Float {
     case genderView = 100
 }
 
+enum PhoneVerificationSteps: Float {
+    case numberView = 50
+    case numberOtpView = 100
+}
 
 enum ViewID {
     case OnboardingView
@@ -33,6 +37,7 @@ enum HttpMethod: String {
     case GET
     case PUT
     case DELETE
+    case PATCH
 }
 
 
@@ -45,6 +50,10 @@ enum ApiMethods: String {
     case bioUpdate = "PUT "
     case addImage = "PUT  "
     case getDetails = "GET "
+    case changePassword = "PATCH"
+    case forgotPassEmail = " POST"
+    case otp = "  POST"
+    case resetPassword = " POST "
     //case addVehicle = "POST  "
 }
 
@@ -120,9 +129,7 @@ enum EditPublicationTypes: String, CaseIterable {
 }
 
 enum OfferRideSelector: Int {
-    case SelectVehicle = 0
-    case AvailableSeats = 1
-    case PricePerSeat = 2
+    case SelectVehicle = 0, AvailableSeats, PricePerSeat
 }
 
 enum RideMethods: String, CaseIterable {
@@ -137,9 +144,7 @@ enum RideType: String, CaseIterable {
 
 
 enum ProfileOptions: Int,CaseIterable {
-    case editProfile = 0
-    case accountSettings = 1
-    case vehicle = 2
+    case editProfile = 0 ,accountSettings ,vehicle
 }
 
 enum TextFieldType {
@@ -161,3 +166,20 @@ enum VehicleTextFieldType: String {
     case color = "Color"
 }
 
+enum OTPField {
+    case field1
+    case field2
+    case field3
+    case field4
+}
+
+enum TypeOfOtp {
+    case phoneVerification
+    case forgotPassword
+}
+
+enum ForgotPasswordViews: Float {
+    case email = 33.33
+    case otp = 66.66
+    case resetPassword = 99.99
+}

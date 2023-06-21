@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ItineraryDetailsView: View {
-    @Environment (\.presentationMode) var presentationMode
+    @Environment (\.dismiss) var dismiss
     
     @EnvironmentObject var myRidesVM: MyRidesViewModel
     @EnvironmentObject var carPoolVM: CarPoolRidesViewModel
@@ -19,7 +19,7 @@ struct ItineraryDetailsView: View {
         VStack {
             HStack(spacing: 20){
                 BackButton(image: Constants.Images.backArrow) {
-                    presentationMode.wrappedValue.dismiss()
+                   // presentationMode.wrappedValue.dismiss()
                 }
                 .font(.title)
                 .bold()
@@ -99,17 +99,19 @@ struct ItineraryDetailsView: View {
                     .padding()
                     
             }
+            .navigationDestination(isPresented:              $myRidesVM.toDismissRouteView, destination: {
+                EditRouteView()
+            })
+            
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
+     
         .sheet(isPresented: $myRidesVM.isSource, content: {
             EditLocationSearch()
         })
         .sheet(isPresented: $myRidesVM.isDestination, content: {
             EditLocationSearch()
-        })
-        .fullScreenCover(isPresented: $myRidesVM.toDismissRouteView, content: {
-            EditRouteView()
         })
         .onAppear{
             myRidesVM.editedDate = DateTimeFormat.shared.stringToDate(date: myRidesVM.publishResponseWithId.data.date)
@@ -122,7 +124,14 @@ struct ItineraryDetailsView: View {
             myRidesVM.editSourceCoordinate.longitude = myRidesVM.publishResponseWithId.data.sourceLongitude
             myRidesVM.editDestCoordinate.latitude = myRidesVM.publishResponseWithId.data.destinationLatitude
             myRidesVM.editDestCoordinate.longitude = myRidesVM.publishResponseWithId.data.destinationLongitude
+            if !myRidesVM.toDismissItineraryDetails {
+                self.dismiss()
+             //   self.presentationMode.wrappedValue.dismiss()
+            }
+            
+                //.// self.presentationMode.wrappedValue.dismiss()
         }
+        
     }
 }
 

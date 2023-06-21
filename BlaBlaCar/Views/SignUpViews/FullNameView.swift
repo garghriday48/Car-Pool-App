@@ -20,8 +20,9 @@ struct FullNameView: View {
                 .padding(.bottom, 40)
             InputFields(text        :$vm.userAuthData.user.firstName,
                         title       : Constants.TextfieldPlaceholder.firstName,
-                        isPassOrNot : false,
-                        keyboardType: .default)
+                        isPassOrNot: false,
+                        keyboardType: .default,
+                        capitalizationType: .words)
                 .padding(.bottom, !vm.firstNameValid.isEmpty ? 0 : 20)
             
             HStack{
@@ -38,7 +39,8 @@ struct FullNameView: View {
             InputFields(text        : $vm.userAuthData.user.lastName,
                         title       : Constants.TextfieldPlaceholder.secondName,
                         isPassOrNot : false,
-                        keyboardType: .default)
+                        keyboardType: .default,
+                        capitalizationType: .words)
             .padding(.bottom, !vm.lastNameValid.isEmpty ? 0 : 20)
             HStack{
                 if !vm.lastNameValid.isEmpty{

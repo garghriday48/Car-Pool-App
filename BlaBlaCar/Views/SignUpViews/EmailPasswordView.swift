@@ -22,7 +22,8 @@ struct EmailPasswordView: View {
             InputFields(text        : $vm.userAuthData.user.email,
                         title       : Constants.TextfieldPlaceholder.email,
                         isPassOrNot : false,
-                        keyboardType: .emailAddress)
+                        keyboardType: .emailAddress,
+                        capitalizationType: .never)
             .padding(.bottom, (vm.emailValid.isEmpty && vm.isNewUser) ? 20 : 0)
             if vm.isNewUser{
                 HStack{
@@ -41,7 +42,8 @@ struct EmailPasswordView: View {
             InputFields(text        :$vm.userAuthData.user.password,
                         title       :Constants.TextfieldPlaceholder.password,
                         isPassOrNot : true,
-                        keyboardType: .default)
+                        keyboardType: .default,
+                        capitalizationType: .never)
             .padding(.bottom, (vm.passValid.isEmpty && vm.isNewUser) ? 20 : 0)
             if vm.isNewUser{
                 HStack{
@@ -60,7 +62,7 @@ struct EmailPasswordView: View {
             }
             if !vm.isNewUser {
                 NavigationLink {
-                    
+                    ForgotPasswordView()
                 } label: {
                     Text("Forgot password?")
                         .font(.headline)
@@ -91,12 +93,11 @@ struct EmailPasswordView: View {
             }
         }
         .padding()
-        
         .onChange(of: vm.userAuthData.user.email) { _ in
             vm.toValidateEmail()
         }
         .onChange(of: vm.userAuthData.user.password) { _ in
-            vm.toValidatePassword()
+            vm.toValidatePassword(value: vm.userAuthData.user.password)
         }
     }
 }

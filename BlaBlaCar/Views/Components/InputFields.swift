@@ -14,6 +14,7 @@ struct InputFields: View {
     var title: String
     var isPassOrNot: Bool
     var keyboardType: UIKeyboardType
+    var capitalizationType: TextInputAutocapitalization
 
     var body: some View {
         ZStack(alignment: .trailing) {
@@ -23,10 +24,12 @@ struct InputFields: View {
                         SecureField(title, text: $text)
                             .autocorrectionDisabled()
                             .keyboardType(keyboardType)
+                            .textInputAutocapitalization(capitalizationType)
                     } else {
                         TextField(title, text: $text)
                             .autocorrectionDisabled()
                             .keyboardType(keyboardType)
+                            .textInputAutocapitalization(capitalizationType)
                     }
                 }
                 Button(action: {
@@ -40,13 +43,14 @@ struct InputFields: View {
                 TextField(title, text: $text)
                     .autocorrectionDisabled()
                     .keyboardType(keyboardType)
+                    .textInputAutocapitalization(capitalizationType)
             }
         }
         //.foregroundColor(.black)
         .padding()
         .padding(.trailing,20)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(.white)
             )
         .shadow(radius: 2)

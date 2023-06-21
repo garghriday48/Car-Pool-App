@@ -91,7 +91,7 @@ struct EditProfileView: View {
 
 
                         ForEach($vm.updatingUserArray){$profile in
-                            ProfileTextField(profileVM: profileVM, vm: vm,  textField: $profile.textField, textFieldType: profile.type, heading: profile.heading, keyboardType: profile.keyboardType ?? .default)
+                            ProfileTextField(profileVM: profileVM, vm: vm,  textField: $profile.textField, textFieldType: profile.type, heading: profile.heading, keyboardType: profile.keyboardType ?? .default, capitalizationType: profile.capitalizationType ?? .never)
                                 
                         }
                         
@@ -113,7 +113,7 @@ struct EditProfileView: View {
                         } label: {
                             ButtonView(buttonName: Constants.ButtonsTitle.done, border: false)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
                                         .fill(Color(Color.redColor))
                                     )
                                 .padding(.top)

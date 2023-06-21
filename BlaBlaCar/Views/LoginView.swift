@@ -20,21 +20,18 @@ struct LoginView: View {
 
 
         }
-        .alert(Constants.ErrorBox.error, isPresented: $vm.hasEmailError, actions: {
-            Button(Constants.ErrorBox.okay, role: .destructive) {
-                navigationVM.pop(to: .MainSigninSignupView)
-                
+        .alert(Constants.ErrorBox.error, isPresented: $vm.hasResponseError, actions: {
+            Button(Constants.ErrorBox.okay, role: .cancel) {
             }
         }, message: {
             Text(vm.errorMessage1)
         })
+
         .alert(Constants.ErrorBox.error, isPresented: $vm.hasError, actions: {
-            Button(Constants.ErrorBox.okay, role: .destructive) {
-                navigationVM.pop(to: .MainSigninSignupView)
-                
+            Button(Constants.ErrorBox.okay, role: .cancel) {
             }
         }, message: {
-            Text(vm.errorMessage1)
+            Text(vm.errorMessage?.errorDescription ?? "")
         })
 
         .onAppear{

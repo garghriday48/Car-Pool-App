@@ -28,7 +28,7 @@ class MyRidesViewModel: ObservableObject {
     
     @Published var publishListResponse = PublishListResponse.initialize
     @Published var publishResponseWithId = PublishResponseWithId.initialize
-    @Published var updatedPublishedRideResponse = PublishResponse.initialize
+    @Published var updatedPublishedRideResponse = PublishRideResponse.initialize
     
     @Published var bookingListResponse = BookingListResponse.initialize
     
@@ -72,6 +72,9 @@ class MyRidesViewModel: ObservableObject {
     @Published var toDismissEditSeatsView = false
     @Published var toDismissEditPriceView = false
     @Published var toDismissRouteView = false
+    @Published var toNotShowDetails: Int?
+    
+    @Published var editPublicationTypes = EditPublicationTypes.itineraryDetails
     
     private var anyCancellable: AnyCancellable?
     private var anyCancellable1: AnyCancellable?
@@ -85,7 +88,7 @@ class MyRidesViewModel: ObservableObject {
         case .price:
             return ["publish": ["set_price": updatedPrice]]
         case .seats:
-            return ["publish": ["date": "\(updatedSeats)"]]
+            return ["publish": ["passengers_count": "\(updatedSeats)"]]
         }
     }
     
@@ -245,10 +248,11 @@ class MyRidesViewModel: ObservableObject {
                     
                 case .finished:
                     self.updateIsSuccess = true
+                    
                 }
                 
             } receiveValue: { [weak self] data in
-                self?.updatedPublishedRideResponse = data ?? PublishResponse.initialize
+                self?.updatedPublishedRideResponse = data ?? PublishRideResponse.initialize
                 print(self?.updatedPublishedRideResponse as Any)
             }
 

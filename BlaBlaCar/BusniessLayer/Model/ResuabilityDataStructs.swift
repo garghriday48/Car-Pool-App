@@ -39,18 +39,21 @@ struct FilterData: Identifiable{
 }
 
 
-struct EditProfileOptions: Identifiable, Hashable {
+struct EditProfileOptions: Identifiable {
+    
     var id = UUID()
     var heading: String
     var textField: String
     var type: TextFieldType
     var keyboardType: UIKeyboardType?
+    var capitalizationType: TextInputAutocapitalization?
 }
 
-struct VehicleOptions: Identifiable, Hashable {
+struct VehicleOptions: Identifiable {
     var id = UUID()
     var heading: String
     var textField: String
     var textFieldType: VehicleTextFieldType
     var keyboardType: UIKeyboardType?
+    var capitalizationType: TextInputAutocapitalization?
 }

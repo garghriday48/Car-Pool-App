@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AccountSettingsView: View {
     
+    @ObservedObject var vm: SignInSignUpViewModel
     @ObservedObject var profileVM: ProfileViewModel
     @Environment (\.dismiss) var dismiss
     
@@ -32,12 +33,18 @@ struct AccountSettingsView: View {
             ScrollView{
                 VStack(alignment: .leading){
                     ForEach(0..<2){item in
-                        HStack{
-                            Text(DataArrays.accountSettingsArray[item])
-                            Spacer()
-                            Image(systemName: Constants.Images.rightArrow)
+                        Button {
+                            vm.toShowChangePassword.toggle()
+                        } label: {
+                            HStack{
+                                Text(DataArrays.accountSettingsArray[item])
+                                Spacer()
+                                Image(systemName: Constants.Images.rightArrow)
+                            }
+                            .padding(.vertical)
                         }
-                        .padding(.vertical)
+
+                        
                         DividerCapsule(height: 2, color: Color(.systemGray3))
                     }
                     
@@ -58,11 +65,14 @@ struct AccountSettingsView: View {
             }
         }
         .navigationBarBackButtonHidden()
+        .fullScreenCover(isPresented: $vm.toShowChangePassword) {
+            ChangePasswordView(profileVM: profileVM)
+        }
     }
 }
 
 struct AccountSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountSettingsView(profileVM: ProfileViewModel())
+        AccountSettingsView(vm: SignInSignUpViewModel(), profileVM: ProfileViewModel())
     }
 }

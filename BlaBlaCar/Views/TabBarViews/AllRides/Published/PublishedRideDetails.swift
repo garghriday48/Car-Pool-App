@@ -132,14 +132,17 @@ struct PublishedRideDetails: View {
                                             }
                     .foregroundColor(.primary)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    
                     VStack(alignment: .leading){
-                        NavigationLink {
-                            EditPublishedRideView()
-                        } label: {
-                            Text(Constants.Headings.editYourPublication).bold().padding(.top)
-                                .font(.title3)
-                        }
+                        
                         if myRidesVM.publishResponseWithId.data.status != RidePublishedType.cancel.rawValue {
+                            
+                            NavigationLink {
+                                EditPublishedRideView()
+                            } label: {
+                                Text(Constants.Headings.editYourPublication).bold().padding(.top)
+                                    .font(.title3)
+                            }
                             Button {
                                 myRidesVM.cancelRideData.id = myRidesVM.publishResponseWithId.data.id
                                 myRidesVM.cancelBooking.toggle()
@@ -154,7 +157,6 @@ struct PublishedRideDetails: View {
                 .padding()
                 .background(.white)
                 .cornerRadius(10)
-                
             }
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)

@@ -53,7 +53,12 @@ struct Constants {
     
     struct Headings {
         static var emailPassHeading = "What's your email and password?"
+        static var changePassword = "Change password"
+        static var resetPassword = "Reset password"
         static var fullNameHeading = "What's your name?"
+        static var enterEmail = "Enter your email"
+        static var enterPhone = "Enter your phone number"
+        static var verification = "Verification"
         static var dobHeading = "What's your date of birth?"
         static var genderHeading = "What's your gender?"
         static var signUpPagesHeading = "Finish signing up"
@@ -97,6 +102,8 @@ struct Constants {
         static var selectFromGallery = "Select from gallery"
         static var accountSettings = "Account settings"
         static var vehicles = "Vehicles"
+        static var phoneVerification = "Phone Verification"
+        static var forgotPassword = "Forgot password"
         static var miniBio = "Mini bio:"
         static var vehicleDetails = "Vehicle Details: "
         static var totalDistanceInKm = "Total distance (in km)"
@@ -116,6 +123,7 @@ struct Constants {
         static var back = "Back"
         static var done = "Done"
         static var delete = "Delete"
+        static var verify = "Verify"
         static var yes = "Yes"
         static var okay = "Okay"
         static var signUp = "Sign up"
@@ -144,10 +152,12 @@ struct Constants {
     struct TextfieldPlaceholder {
         static var email = "Email"
         static var password = "Password"
+        static var confirmPassword = "Confirm password"
         static var firstName = "First Name"
         static var secondName = "Last Name"
         static var gender = "Gender"
         static var dob = "Date Of Birth"
+        static var phoneNum = "Phone Number"
         
         static var dropLocation = "Enter Drop Location"
         static var pickupLocation = "Enter Pickup Location"
@@ -162,7 +172,8 @@ struct Constants {
     struct Regex {
         static var selfMatch        = "SELF MATCHES %@"
         static var passRegex        = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&/,`^()-+=_~;:'.])[A-Za-z\\d@$!%*#?&/,`^()-+=_~;:'.]{8,16}$"
-        static var emailRegex       = "^[a-zA-Z0-9.!$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
+        
+        static var emailRegex       = "^[a-zA-Z0-9.!$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]{2,64}){1,2}"
         static var numRegex         = ".*[A-Za-z!@#$%^&*()\\-_=+{}|?>.<]+.*"
         static var alphabetRegex    = ".*[0-9!@#$%^&*()\\-_=+{}|?>.<]+.*"
         static var containsChRegex  = ".*[!@#$%^&*()\\-_=+{}|?>.<]+.*"
@@ -182,6 +193,7 @@ struct Constants {
         static var invalidEmpty     = "invalid Email eg: dummy@gmail.com"
         static var passNotEmpty     = "password should not be empty"
         static var passNotInRange   = "password range must be between 8 to 16"
+        static var passSame         = "password should be same"
         static var uppercase        = "must contain at least one uppercase"
         static var lowercase        = "must contain at least one lowercase"
         static var specialCh        = "must contain at least one special character"
@@ -193,6 +205,7 @@ struct Constants {
 
     struct UserDefaultKeys {
         
+        static let password = "password"
         static let session = "SessionAuthToken"
         static let profileData = "UserProfileData"
     }

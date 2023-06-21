@@ -18,6 +18,7 @@ struct ProfileTextField: View {
     var vehicleTextFieldType: VehicleTextFieldType?
     var heading: String
     var keyboardType: UIKeyboardType
+    var capitalizationType: TextInputAutocapitalization
     
     var body: some View {
         
@@ -30,6 +31,7 @@ struct ProfileTextField: View {
                 case .firstName, .secondName , .email, .phnNum:
                     TextField(heading, text: $textField)
                         .keyboardType(keyboardType)
+                        .textInputAutocapitalization(capitalizationType)
                         .foregroundColor(.black)
                         .autocorrectionDisabled()
                         .onAppear{
@@ -178,7 +180,7 @@ struct ProfileTextField: View {
 
 struct ProfileTextField_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileTextField(profileVM: ProfileViewModel(), vm: SignInSignUpViewModel(), textField: .constant(""), textFieldType: .dob, heading: "Name", keyboardType: .default)
+        ProfileTextField(profileVM: ProfileViewModel(), vm: SignInSignUpViewModel(), textField: .constant(""), textFieldType: .dob, heading: "Name", keyboardType: .default, capitalizationType: .never)
     }
 }
 

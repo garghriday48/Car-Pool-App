@@ -21,6 +21,7 @@ class NavigationViewModel:ObservableObject{
         if UserDefaults.standard.string(forKey: Constants.UserDefaultKeys.session) != nil && UserDefaults.standard.string(forKey: Constants.UserDefaultKeys.session) != ""{
             paths = [.TabBarPage]
         }
+        
     }
     
     

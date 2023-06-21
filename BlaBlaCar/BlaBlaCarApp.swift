@@ -16,7 +16,6 @@ struct BlaBlaCarApp: App {
         WindowGroup {
             Navigation()
                 .environmentObject(navigationVM)
-
         }
         
     }

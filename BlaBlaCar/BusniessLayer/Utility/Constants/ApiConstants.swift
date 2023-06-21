@@ -10,7 +10,7 @@ import Foundation
 extension Constants {
     
     struct Url {
-        static var baseURL      = "https://732c-112-196-113-2.ngrok-free.app"
+        static var baseURL      = "https://791c-112-196-113-2.ngrok-free.app"
         static var signupKey    = "/users"
         static var signinKey    = "/users/sign_in"
         static var signoutKey   = "/users/sign_out"
@@ -19,6 +19,11 @@ extension Constants {
         
         static var emailCheck   = "/email_check?email="
         static let addImage = "/user_images"
+        static var updatePass = "/update_password"
+        
+        static var sendOtp = "/send_otp"
+        static var verifyOtp = "/verify_otp"
+        static var resetPassword = "/password_reset"
         
         static var addVehicle   = "/vehicles"
         static var updateVehicle = "/vehicles/"

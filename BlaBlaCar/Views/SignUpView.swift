@@ -68,7 +68,7 @@ struct SignUpView: View {
             Text(Constants.Headings.backAlertHeading)
         })
         
-        .alert(Constants.ErrorBox.error, isPresented: $vm.hasEmailError, actions: {
+        .alert(Constants.ErrorBox.error, isPresented: $vm.hasResponseError, actions: {
             Button(Constants.ErrorBox.okay, role: .cancel) {
             }
         }, message: {
@@ -87,5 +87,7 @@ struct SignUpView: View {
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView()
+            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(NavigationViewModel())
     }
 }

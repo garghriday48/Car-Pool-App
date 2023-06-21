@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 class ProfileViewModel: ObservableObject {
     
@@ -29,9 +30,9 @@ class ProfileViewModel: ObservableObject {
     
     @Published var firstName = ""
     @Published var lastName = ""
-    @Published var gender = String()
-    @Published var dob = String()
-    @Published var email = String()
+    @Published var gender = ""
+    @Published var dob = ""
+    @Published var email = ""
     @Published var phnNumber = ""
     
     @Published var vehicleName = String()
@@ -75,6 +76,15 @@ class ProfileViewModel: ObservableObject {
     private var anyCancellable2: AnyCancellable?
     
     @Published var toDismiss = false
+    
+    @Published var phoneVerificationSteps = PhoneVerificationSteps.numberView
+    @Published var toDisplayPhoneVerification = false
+    
+
+    
+    @Published var otpText = ""
+    @Published var otpFields: [String] = Array(repeating: "", count: 4)
+    
 
     init() {
         makeEditProfileArray()
@@ -84,12 +94,12 @@ class ProfileViewModel: ObservableObject {
     
     ///  Function to get an array of EditProfileOptions for reusing of textfields
     func makeEditProfileArray() {
-        editProfileArray = [EditProfileOptions(heading: "First Name", textField: firstName, type: .firstName, keyboardType: .default),
-                            EditProfileOptions(heading: "Last Name", textField: lastName, type: .secondName, keyboardType: .default),
-                            EditProfileOptions(heading: "Gender", textField: self.gender, type: .gender),
-                            EditProfileOptions(heading: "Date of birth", textField: self.dob, type: .dob),
-                            EditProfileOptions(heading: "Email", textField: self.email, type: .email, keyboardType: .emailAddress),
-                            EditProfileOptions(heading: "Phone number", textField: self.phnNumber, type: .phnNum, keyboardType: .numberPad)]
+        editProfileArray = [EditProfileOptions(heading: "First Name", textField: firstName, type: .firstName, keyboardType: .default, capitalizationType: .words),
+                            EditProfileOptions(heading: "Last Name", textField: lastName, type: .secondName, keyboardType: .default, capitalizationType: .words ),
+                            EditProfileOptions(heading: "Gender", textField: gender, type: .gender),
+                            EditProfileOptions(heading: "Date of birth", textField: dob, type: .dob),
+                            EditProfileOptions(heading: "Email", textField: email, type: .email, keyboardType: .emailAddress, capitalizationType: .never),
+                            EditProfileOptions(heading: "Phone number", textField: phnNumber, type: .phnNum, keyboardType: .numberPad, capitalizationType: .never)]
         
     }
     
@@ -97,9 +107,9 @@ class ProfileViewModel: ObservableObject {
     /// Function to get an array of VehicleOptions for reusing of textfields
     func makeVehicleOptionsArray() {
         vehicleOptionsArray = [VehicleOptions(heading: "Country", textField: country, textFieldType: .country),
-                               VehicleOptions(heading: "Name", textField: vehicleName, textFieldType: .name, keyboardType: .default),
-                               VehicleOptions(heading: "Brand", textField: vehicleBrand, textFieldType: .brand, keyboardType: .default),
-                               VehicleOptions(heading: "Number", textField: vehicleNumber, textFieldType: .number, keyboardType: .numberPad),
+                               VehicleOptions(heading: "Name", textField: vehicleName, textFieldType: .name, keyboardType: .default, capitalizationType: .words),
+                               VehicleOptions(heading: "Brand", textField: vehicleBrand, textFieldType: .brand, keyboardType: .default, capitalizationType: .words),
+                               VehicleOptions(heading: "Number", textField: vehicleNumber, textFieldType: .number, keyboardType: .numberPad, capitalizationType: .never),
                                VehicleOptions(heading: "Type", textField: vehicleType, textFieldType: .vehicleType),
                                VehicleOptions(heading: "Color", textField: vehicleColor, textFieldType: .color),
                                VehicleOptions(heading: "Year", textField: vehicleYear, textFieldType: .year)]
@@ -295,7 +305,28 @@ class ProfileViewModel: ObservableObject {
         country = String()
     }
     
+    func activeStateForIndex(index: Int) -> OTPField {
+        switch index {
+        case 0: return .field1
+        case 1: return .field2
+        case 2: return .field3
+        default: return .field4
+        }
+    }
     
+    // MARK: conditions for custom OTP field and limiting it to only one text
+    func OTPCondition(value: [String]) {
+        
+        for index in 0..<4 where value[index].count > 1 {
+            otpFields[index] = String(value[index].last!)
+        }
+    }
+    
+    // MARK: to check that no otp field should be empty
+    func checkStates() -> Bool {
+        for index in 0..<4 where otpFields[index].isEmpty { return false }
+        return true
+    }
 }
 
 

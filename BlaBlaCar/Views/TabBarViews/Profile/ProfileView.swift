@@ -72,8 +72,8 @@ struct ProfileView: View {
                                     .padding(.bottom)
                                 ForEach(DataArrays.profilePlusButtonArray, id: \.self){button in
                                     
-                                    NavigationLink {
-                                        BioView(vm: vm, profileVM: profileVM)
+                                    Button {
+                                        profileVM.toDisplayPhoneVerification.toggle()
                                     } label: {
                                         ProfilePlusButton(image: button[0], name: button[1])
                                     }
@@ -117,7 +117,7 @@ struct ProfileView: View {
                                 NavigationLink {
                                     switch ProfileOptions(rawValue: option){
                                     case .editProfile: EditProfileView(vm: vm, profileVM: profileVM)
-                                    case .accountSettings : AccountSettingsView(profileVM: profileVM)
+                                    case .accountSettings : AccountSettingsView(vm:vm, profileVM: profileVM)
                                     case .vehicle :
                                         VehicleListView(vm: vm, profileVM: profileVM)
                                         
@@ -144,7 +144,7 @@ struct ProfileView: View {
                 }
             }
         
-            .alert(Constants.ErrorBox.error, isPresented: $vm.hasEmailError, actions: {
+            .alert(Constants.ErrorBox.error, isPresented: $vm.hasResponseError, actions: {
                 Button(Constants.ErrorBox.okay, role: .cancel) {
                 }
             }, message: {
@@ -157,7 +157,9 @@ struct ProfileView: View {
             }, message: {
                 Text(vm.errorMessage?.errorDescription ?? "")
             })
-
+            .fullScreenCover(isPresented: $profileVM.toDisplayPhoneVerification, content: {
+                PhoneVerificationView(profileVM: profileVM)
+            })
             .onAppear {
                 vm.userId = vm.userData?.status.data?.id ?? 0
                 vm.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])

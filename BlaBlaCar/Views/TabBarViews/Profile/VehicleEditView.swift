@@ -34,7 +34,7 @@ struct VehicleEditView: View {
                 VStack{
                     
                     ForEach($profileVM.addingVehicleArray){$vehicle in
-                        ProfileTextField(profileVM: profileVM, vm: vm,  textField: $vehicle.textField, vehicleTextFieldType: vehicle.textFieldType, heading: vehicle.heading, keyboardType: vehicle.keyboardType ?? .default)
+                        ProfileTextField(profileVM: profileVM, vm: vm,  textField: $vehicle.textField, vehicleTextFieldType: vehicle.textFieldType, heading: vehicle.heading, keyboardType: vehicle.keyboardType ?? .default, capitalizationType: vehicle.capitalizationType ?? .never)
                     }
                 }
                 .padding()

@@ -31,11 +31,20 @@ struct EditPublishedRideView: View {
             
             VStack {
                 ForEach(EditPublicationTypes.allCases, id: \.self) { options in
-                    NavigationLink {
+                    Button {
+//                        switch options {
+//                        case .itineraryDetails: ItineraryDetailsView()
+//                        case .price: PriceEditView()
+//                        case .seats: SeatsEditView(value: $myRidesVM.updatedSeats)
+//                        }
                         switch options {
-                        case .itineraryDetails: ItineraryDetailsView()
-                        case .price: PriceEditView()
-                        case .seats: SeatsEditView(value: $myRidesVM.updatedSeats)
+                        case .itineraryDetails: myRidesVM.toDismissItineraryDetails.toggle()
+                            myRidesVM.editPublicationTypes = .itineraryDetails
+                        case .seats:
+                            myRidesVM.toDismissEditSeatsView.toggle()
+                            myRidesVM.editPublicationTypes = .seats
+                        case .price: myRidesVM.toDismissEditPriceView.toggle()
+                            myRidesVM.editPublicationTypes = .price
                         }
                     } label: {
                         HStack {
@@ -51,28 +60,31 @@ struct EditPublishedRideView: View {
                 
                 DividerCapsule(height: 2, color: Color(.systemGray3))
                     .padding(.top)
-                Button {
-                    
-                } label: {
-                    Text(Constants.Headings.cancelYOurRide).bold().padding(.top)
-                        .font(.title3)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding()
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $myRidesVM.toDismissItineraryDetails, destination: {
+            ItineraryDetailsView()
+        })
         .onAppear{
             
             myRidesVM.publishWithIdApiCall(method: .publishById, httpMethod: .GET)
             myRidesVM.updatedSeats = myRidesVM.publishResponseWithId.data.passengersCount
             myRidesVM.idToUpdate = myRidesVM.publishResponseWithId.data.id
         }
-        .alert("Your ride has been successfully updated", isPresented: $myRidesVM.updateIsSuccess, actions: {
-            Button(Constants.ButtonsTitle.okay, role: .cancel) {
-            }
-        })
+//        .alert("Your ride has been successfully updated", isPresented: $myRidesVM.updateIsSuccess, actions: {
+//            Button(Constants.ButtonsTitle.okay, role: .cancel) {
+//                switch myRidesVM.editPublicationTypes {
+//                case .itineraryDetails:
+//                    myRidesVM.toDismissRouteView = false
+//                    isBool = false
+//                    //myRidesVM.toNotShowDetails = nil
+//                default: break
+//                }
+//            }
+//        })
     }
 }
 

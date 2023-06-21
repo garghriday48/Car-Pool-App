@@ -13,14 +13,14 @@ struct EditRouteView: View {
     @EnvironmentObject var myRidesVM: MyRidesViewModel
     @EnvironmentObject var carPoolVM: CarPoolRidesViewModel
     
-    @Environment (\.presentationMode) var presentationMode
+    @Environment (\.dismiss) var dismiss
     
     
     var body: some View {
         VStack{
             HStack{
                 BackButton(image: Constants.Images.backArrow) {
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 }
                 .font(.title)
                 .bold()
@@ -80,7 +80,28 @@ struct EditRouteView: View {
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
-
+        .alert("Your ride has been successfully updated", isPresented: $myRidesVM.updateIsSuccess, actions: {
+            Button(Constants.ButtonsTitle.okay, role: .cancel) {
+                switch myRidesVM.editPublicationTypes {
+                case .itineraryDetails:
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        myRidesVM.toDismissRouteView = false
+                    }
+                    myRidesVM.toDismissItineraryDetails = false
+                    //isBool = false
+                    //myRidesVM.toNotShowDetails = nil
+                default: break
+                }
+            }
+        })
+        
+        .onChange(of: myRidesVM.toDismissRouteView) { _ in
+            if !myRidesVM.toDismissRouteView {
+                //DispatchQueue.main.asyncAfter(deadline: .now() + 1){
+                    self.dismiss()
+                //}
+            }
+        }
         /// to assign the estimate time value to another variable which is used when publishing ride so that user that is booking ride can seen the time that will be taken to rezach destination.
         .onDisappear{
             mapVM.mapView.removeAnnotations(mapVM.mapView.annotations)

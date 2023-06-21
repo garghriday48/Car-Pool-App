@@ -33,18 +33,16 @@ class ApiManager {
 
         
         return URLSession.shared.dataTaskPublisher(for: request)
-            .mapError { _ -> AuthenticateError in
-                return AuthenticateError.unknown
-            }
+            .mapError { _ -> AuthenticateError in return AuthenticateError.unknown }
         
             .tryMap { (data, response) -> (data: Data, response: URLResponse) in
                 
-                guard let response = response as? HTTPURLResponse else {
-                    throw AuthenticateError.badResponse
-                }
+                guard let response = response as? HTTPURLResponse else { throw AuthenticateError.badResponse }
                 
                 if !((200..<299) ~= response.statusCode) {
-
+                    if method == .forgotPassEmail || method == .resetPassword || method == .otp {
+                        throw try JSONDecoder().decode(ForgotPasswordResponse.self, from: data)
+                    }
                     throw try JSONDecoder().decode(ErrorResponse.self, from: data)
                 }
                 print(response)
