@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AdditionalInfoView: View {
     
+    @ObservedObject var mapVM: MapViewModel
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
     @EnvironmentObject var navigationVM: NavigationViewModel
     @Environment (\.presentationMode) var presentationMode
@@ -21,8 +22,7 @@ struct AdditionalInfoView: View {
             BackButton(image: Constants.Images.backArrow) {
                 presentationMode.wrappedValue.dismiss()
             }
-            .font(.title)
-            .bold()
+            .font(.title2)
             .padding()
             .frame(maxWidth: .infinity, maxHeight: 80, alignment: .leading)
             
@@ -32,7 +32,7 @@ struct AdditionalInfoView: View {
                    .foregroundColor(Color(Color.redColor))
                
                 Text(Constants.Headings.rideCreated)
-                   .font(.headline)
+                    .font(.system(size: 18, weight: .semibold ,design: .rounded))
                    .padding(.top, 10)
            }
             VStack(alignment: .leading) {
@@ -47,6 +47,7 @@ struct AdditionalInfoView: View {
                 TextField(Constants.Description.type100, text: $carPoolVM.publishRideData.publish.aboutRide, axis: .vertical)
                     .lineLimit(8, reservesSpace: true)
                     .textFieldStyle(.roundedBorder)
+                    .font(.system(size: 16 ,design: .rounded))
                 }
             .padding()
 
@@ -57,6 +58,8 @@ struct AdditionalInfoView: View {
                 carPoolVM.publishRideApiCall(method: .publishRide, httpMethod: .POST)
                 carPoolVM.resetPublishRideValues()
                 carPoolVM.navigateToMapRoute = true
+                mapVM.mapView.removeAnnotations(mapVM.mapView.annotations)
+                mapVM.mapView.removeOverlays(mapVM.mapView.overlays)
                 
             } label: {
                 ButtonView(buttonName: Constants.ButtonsTitle.publishRide, border: true)
@@ -66,11 +69,12 @@ struct AdditionalInfoView: View {
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
+        
     }
 }
 
 struct AdditionalInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        AdditionalInfoView(carPoolVM: CarPoolRidesViewModel())
+        AdditionalInfoView(mapVM: MapViewModel(), carPoolVM: CarPoolRidesViewModel())
     }
 }

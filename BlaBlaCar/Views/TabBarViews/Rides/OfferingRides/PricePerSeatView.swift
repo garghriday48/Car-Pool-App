@@ -12,6 +12,7 @@ struct PricePerSeatView: View {
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
     @Binding var toShowSeatPrice: Bool
     @State var price = String()
+    @State var isDisabled = false
     
     @Environment (\.presentationMode) var presentationMode
     
@@ -25,16 +26,16 @@ struct PricePerSeatView: View {
                     ZStack{
                         Button {
                             toShowSeatPrice.toggle()
-                            carPoolVM.offerRideSelectorArray[2].text = String()
+                            
                         } label: {
                             Text(Constants.ButtonsTitle.close)
-                                .font(.headline)
-                                .foregroundColor(Color(.systemGray))
+                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .foregroundColor(Color(Color.redColor))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
                         }
                         Text(Constants.Headings.perSeatPrice)
-                            .font(.title3)
+                            .font(.system(size: 18, weight: .semibold, design: .rounded))
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
@@ -48,9 +49,9 @@ struct PricePerSeatView: View {
                     .keyboardType(.numberPad)
                     .font(.title)
                     .foregroundColor(.black)
-                    .padding(.vertical)
+                    .padding(.top)
                     .multilineTextAlignment(.center)
-                DividerCapsule(height: 3, color: Color(.darkGray))
+                DividerCapsule(height: 1, color: Color(.black))
             }
             .frame(width: 170, alignment: .center)
             .padding()
@@ -64,6 +65,22 @@ struct PricePerSeatView: View {
 
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity ,alignment: .top)
+        .onChange(of: price) { newValue in
+            if newValue.count > 6 {
+                price = String(newValue.prefix(6))
+                
+            }
+            if !newValue.onlyNum(){
+                price = ""
+                isDisabled = true
+            } else {
+                isDisabled = false
+            }
+            
+        }
+        .onAppear{
+            price = carPoolVM.offerRideSelectorArray[2].text
+        }
     }
 }
 

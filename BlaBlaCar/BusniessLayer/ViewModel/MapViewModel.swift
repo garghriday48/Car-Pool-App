@@ -11,6 +11,8 @@ import Combine
 
 class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationManagerDelegate {
     
+    static let mapVM = MapViewModel()
+    
     // MARK: properties
     @Published var mapView: MKMapView = .init()
     @Published var mapType: MKMapType = .standard
@@ -29,6 +31,8 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
     @Published var pickedLocation: CLLocation?
     @Published var pickedPlacemark: CLPlacemark?
     
+    @Published var updatedPlacemark: CLPlacemark?
+    
     
     // MARK: whether to show map or not
     @Published var toShowMap: Bool = false
@@ -37,13 +41,16 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
     @Published var permissionDenied = false
     
     
+    private let request = MKLocalSearch.Request()
+    private var localSearch: MKLocalSearch?
+    
     override init() {
         super.init()
         
         mapView.delegate = self
         locationManager.delegate = self
         
-        //locationManager.requestWhenInUseAuthorization()
+
         
         // MARK: search textfield watching (using combine)
         cancellable = $searchText
@@ -69,29 +76,53 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
         }
     }
     
+    func searchPlace(_ place: String) {
+            
+        }
+//    Task {
+//        do {
+//            let request = MKLocalSearch.Request()
+//            request.naturalLanguageQuery = value
+//
+//            let response = try await MKLocalSearch(request: request).start()
+//
+//            DispatchQueue.main.async {
+//                self.fetchedPlaces = response.mapItems.compactMap({ item -> CLPlacemark? in
+//                    return item.placemark
+//                })
+//            }
+//        } catch {
+//
+//        }
+//    }
+//    print(fetchedPlaces)
+    
     // MARK: function to fetch place using MKLocalSearch
     func fetchValue(value: String) {
-        Task {
-            do {
-                let request = MKLocalSearch.Request()
-                request.naturalLanguageQuery = value.lowercased()
-                
-                let response = try await MKLocalSearch(request: request).start()
-                
-                DispatchQueue.main.async {
-                    self.fetchedPlaces = response.mapItems.compactMap({ item -> CLPlacemark? in
-                        return item.placemark
-                    })
-                }
-            } catch {
-                 
-            }
+       Task {
+           do {
+               localSearch?.cancel()
+               
+               request.naturalLanguageQuery = value
+               localSearch = MKLocalSearch(request: request)
+               localSearch?.start { [weak self] searchResponse, _  in
+//                   guard let items = searchResponse?.mapItems else {
+//                          return
+//                      }
+//                   self?.fetchedPlaces = items
+                   self?.fetchedPlaces = searchResponse?.mapItems.compactMap({ item -> CLPlacemark? in
+                       return item.placemark
+                   })
+               }
+               print(self.fetchedPlaces)
+           }
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // MARK: handle errors
         print(error.localizedDescription)
+        print("location is not getting fetched from map.")
     }
     
     private func checkLocationAuthorization() {
@@ -101,6 +132,7 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
             
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
+            //locationManager.requestLocation()
         case .restricted:
             print("restricted")
         case .denied:
@@ -118,7 +150,7 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let currentLocation = locations.first else { return }
+        guard let currentLocation = locations.last else { return }
         self.userLocation = currentLocation
         
     }
@@ -156,6 +188,7 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
                 guard let place = try await newLocationCoordinates(location: location) else { return }
                 DispatchQueue.main.async {
                     self.pickedPlacemark = place
+                    
                 }
             } catch {
                 //HANDLE ERROR

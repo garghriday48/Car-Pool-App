@@ -33,7 +33,7 @@ class ApiManager {
 
         
         return URLSession.shared.dataTaskPublisher(for: request)
-            .mapError { _ -> AuthenticateError in return AuthenticateError.unknown }
+            .mapError { error -> AuthenticateError in return ServiceHelper.shared.checkNetworkError(error: error) }
         
             .tryMap { (data, response) -> (data: Data, response: URLResponse) in
                 
@@ -45,7 +45,6 @@ class ApiManager {
                     }
                     throw try JSONDecoder().decode(ErrorResponse.self, from: data)
                 }
-                print(response)
                 // if sign out it attempted
                 // the clear the user defaults
                 // by setting the authoriztion value of
@@ -123,8 +122,11 @@ class ApiManager {
         }
         print(url as Any)
         return URLSession.shared.dataTaskPublisher(for: request)
-            .mapError { _ -> AuthenticateError in
-                return AuthenticateError.unknown
+        
+            .mapError { error -> AuthenticateError in
+               
+                return ServiceHelper.shared.checkNetworkError(error: error)
+                
             }
             .tryMap { (data, response) -> (data: Data, response: URLResponse) in
                 
@@ -155,7 +157,7 @@ class ApiManager {
     
 
     
-    func apiRidesMethod<T: Decodable, M: Codable, E: RawRepresentable>(httpMethod: HttpMethod, method: E, dataModel: M, url: URL?) -> AnyPublisher <T, Error> where E.RawValue == String {
+    func apiMethodWithStruct<T: Decodable, M: Codable, E: RawRepresentable>(httpMethod: HttpMethod, method: E, dataModel: M, url: URL?) -> AnyPublisher <T, Error> where E.RawValue == String {
             guard let request = ServiceHelper.shared.setUpApiRequestWithStruct(
                 url: url,
                 data: dataModel,
@@ -169,8 +171,8 @@ class ApiManager {
             print(url as Any)
             return URLSession.shared.dataTaskPublisher(for: request)
         
-            .mapError { _ -> AuthenticateError in
-                return AuthenticateError.unknown
+            .mapError { error -> AuthenticateError in
+                return ServiceHelper.shared.checkNetworkError(error: error)
             }
             .tryMap { (data, response) -> (data: Data, response: URLResponse) in
                 
@@ -179,7 +181,7 @@ class ApiManager {
                 }
                 
                 if !((200..<299) ~= response.statusCode) {
-                    //throw AuthenticateError.parsing
+                    
                     if dataModel is BookRideData {
                         if response.statusCode == 422 {
                             throw AuthenticateError.alreadyBooked
@@ -187,7 +189,7 @@ class ApiManager {
                             throw AuthenticateError.badResponse
                         }
                     } else {
-                        throw AuthenticateError.badResponse
+                        throw try JSONDecoder().decode(ErrorResponse.self, from: data)
                     }
                 }
                 print(response.statusCode)
@@ -199,10 +201,7 @@ class ApiManager {
             .tryMap { data in
                 let decoder = JSONDecoder()
                 do {
-                    
-                    print(data)
-                    return try decoder.decode(T.self, from: data)
-                    
+                    return try decoder.decode(T.self, from: data) 
                 } catch {
                     throw AuthenticateError.noData
                 }

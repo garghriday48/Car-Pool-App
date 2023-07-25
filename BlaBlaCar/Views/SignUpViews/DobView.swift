@@ -17,12 +17,15 @@ struct DobView: View {
             GeometryReader{ _ in
                 VStack(alignment: .leading){
                     Text(Constants.Headings.dobHeading)
-                        .font(.largeTitle)
+                        .font(.system(size: 24, design: .rounded))
                         .bold()
                         .padding(.bottom, 40)
                     VStack{
-                        TextViewFields(text: vm.userAuthData.user.dob.isEmpty ? Constants.TextfieldPlaceholder.dob : vm.userAuthData.user.dob)
-                            .foregroundColor(vm.userAuthData.user.dob.isEmpty ? Color(.gray).opacity(0.6) : .black)
+                        TextViewFields(text: Constants.TextfieldPlaceholder.dob,
+                                       selectedText: vm.userAuthData.user.dob,
+                                       horizontalSpace: .Element(),
+                                       isEmpty: vm.userAuthData.user.dob.isEmpty)
+                            .foregroundColor(vm.userAuthData.user.dob.isEmpty ? Color(.gray).opacity(0.5) : .black)
                     }
                     .onTapGesture {
                         withAnimation{
@@ -38,10 +41,9 @@ struct DobView: View {
                             ButtonView(buttonName   : Constants.ButtonsTitle.next,
                                        border       : false)
                             .background(
-                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
                                     .fill(vm.dobBtnDisable ? Color(Color.redColor).opacity(0.2) : Color(Color.redColor)))
                                 
-                            //.cornerRadius(50)
                         }
                         .disabled(vm.dobBtnDisable)
                         Button {
@@ -58,10 +60,13 @@ struct DobView: View {
                 }
                 .padding(.horizontal)
                 if vm.toShowPicker == true{
-                    PickerView(isDatePicker : $vm.isDatePicker,
-                               toShowPicker : $vm.toShowPicker,
-                               myDate       : $vm.myDate,
-                               selectedIndex: $vm.selectedIndex)
+                    VStack{
+                        PickerView(isDatePicker : $vm.isDatePicker,
+                                   toShowPicker : $vm.toShowPicker,
+                                   myDate       : $vm.myDate,
+                                   selectedIndex: $vm.selectedIndex)
+                    }
+                   
                 }
             }
         }

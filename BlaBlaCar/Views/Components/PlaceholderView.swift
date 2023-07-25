@@ -34,7 +34,7 @@ struct PlaceholderView: View {
                 // image view
                 Image(image)
                     .resizable()
-                    .frame(width: 240, height: 194)
+                    .frame(width: 300, height: 194)
                     .padding()
                 
                 // title text

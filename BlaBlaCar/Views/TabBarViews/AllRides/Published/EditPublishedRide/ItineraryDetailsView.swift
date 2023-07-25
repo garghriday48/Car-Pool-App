@@ -19,7 +19,7 @@ struct ItineraryDetailsView: View {
         VStack {
             HStack(spacing: 20){
                 BackButton(image: Constants.Images.backArrow) {
-                   // presentationMode.wrappedValue.dismiss()
+                    self.dismiss()
                 }
                 .font(.title)
                 .bold()
@@ -34,14 +34,14 @@ struct ItineraryDetailsView: View {
             
             VStack(spacing: 15) {
                 HStack {
-                    Text("Date")
+                    Text(Constants.Description.date)
                     Spacer()
                     DatePicker(selection: $myRidesVM.editedDate, in: Date()...interval.end ,displayedComponents: .date, label: {})
                         .labelsHidden()
                 }
                 .padding(.vertical)
                 HStack {
-                    Text("Time")
+                    Text(Constants.Description.time)
                     Spacer()
                     
                     DatePicker(selection: $myRidesVM.editedTime, displayedComponents: .hourAndMinute, label: {})
@@ -60,6 +60,7 @@ struct ItineraryDetailsView: View {
                         } label: {
                             HStack {
                                 Text(myRidesVM.editedSource)
+                                    .multilineTextAlignment(.leading)
                                 Spacer()
                                 Image(systemName: Constants.Images.rightArrow)
                             }
@@ -71,6 +72,7 @@ struct ItineraryDetailsView: View {
                         } label: {
                             HStack {
                                 Text(myRidesVM.editedDestination)
+                                    .multilineTextAlignment(.leading)
                                 Spacer()
                                 Image(systemName: Constants.Images.rightArrow)
                             }
@@ -88,21 +90,17 @@ struct ItineraryDetailsView: View {
             
             Spacer()
             
-            Button {
-                myRidesVM.toDismissRouteView.toggle()
+            NavigationLink {
+                EditRouteView()
             } label: {
                 ButtonView(buttonName: Constants.ButtonsTitle.proceed, border: false)
                     .background(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
                             .fill(Color(Color.redColor))
                         )
                     .padding()
                     
             }
-            .navigationDestination(isPresented:              $myRidesVM.toDismissRouteView, destination: {
-                EditRouteView()
-            })
-            
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
@@ -124,14 +122,11 @@ struct ItineraryDetailsView: View {
             myRidesVM.editSourceCoordinate.longitude = myRidesVM.publishResponseWithId.data.sourceLongitude
             myRidesVM.editDestCoordinate.latitude = myRidesVM.publishResponseWithId.data.destinationLatitude
             myRidesVM.editDestCoordinate.longitude = myRidesVM.publishResponseWithId.data.destinationLongitude
-            if !myRidesVM.toDismissItineraryDetails {
-                self.dismiss()
-             //   self.presentationMode.wrappedValue.dismiss()
-            }
-            
-                //.// self.presentationMode.wrappedValue.dismiss()
         }
-        
+        .onDisappear{
+            myRidesVM.publishResponseWithId.data.source = myRidesVM.editedSource
+            myRidesVM.publishResponseWithId.data.destination = myRidesVM.editedDestination
+        }
     }
 }
 

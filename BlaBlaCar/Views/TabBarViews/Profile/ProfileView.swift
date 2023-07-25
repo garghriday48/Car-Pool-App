@@ -6,19 +6,22 @@
 //
 
 import SwiftUI
+import _PhotosUI_SwiftUI
 
 struct ProfileView: View {
     
     @ObservedObject var vm: SignInSignUpViewModel
     @ObservedObject var profileVM: ProfileViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
+    
+    @State var photosPicker: [PhotosPickerItem] = []
     
     var body: some View {
-        //NavigationStack{
             ZStack(alignment: .top){
                 VStack{
                     HStack{
                         Text(Constants.Headings.profile)
-                            .font(.title)
+                            .font(.system(size: 24, design: .rounded))
                             .bold()
                             .frame(maxWidth: .infinity ,alignment: .topLeading)
                         
@@ -27,49 +30,94 @@ struct ProfileView: View {
                             
                         } label: {
                             Text(Constants.ButtonsTitle.helpSupport)
-                                .font(.headline)
+                                .font(.system(size: 16, design: .rounded))
                                 .foregroundColor(Color(Color.redColor))
                         }
                         
                     }
                     .padding()
-                    DividerCapsule(height: 4, color: Color(.systemGray3))
+                    DividerCapsule(height: 1, color: .gray.opacity(0.5))
                         .padding(.bottom)
+                    
                     ScrollView{
                         VStack{
-                            AsyncImage(url: vm.profileResponse.imageUrl) { image in
+                            ZStack{
+                                Group{
+                                    //// profile can be changed
+                                    //// by clicking on it
+                                    AsyncImage(url: vm.profileResponse.imageUrl) { image in
                                         image
                                             .resizable()
                                             .scaledToFill()
+                                        
                                     } placeholder: {
-                                        if vm.profileResponse.imageUrl == nil {
+                                        if vm.profileResponse.imageUrl != nil || errorVM.isLoading {
+                                            ZStack {
+                                                LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
+                                                    .frame(maxWidth: .infinity, alignment: .center)
+                                            }
+                                        } else {
                                             Image(Constants.Images.person)
                                                 .resizable()
                                                 .scaledToFill()
-                                        } else {
-                                            ZStack {
-                                                Color.gray.opacity(0.1)
-                                                ProgressView()
-                                            }
+                                            
                                         }
                                     }
+                                    if errorVM.isLoading {
+                                        LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                    }
+                                }
+                                .frame(width: 124, height: 124)
+                                .clipShape(Circle())
+                                .overlay(alignment: .bottomTrailing) {
+                                    Image(systemName: "pencil.circle.fill")
+                                        .font(.system(size: 30)).foregroundColor(Color(Color.redColor))
                                     
-                                    .frame(width: 100, height: 100)
-                                    .clipShape(Circle())
+                                }
+                            }
+                            .onTapGesture {
+                                // toggle edit profile button
+                                vm.editPhotos.toggle()
+                            }
+                            .photosPicker(isPresented: $vm.openPhotosPicker, selection: $photosPicker)
+                            .onChange(of: photosPicker) { _ in
+                                Task{
+                                    guard let items = photosPicker.first else{ return }
+                                    if let data = try? await items.loadTransferable(type: Data.self){
+                                        if let uiImage = UIImage(data: data) {
+                                            errorVM.isLoading = true
+                                            vm.apiCall(method: .addImage, httpMethod: .PUT, data: ["image": uiImage])
+                                        }
+                                    }
+                                }
+                            }
+                                
+                            
+                            
+                             ///confirmation dialog
+                             ///prompting user with options
+                             ///to get image from galler
+                             ///to click a picture
+                            .confirmationDialog("", isPresented : $vm.editPhotos) {
+                                Button(Constants.Headings.selectFromGallery) {
+                                    vm.openPhotosPicker.toggle()
+                                }
+                            }
+
                             
                             (Text(vm.userData?.status.data?.first_name ?? "No") + Text(" ") +
                              Text(vm.userData?.status.data?.last_name ?? "Name"))
-                            .font(.title3)
+                            .font(.system(size: 20, design: .rounded))
                             .bold()
-                            .padding(.bottom,50)
+                            .padding(.bottom, 30)
                             
-                            DividerCapsule(height: 2, color: Color(.systemGray3))
                             
                             VStack(alignment: .leading, spacing: 10){
                                 Text(Constants.Headings.verifyProfile)
-                                    .font(.title2)
+                                    .font(.system(size: 18, design: .rounded))
                                     .fontWeight(.semibold)
-                                    .padding(.bottom)
+                                
                                 ForEach(DataArrays.profilePlusButtonArray, id: \.self){button in
                                     
                                     Button {
@@ -77,19 +125,18 @@ struct ProfileView: View {
                                     } label: {
                                         ProfilePlusButton(image: button[0], name: button[1])
                                     }
-                                    .foregroundColor(.blue)
                                 }
                             }
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            DividerCapsule(height: 2, color: Color(.systemGray3))
+                            DividerCapsule(height: 1, color: .gray.opacity(0.3))
                             
                             VStack(alignment: .leading, spacing: 10){
                                 Text(Constants.Headings.aboutYou)
-                                    .font(.title2)
+                                    .font(.system(size: 18, design: .rounded))
                                     .fontWeight(.semibold)
-                                    .padding(.bottom)
+
                                 NavigationLink {
                                     BioView(vm: vm, profileVM: profileVM)
                                 } label: {
@@ -98,11 +145,12 @@ struct ProfileView: View {
                                     } else {
                                         HStack{
                                             Image(systemName: Constants.Images.checkmarkFilled)
+                                                .foregroundColor(Color(Color.redColor))
                                             Text(vm.userData?.status.data?.bio ?? "")
                                                 .foregroundColor(.gray)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                         }
-                                        .font(.title3)
+                                        .font(.system(size: 16, design: .rounded))
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
@@ -111,7 +159,7 @@ struct ProfileView: View {
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             
-                            DividerCapsule(height: 2, color: Color(.systemGray3))
+                            DividerCapsule(height: 1, color: .gray.opacity(0.3))
                             
                             ForEach(0..<3, id: \.self){option in
                                 NavigationLink {
@@ -128,34 +176,31 @@ struct ProfileView: View {
                                     ProfileOptionsCellView(mainText: DataArrays.profileOptionsArray[option][0], secondaryText: DataArrays.profileOptionsArray[option][1])
                                 }
                             }
+                            
                             Button {
-                                vm.apiCall(method: .signOut, httpMethod: .GET, data: vm.getData(method: .signOut))
+                                vm.toLogOut.toggle()
+                                
                             } label: {
                                 Text(Constants.ButtonsTitle.logOut)
-                                    .font(.title3)
+                                    .font(.system(size: 20, design: .rounded))
                                     .bold()
                                     .foregroundColor(Color(Color.redColor))
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.horizontal)
                             }
+                            .padding(.vertical)
                         }
+                        .padding(.top)
                         .frame(maxHeight: .infinity, alignment: .top)
                     }
                 }
             }
-        
-            .alert(Constants.ErrorBox.error, isPresented: $vm.hasResponseError, actions: {
-                Button(Constants.ErrorBox.okay, role: .cancel) {
+            .confirmationDialog(Constants.Headings.logOutHeading, isPresented: $vm.toLogOut, actions: {
+                Button(Constants.ButtonsTitle.logOut, role: .destructive) {
+                    vm.apiCall(method: .signOut, httpMethod: .GET, data: vm.getData(method: .signOut))
                 }
             }, message: {
-                Text(vm.errorMessage1)
-            })
-
-            .alert(Constants.ErrorBox.error, isPresented: $vm.hasError, actions: {
-                Button(Constants.ErrorBox.okay, role: .cancel) {
-                }
-            }, message: {
-                Text(vm.errorMessage?.errorDescription ?? "")
+                Text(Constants.Headings.logOutHeading)
             })
             .fullScreenCover(isPresented: $profileVM.toDisplayPhoneVerification, content: {
                 PhoneVerificationView(profileVM: profileVM)
@@ -165,9 +210,7 @@ struct ProfileView: View {
                 vm.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])
                 profileVM.vehicleListArray = profileVM.vehicleResponseList.data
                 profileVM.isVehicleViewSelected = false
-                profileVM.toDismissVehicleList = false
                 profileVM.isAddingNewVehicle = false
-                profileVM.toDeleteVehicle = false
             }
     }
 }
@@ -176,5 +219,6 @@ struct ProfileView: View {
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         ProfileView(vm: SignInSignUpViewModel(), profileVM: ProfileViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }

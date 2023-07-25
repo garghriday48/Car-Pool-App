@@ -10,6 +10,7 @@ import SwiftUI
 struct ChangePasswordView: View {
     
     @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     @ObservedObject var profileVM: ProfileViewModel
     
@@ -41,8 +42,7 @@ struct ChangePasswordView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(
                                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .fill(.white))
-                        .shadow(radius: 2)
+                                        .stroke(.black, lineWidth: 2))
                         .foregroundColor(.black)
                         
                 }
@@ -53,7 +53,8 @@ struct ChangePasswordView: View {
                             title       :Constants.TextfieldPlaceholder.password,
                             isPassOrNot : true,
                             keyboardType: .default,
-                            capitalizationType: .never)
+                            capitalizationType: .never,
+                            borderColor: vm.changePassword.password.isEmpty ? .gray.opacity(0.6) : .black)
                 .padding(.bottom, (vm.passValid.isEmpty) ? 20 : 0)
                 
                 HStack{
@@ -71,7 +72,8 @@ struct ChangePasswordView: View {
                             title       :Constants.TextfieldPlaceholder.confirmPassword,
                             isPassOrNot : true,
                             keyboardType: .default,
-                            capitalizationType: .never)
+                            capitalizationType: .never,
+                            borderColor: vm.changePassword.password_confirmation.isEmpty ? .gray.opacity(0.6) : .black)
                 .padding(.bottom, (vm.confirmPass.isEmpty) ? 20 : 0)
                 HStack{
                     if !vm.confirmPass.isEmpty{
@@ -86,8 +88,8 @@ struct ChangePasswordView: View {
                 
                 
                 Spacer()
-                if vm.isLoading {
-                    LoadingView(isLoading: $vm.loaderLoading)
+                if errorVM.isLoading {
+                    LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
                     Button {
@@ -111,19 +113,6 @@ struct ChangePasswordView: View {
             }
         }, message: {
             Text(Constants.Headings.backAlertHeading)
-        })
-        .alert(Constants.ErrorBox.error, isPresented: $vm.hasResponseError, actions: {
-            Button(Constants.ErrorBox.okay, role: .cancel) {
-            }
-        }, message: {
-            Text(vm.errorMessage1)
-        })
-
-        .alert(Constants.ErrorBox.error, isPresented: $vm.hasError, actions: {
-            Button(Constants.ErrorBox.okay, role: .cancel) {
-            }
-        }, message: {
-            Text(vm.errorMessage?.errorDescription ?? "")
         })
         .onAppear{
             vm.passValid = ""
@@ -149,6 +138,7 @@ struct ChangePasswordView_Previews: PreviewProvider {
     static var previews: some View {
         ChangePasswordView(profileVM: ProfileViewModel())
             .environmentObject(SignInSignUpViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }
 

@@ -22,18 +22,17 @@ struct ProfileTextField: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 10){
-            Text(heading)
-                .foregroundColor(Color(.darkGray))
+        VStack(alignment: .leading, spacing: 20){
 
             HStack{
                 switch textFieldType {
                 case .firstName, .secondName , .email, .phnNum:
-                    TextField(heading, text: $textField)
-                        .keyboardType(keyboardType)
-                        .textInputAutocapitalization(capitalizationType)
-                        .foregroundColor(.black)
-                        .autocorrectionDisabled()
+                    InputFields(text: $textField,
+                                title: heading,
+                                isPassOrNot: false,
+                                keyboardType: keyboardType,
+                                capitalizationType: capitalizationType,
+                                borderColor: textField.isEmpty ? .black.opacity(0.5) : .black)
                         .onAppear{
                             switch textFieldType{
                             case .firstName: textField = profileVM.firstName
@@ -47,39 +46,48 @@ struct ProfileTextField: View {
                             vm.toValidateProfileFields()
                         }
                     Spacer()
-                    Image(systemName: Constants.Images.pencil)
-                        .foregroundColor(Color(.darkGray))
-                        .padding(.leading)
                 case .gender:
-                    DropDownText(text: profileVM.gender.isEmpty ? Constants.TextfieldPlaceholder.dob : profileVM.gender, condition: profileVM.gender.isEmpty)
-                        .onAppear{
-                            textField = profileVM.gender
+                        ZStack(alignment: .trailing){
+                            TextViewFields(text: Constants.TextfieldPlaceholder.gender,
+                                           selectedText: profileVM.gender,
+                                           horizontalSpace: .Element(),
+                                           isEmpty: profileVM.gender.isEmpty)
+                            .onAppear{
+                                textField = profileVM.gender
+                            }
+                            .onChange(of: profileVM.gender) { _ in
+                                textField = profileVM.gender
+                            }
+                             DropDownLabel()
+                                .offset(x: -18)
+                            }
+                        .onTapGesture {
+                            profileVM.toShowPicker = true
+                            profileVM.isDatePicker = false
                         }
-                        .onChange(of: profileVM.gender) { _ in
-                            textField = profileVM.gender
-                        }
-                    Spacer()
-                    Button {
-                        profileVM.toShowPicker = true
-                        profileVM.isDatePicker = false
-                    } label: {
-                        DropDownLabel()
-                    }
+                        .padding(.top, 1)
+                    
                 case .dob:
-                    DropDownText(text: profileVM.dob.isEmpty ? Constants.TextfieldPlaceholder.dob : profileVM.dob, condition: profileVM.dob.isEmpty)
+                    ZStack(alignment: .trailing){
+                        TextViewFields(text: Constants.TextfieldPlaceholder.dob,
+                                       selectedText: profileVM.dob,
+                                       horizontalSpace: .Element(),
+                                       isEmpty: profileVM.dob.isEmpty)
+                        
                         .onAppear{
                             textField = profileVM.dob
                         }
                         .onChange(of: profileVM.dob) { _ in
                             textField = profileVM.dob
                         }
-                    Spacer()
-                    Button {
+                        DropDownLabel()
+                           .offset(x: -18)
+                    }
+                    .onTapGesture {
                         profileVM.toShowPicker = true
                         profileVM.isDatePicker = true
-                    } label: {
-                        DropDownLabel()
                     }
+                    .padding(.top, 1)
 
                 case .none:
                     EmptyView()
@@ -88,10 +96,12 @@ struct ProfileTextField: View {
                 if profileVM.isVehicleViewSelected {
                     switch vehicleTextFieldType {
                     case .name, .brand, .number:
-                        TextField(heading, text: $textField)
-                            .keyboardType(keyboardType)
-                            .foregroundColor(.black)
-                            .autocorrectionDisabled()
+                        InputFields(text: $textField,
+                                    title: heading,
+                                    isPassOrNot: false,
+                                    keyboardType: keyboardType,
+                                    capitalizationType: capitalizationType,
+                                    borderColor: textField.isEmpty ? .black.opacity(0.5) : .black)
                             .onAppear{
                                 switch vehicleTextFieldType {
                                 case .name: textField = profileVM.vehicleName
@@ -101,77 +111,97 @@ struct ProfileTextField: View {
                                 }
                             }
                         Spacer()
-                        Image(systemName: Constants.Images.pencil)
-                            .foregroundColor(Color(.darkGray))
-                            .padding(.leading)
                     case .country:
-                        
-                        DropDownText(text: profileVM.country.isEmpty ? Constants.TextfieldPlaceholder.country : profileVM.country, condition: profileVM.country.isEmpty)
+                        ZStack(alignment: .trailing){
+                            TextViewFields(text: Constants.TextfieldPlaceholder.country,
+                                           selectedText: profileVM.country,
+                                           horizontalSpace: .Element(),
+                                           isEmpty: profileVM.country.isEmpty)
                             .onAppear{
                                 textField = profileVM.country
                             }
                             .onChange(of: profileVM.country) { _ in
                                 textField = profileVM.country
                             }
-                        Spacer()
-                        Button {
+                                DropDownLabel()
+                                    .offset(x: -18)
+                        }
+                        .onTapGesture {
                             profileVM.vehicleOptionSelector = vehicleTextFieldType!
                             profileVM.toShowVehicleOptionsList.toggle()
-                        } label: {
-                            DropDownLabel()
                         }
+                        .padding(.top,1)
+                        
                     case .vehicleType:
-                        DropDownText(text: profileVM.vehicleType.isEmpty ? Constants.TextfieldPlaceholder.type : profileVM.vehicleType, condition: profileVM.vehicleType.isEmpty)
+                        ZStack(alignment: .trailing){
+                            TextViewFields(text: Constants.TextfieldPlaceholder.type,
+                                           selectedText: profileVM.vehicleType,
+                                           horizontalSpace: .Element(),
+                                           isEmpty: profileVM.vehicleType.isEmpty)
                             .onAppear{
                                 textField = profileVM.vehicleType
                             }
                             .onChange(of: profileVM.vehicleType) { _ in
                                 textField = profileVM.vehicleType
                             }
-                        Spacer()
-                        Button {
+                            
+                            DropDownLabel()
+                                .offset(x: -18)
+                        }
+                        .onTapGesture {
                             profileVM.vehicleOptionSelector = vehicleTextFieldType!
                             profileVM.toShowVehicleOptionsList.toggle()
-                        } label: {
-                            DropDownLabel()
                         }
+                        .padding(.top,1)
                     case .year:
-                        DropDownText(text: profileVM.vehicleYear.isEmpty ? Constants.TextfieldPlaceholder.year : profileVM.vehicleYear, condition: profileVM.vehicleYear.isEmpty)
+                        ZStack(alignment: .trailing){
+                            TextViewFields(text: Constants.TextfieldPlaceholder.year,
+                                           selectedText: profileVM.vehicleYear,
+                                           horizontalSpace: .Element(),
+                                           isEmpty: profileVM.vehicleYear.isEmpty)
                             .onAppear{
                                 textField = profileVM.vehicleYear
                             }
                             .onChange(of: profileVM.vehicleYear) { _ in
                                 textField = profileVM.vehicleYear
                             }
-                        Spacer()
-                        Button {
+                            
+                            DropDownLabel()
+                                .offset(x: -18)
+                        }
+                        .onTapGesture {
                             profileVM.vehicleOptionSelector = vehicleTextFieldType!
                             profileVM.toShowVehicleOptionsList.toggle()
-                        } label: {
-                            DropDownLabel()
                         }
+                        .padding(.top, 1)
                     case .color:
-                        DropDownText(text: profileVM.vehicleColor.isEmpty ? Constants.TextfieldPlaceholder.color : profileVM.vehicleColor, condition: profileVM.vehicleColor.isEmpty)
+                        ZStack(alignment: .trailing){
+                            TextViewFields(text: Constants.TextfieldPlaceholder.color,
+                                           selectedText: profileVM.vehicleColor,
+                                           horizontalSpace: .Element(),
+                                           isEmpty: profileVM.vehicleColor.isEmpty)
                             .onAppear{
                                 textField = profileVM.vehicleColor
                             }
                             .onChange(of: profileVM.vehicleColor) { _ in
                                 textField = profileVM.vehicleColor
                             }
-                        Spacer()
-                        Button {
+                            
+                         DropDownLabel()
+                            .offset(x: -18)
+                        }
+                        .onTapGesture {
                             profileVM.vehicleOptionSelector = vehicleTextFieldType!
                             profileVM.toShowVehicleOptionsList.toggle()
-                        } label: {
-                            DropDownLabel()
                         }
+                        .padding(.top, 1)
                     case .none:
                         EmptyView()
                     }
                 }
             }
-            .padding(.bottom, 5)
-            DividerCapsule(height: 2, color: Color(.systemGray3))
+            .padding(.bottom)
+            
         }
         .font(.title3)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -198,7 +228,8 @@ struct DropDownText: View {
 struct DropDownLabel: View {
     var body: some View {
         Image(systemName: Constants.Images.downArrow)
+            .font(.system(size: 14, design: .rounded))
             .foregroundColor(Color(.darkGray))
-            .padding(.leading)
+            
     }
 }

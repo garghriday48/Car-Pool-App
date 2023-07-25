@@ -15,45 +15,77 @@ struct InputFields: View {
     var isPassOrNot: Bool
     var keyboardType: UIKeyboardType
     var capitalizationType: TextInputAutocapitalization
+    var borderColor: Color
 
     var body: some View {
-        ZStack(alignment: .trailing) {
+        ZStack(alignment: .leading) {
+            Text(title)
+                .font(.system(size: 16, design: .rounded))
+                .foregroundColor(.black.opacity(0.5))
+                .padding(.horizontal, self.text.isEmpty ? 0 : 10)
+                .background(Color.white)
+                .offset(y: self.text.isEmpty ? 0 : -28)
+                .scaleEffect(self.text.isEmpty ? 1 : 0.9, anchor: .leading)
             if isPassOrNot {
-                Group {
-                    if isSecured {
-                        SecureField(title, text: $text)
-                            .autocorrectionDisabled()
-                            .keyboardType(keyboardType)
-                            .textInputAutocapitalization(capitalizationType)
-                    } else {
-                        TextField(title, text: $text)
-                            .autocorrectionDisabled()
-                            .keyboardType(keyboardType)
-                            .textInputAutocapitalization(capitalizationType)
+                HStack{
+                    Group {
+                        if isSecured {
+                            SecureField("", text: $text)
+                                .frame(height: 20)
+                        } else {
+                            TextField("", text: $text)
+                                .frame(height: 20)
+                        }
                     }
-                }
-                Button(action: {
-                    isSecured.toggle()
-                }) {
-                    Image(systemName: self.isSecured ? Constants.Images.eyeClose : Constants.Images.eye)
-                        //.accentColor(.gray)
-                        .padding(.trailing,-20)
-                }
-            } else {
-                TextField(title, text: $text)
+                    .font(.system(size: 16, design: .rounded))
+                    .foregroundColor(.black)
                     .autocorrectionDisabled()
                     .keyboardType(keyboardType)
                     .textInputAutocapitalization(capitalizationType)
+                    Spacer()
+                    
+                    Button(action: {
+                        isSecured.toggle()
+                    }) {
+                        Image(systemName: self.isSecured ? Constants.Images.eyeClose : Constants.Images.eye)
+                            .foregroundColor(Color(Color.redColor))
+                            .padding(.trailing,-20)
+                        
+                    }
+                }
+        
+                
+            } else {
+                ZStack(alignment: .trailing){
+                    TextField("", text: $text)
+                        
+                    if !self.text.isEmpty {
+                        Button(action:
+                        {
+                            self.text = ""
+                        })
+                        {
+                            Image(systemName: Constants.Images.crossFill)
+                                .foregroundColor(.gray.opacity(0.5))
+                        }
+                        .padding(.trailing, -20)
+                    }
+                }
+                .autocorrectionDisabled()
+                .keyboardType(keyboardType)
+                .textInputAutocapitalization(capitalizationType)
+                .font(.system(size: 16, design: .rounded))
+                .foregroundColor(.black)
+                .frame(height: 20)
             }
         }
-        //.foregroundColor(.black)
+        .animation(.easeOut, value: !text.isEmpty)
         .padding()
         .padding(.trailing,20)
         .background(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(.white)
+                .stroke(borderColor, lineWidth: 1)
             )
-        .shadow(radius: 2)
     }
 }
 

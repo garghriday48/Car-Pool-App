@@ -68,9 +68,7 @@ class MyRidesViewModel: ObservableObject {
     @Published var totalDistance = MKRoute()
     @Published var estimatedTime = TimeInterval()
     
-    @Published var toDismissItineraryDetails = false
-    @Published var toDismissEditSeatsView = false
-    @Published var toDismissEditPriceView = false
+    @Published var toDismissEditView = false
     @Published var toDismissRouteView = false
     @Published var toNotShowDetails: Int?
     
@@ -84,11 +82,11 @@ class MyRidesViewModel: ObservableObject {
     func toGetData(method: EditPublicationTypes) -> [String: Any] {
         switch method {
         case .itineraryDetails:
-            return ["publish": ["date": editedDate.formatted(date: .abbreviated, time: .omitted), "time":  editedTime.formatted(date: .omitted, time: .shortened), "source_latitude": editSourceCoordinate.latitude, "source_longitude": editSourceCoordinate.longitude, "destination_latitude": editDestCoordinate.latitude, "destination_longitude": editDestCoordinate.longitude, "source": editedSource, "destination": editedDestination, "estimate_time": DateTimeFormat.shared.toConvertDate(seconds: Int(estimatedTime))]]
+            return [Constants.DictionaryForApiCall.publish: [Constants.DictionaryForApiCall.date: editedDate.formatted(date: .abbreviated, time: .omitted), Constants.DictionaryForApiCall.time:  editedTime.formatted(date: .omitted, time: .shortened), Constants.DictionaryForApiCall.sourceLat: editSourceCoordinate.latitude, Constants.DictionaryForApiCall.sourceLong: editSourceCoordinate.longitude, Constants.DictionaryForApiCall.destLat: editDestCoordinate.latitude, Constants.DictionaryForApiCall.destLong: editDestCoordinate.longitude, Constants.DictionaryForApiCall.source: editedSource, Constants.DictionaryForApiCall.destination: editedDestination, Constants.DictionaryForApiCall.estimatedTime: DateTimeFormat.shared.toConvertDate(seconds: Int(estimatedTime))]]
         case .price:
-            return ["publish": ["set_price": updatedPrice]]
+            return [Constants.DictionaryForApiCall.publish: [Constants.DictionaryForApiCall.price: updatedPrice]]
         case .seats:
-            return ["publish": ["passengers_count": "\(updatedSeats)"]]
+            return [Constants.DictionaryForApiCall.publish: [Constants.DictionaryForApiCall.count: "\(updatedSeats)"]]
         }
     }
     
@@ -118,17 +116,20 @@ class MyRidesViewModel: ObservableObject {
     func publishRideApiCall(method: ApiMyRidesMethods, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
+        ResponseErrorViewModel.shared.isLoading = true
 
-        anyCancellable = ApiManager.shared.apiRidesMethod(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                    
                 case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     print("completed")
                 }
                 
@@ -146,17 +147,20 @@ class MyRidesViewModel: ObservableObject {
     func publishWithIdApiCall(method: ApiMyRidesMethods, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
-
-        anyCancellable = ApiManager.shared.apiRidesMethod(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                    
                 case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     self.publishWithIdSuccess = true
                 }
             } receiveValue: { [weak self] data in
@@ -174,17 +178,20 @@ class MyRidesViewModel: ObservableObject {
     func bookingRideApiCall(method: ApiMyRidesMethods, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
-
-        anyCancellable1 = ApiManager.shared.apiRidesMethod(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable1 = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                    
                 case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     print("completed")
                 }
             } receiveValue: { [weak self] data in
@@ -204,17 +211,20 @@ class MyRidesViewModel: ObservableObject {
         isRideCancelled = false
         
         let url = URL(string: toGetURL(method: method))
-
-        anyCancellable = ApiManager.shared.apiRidesMethod(httpMethod: httpMethod, method: method, dataModel: cancelRideData, url: url)
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: cancelRideData, url: url)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                    
                 case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     self.isRideCancelled = true
                     self.cancelBooking = false
                     
@@ -236,18 +246,22 @@ class MyRidesViewModel: ObservableObject {
         updateIsSuccess = false
         
         let url = URL(string: toGetURL(method: method))
-
+        ResponseErrorViewModel.shared.isLoading = true
+        
         anyCancellable2 = ApiManager.shared.apiMethodsWithDict(httpMethod: httpMethod, method: method, dataModel: data, url: url)
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
-                case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
                     
+                case .failure(let error):
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                 case .finished:
-                    self.updateIsSuccess = true
+                    ResponseErrorViewModel.shared.isLoading = false
+                    
+                    self?.updateIsSuccess = true
+                    self?.publishWithIdApiCall(method: .publishById, httpMethod: .GET)
                     
                 }
                 
@@ -263,15 +277,15 @@ class MyRidesViewModel: ObservableObject {
         
         if bookedTab{
             switch RideBookedType(rawValue: type){
-            case .CONFIRM : rideType = ("CONFIRM", Color.green)
-            case .CANCEL : rideType = ("CANCELLED", Color.red)
+            case .CONFIRM : rideType = (Constants.Description.confirmed, Color.green)
+            case .CANCEL : rideType = (Constants.Description.cancelled, Color.red)
             case .none: break
             }
         } else {
             switch RidePublishedType(rawValue: type){
-            case .confirm: rideType = ("CONFIRM", Color.green)
-            case .pending: rideType = ("PENDING", Color.yellow)
-            case .cancel: rideType = ("CANCELLED", Color.red)
+            case .confirm: rideType = (Constants.Description.completed, Color.green)
+            case .pending: rideType = (Constants.Description.pending, Color.yellow)
+            case .cancel: rideType = (Constants.Description.cancelled, Color.red)
             case .none: break
             }
         }

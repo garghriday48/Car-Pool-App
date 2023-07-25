@@ -35,13 +35,13 @@ struct DateCalenderView: View {
                             
                         } label: {
                             Text(Constants.ButtonsTitle.close)
-                                .font(.headline)
-                                .foregroundColor(Color(.systemGray))
+                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .foregroundColor(Color(Color.redColor))
                                 .padding(.horizontal)
                         }
                         Spacer()
                         Text(Constants.Headings.selectDate)
-                            .font(.title3)
+                            .font(.system(size: 18, weight: .semibold, design: .rounded))
                             .bold()
                             
                         Spacer()
@@ -50,8 +50,8 @@ struct DateCalenderView: View {
                             toShowCalenderPicker.toggle()
                         } label: {
                             Text(Constants.ButtonsTitle.done)
-                                .font(.headline)
-                                .foregroundColor(Color(.systemGray))
+                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .foregroundColor(Color(Color.redColor))
                                 .padding(.horizontal)
                         }
                     }
@@ -68,7 +68,11 @@ struct DateCalenderView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity ,alignment: .top)
         .onAppear{
-            originalDate = carPoolVM.departureDate
+            if carPoolVM.rideMethod == .offeringRide {
+                originalDate = carPoolVM.publishingDate
+            } else if carPoolVM.rideMethod == .bookingRide {
+                originalDate = carPoolVM.departureDate
+            }
         }
     }
 }
@@ -76,5 +80,6 @@ struct DateCalenderView: View {
 struct DateCalenderView_Previews: PreviewProvider {
     static var previews: some View {
         DateCalenderView(date: .constant(Date()), toShowCalenderPicker: .constant(false), typeOfPicker: .date)
+            .environmentObject(CarPoolRidesViewModel())
     }
 }

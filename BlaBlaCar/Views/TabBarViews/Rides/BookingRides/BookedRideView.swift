@@ -16,12 +16,7 @@ struct BookedRideView: View {
     var body: some View {
         VStack{
             
-            BackButton(image: Constants.Images.backArrow) {
-                presentationMode.wrappedValue.dismiss()
-            }
-            .font(.title)
-            .bold()
-            .padding()
+            VStack{}
             .frame(maxWidth: .infinity, maxHeight: 80, alignment: .leading)
             
             VStack {
@@ -30,7 +25,7 @@ struct BookedRideView: View {
                    .foregroundColor(Color(Color.redColor))
                
                 Text(Constants.Headings.rideBooked)
-                   .font(.headline)
+                    .font(.system(size: 18, weight: .semibold ,design: .rounded))
                    .padding(.top, 10)
            }
             Button {

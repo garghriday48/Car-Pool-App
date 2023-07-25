@@ -15,39 +15,48 @@ struct PassengersCard: View {
     
     var body: some View {
         HStack {
-            if let image = array.image {
-                AsyncImage(url: URL(string: image)) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    if array.image == nil {
-                        Image(Constants.Images.person)
+            Group{
+                if let image = array.image {
+                    AsyncImage(url: URL(string: image)) { image in
+                        image
                             .resizable()
                             .scaledToFill()
-                    } else {
-                        ZStack {
-                            Color.gray.opacity(0.1)
-                            ProgressView()
+                    } placeholder: {
+                        if array.image == ""{
+                            Image(Constants.Images.person)
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            ZStack {
+                                Color.gray.opacity(0.1)
+                                ProgressView()
+                            }
                         }
                     }
+                    
+                } else {
+                    Image(Constants.Images.person)
+                        .resizable()
+                        .scaledToFill()
                 }
-                .frame(width: 60, height: 60)
-                .clipShape(Circle())
-                .overlay {
-                    Circle().stroke(lineWidth: 1)
-                }
-                VStack(alignment: .leading, spacing: 4){
-                    Text(array.firstName + " " + array.lastName)
-                        .foregroundColor(.black)
-                        .font(.title3)
-                    Text("\(Age.shared.calcAge(birthday: array.dob)) y/o")
-                    .font(.subheadline)
-                    .foregroundColor(Color(.darkGray))
-                }
-                Spacer()
-                Image(systemName: Constants.Images.rightArrow)
             }
+            .frame(width: 60, height: 60)
+            .clipShape(Circle())
+            .overlay {
+                Circle().stroke(lineWidth: 1)
+            }
+            
+            VStack(alignment: .leading, spacing: 4){
+                Text(array.firstName + " " + array.lastName)
+                    .foregroundColor(.black)
+                    .font(.title3)
+                Text("\(Age.shared.calcAge(birthday: array.dob)) y/o")
+                .font(.subheadline)
+                .foregroundColor(Color(.darkGray))
+            }
+            Spacer()
+            Image(systemName: Constants.Images.rightArrow)
+
        }
        .padding(.vertical)
        .frame(maxWidth: .infinity, alignment: .leading)

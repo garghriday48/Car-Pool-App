@@ -19,16 +19,15 @@ struct VehicleListView: View {
                 BackButton(image: Constants.Images.backArrow) {
                     self.dismiss()
                 }
-                .font(.title)
-                .bold()
+                .font(.title2)
                 
                 Text(Constants.Headings.vehicles)
-                    .font(.title3)
+                    .font(.system(size: 18, design: .rounded))
                     .padding(.horizontal)
                     .frame(maxWidth: .infinity ,alignment: .topLeading)
             }
             .padding()
-            DividerCapsule(height: 4, color: Color(.systemGray3))
+            DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 .padding(.bottom)
             ScrollView{
                 ForEach(profileVM.vehicleResponseList.data){data in
@@ -36,32 +35,34 @@ struct VehicleListView: View {
                         profileVM.isVehicleViewSelected.toggle()
                         profileVM.toSetVehicleOptions(data: data)
                         profileVM.vehicleId = String(data.id)
-                        
+                        profileVM.isAddingNewVehicle = false
+                        profileVM.toDismiss = false
                     } label: {
-                        SelectVehicleCellView(mainText: data.vehicleName, secondaryText: data.vehicleColor)
-                            .foregroundColor(.primary)
+                        SelectVehicleCellView(data: data)
                     }
                 }
 
                 Button(action: {
                     profileVM.isVehicleViewSelected.toggle()
                     profileVM.resetVehicleOptions()
-                    profileVM.isAddingNewVehicle.toggle()
+                    profileVM.isAddingNewVehicle = true
+                    profileVM.toDismiss = false
                 }, label: {
                     ProfilePlusButton(image: Constants.Images.plusCircle, name: Constants.ButtonsTitle.addVehicle)
                         .foregroundColor(Color(Color.redColor))
                         .padding()
                 })
             }
-            .fullScreenCover(isPresented: $profileVM.isVehicleViewSelected) {
+            .refreshable {
+                profileVM.vehicleListApiCall(method: .vehicleList, data: profileVM.makeDict(method: .vehicleList), httpMethod: .GET)
+            }
+            .navigationDestination(isPresented: $profileVM.isVehicleViewSelected, destination: {
                 VehicleEditView(vm: vm, profileVM: profileVM)
-            }
+            })
         }
-        .onChange(of: profileVM.toDismissVehicleList, perform: { _ in
-            if profileVM.toDismissVehicleList {
-                self.dismiss()
-            }
-        })
+        .onAppear{
+            profileVM.vehicleListApiCall(method: .vehicleList, data: profileVM.makeDict(method: .vehicleList), httpMethod: .GET)
+        }
         .scrollDismissesKeyboard(.immediately)
         .navigationBarBackButtonHidden(true)
     }

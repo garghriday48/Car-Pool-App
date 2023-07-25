@@ -18,10 +18,10 @@ struct LocationCell: View {
                 .foregroundColor(.gray)
             VStack(alignment: .leading, spacing: 6){
                 Text(name)
-                    .font(.title3.bold())
+                    .font(.system(size: 20, weight: .bold ,design: .rounded))
                 
                 Text(secondayName)
-                    .font(.caption)
+                    .font(.system(size: 14, weight: .semibold ,design: .rounded))
                     .foregroundColor(.gray)
             }
         }

@@ -37,11 +37,11 @@ struct SeatsEditView: View {
                 } label: {
                     Image(systemName: Constants.Images.minusCircle)
                         .resizable()
-                        .foregroundColor(value <= 0 ? Color(Color.redColor).opacity(0.2) : Color(Color.redColor))
+                        .foregroundColor(value <= 1 ? Color(Color.redColor).opacity(0.2) : Color(Color.redColor))
                         .frame(width: 40, height: 40)
                     
                 }
-                .disabled(value <= 0)
+                .disabled(value <= 1)
                 Spacer()
                 VStack{
                     Text("\(value)")
@@ -78,6 +78,6 @@ struct SeatsEditView: View {
 
 struct SeatsEditView_Previews: PreviewProvider {
     static var previews: some View {
-        SeatsEditView(value: .constant(0))
+        SeatsEditView(value: .constant(1))
     }
 }

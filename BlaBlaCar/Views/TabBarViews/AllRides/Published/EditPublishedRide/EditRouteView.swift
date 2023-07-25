@@ -46,7 +46,7 @@ struct EditRouteView: View {
                     Spacer()
                     
                     /// text to show distance from source to destination in km.
-                    Text(String(format: Constants.StringFormat.twoDigit, (myRidesVM.totalDistance.distance)/1000) + " Km")
+                    Text(String(format: Constants.StringFormat.twoDigit, (myRidesVM.totalDistance.distance)/1000) + Constants.Description.kilometer)
                     
                 }
                 .font(.title3)
@@ -60,9 +60,9 @@ struct EditRouteView: View {
                     
                     /// to show estimated time to reach destination and conditions to check whether to show time in mins or hrs.
                     if myRidesVM.estimatedTime < 3600 {
-                        Text(String(format: Constants.StringFormat.zeroDigit, myRidesVM.estimatedTime/60) + " min")
+                        Text(String(format: Constants.StringFormat.zeroDigit, myRidesVM.estimatedTime/60) + Constants.Description.minute)
                     } else if myRidesVM.estimatedTime >= 3600 {
-                        Text(String(format: Constants.StringFormat.twoDigit, myRidesVM.estimatedTime/3600) + " hr")
+                        Text(String(format: Constants.StringFormat.twoDigit, myRidesVM.estimatedTime/3600) + Constants.Description.hour)
                     }
                     
                 }
@@ -72,6 +72,7 @@ struct EditRouteView: View {
                 
                 Button {
                     myRidesVM.updateRideApiCall(dismissMethod: .itineraryDetails, method: .updatePublishedRide, httpMethod: .PUT, data: myRidesVM.toGetData(method: .itineraryDetails))
+                   
                 } label: {
                     ButtonView(buttonName: Constants.ButtonsTitle.proceed, border: true)
                 }
@@ -80,28 +81,6 @@ struct EditRouteView: View {
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
-        .alert("Your ride has been successfully updated", isPresented: $myRidesVM.updateIsSuccess, actions: {
-            Button(Constants.ButtonsTitle.okay, role: .cancel) {
-                switch myRidesVM.editPublicationTypes {
-                case .itineraryDetails:
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        myRidesVM.toDismissRouteView = false
-                    }
-                    myRidesVM.toDismissItineraryDetails = false
-                    //isBool = false
-                    //myRidesVM.toNotShowDetails = nil
-                default: break
-                }
-            }
-        })
-        
-        .onChange(of: myRidesVM.toDismissRouteView) { _ in
-            if !myRidesVM.toDismissRouteView {
-                //DispatchQueue.main.asyncAfter(deadline: .now() + 1){
-                    self.dismiss()
-                //}
-            }
-        }
         /// to assign the estimate time value to another variable which is used when publishing ride so that user that is booking ride can seen the time that will be taken to rezach destination.
         .onDisappear{
             mapVM.mapView.removeAnnotations(mapVM.mapView.annotations)

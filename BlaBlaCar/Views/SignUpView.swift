@@ -13,6 +13,7 @@ struct SignUpView: View {
     
     @EnvironmentObject var vm: SignInSignUpViewModel
     @EnvironmentObject var navigationVM: NavigationViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     @Environment (\.presentationMode) var presentationMode
     
@@ -22,7 +23,7 @@ struct SignUpView: View {
             VStack {
                 
                 Text("Step \(Int(vm.signUpViews.rawValue/25)) of 4")
-                    .font(.headline)
+                    .font(.system(size: 14)).bold()
                     .foregroundColor(Color(Color.redColor))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading)
@@ -55,31 +56,35 @@ struct SignUpView: View {
             
         }
         .navigationBarBackButtonHidden(true)
-        .navigationTitle(Constants.Headings.signUpPagesHeading)
+        .navigationTitle(Constants.Headings.signUpPagesHeading).fontDesign(.rounded)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(leading: BackButton(image: Constants.Images.backArrow) {
-            vm.isGoingBackToMainPage = true
+            if vm.signUpViews == .emailPasswordView && vm.userAuthData.user.email.isEmpty && vm.userAuthData.user.email.isEmpty {
+                navigationVM.paths = []
+            } else {
+                vm.isGoingBackToMainPage = true
+            }
         })
         .confirmationDialog(Constants.Headings.backAlertHeading, isPresented: $vm.isGoingBackToMainPage, actions: {
             Button(Constants.ButtonsTitle.yes, role: .destructive) {
-                navigationVM.pop(to: .MainSigninSignupView)
+                navigationVM.paths = []
             }
         }, message: {
             Text(Constants.Headings.backAlertHeading)
         })
         
-        .alert(Constants.ErrorBox.error, isPresented: $vm.hasResponseError, actions: {
+        .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasResponseError, actions: {
             Button(Constants.ErrorBox.okay, role: .cancel) {
             }
         }, message: {
-            Text(vm.errorMessage1)
+            Text(errorVM.errorMessage1)
         })
 
-        .alert(Constants.ErrorBox.error, isPresented: $vm.hasError, actions: {
+        .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasError, actions: {
             Button(Constants.ErrorBox.okay, role: .cancel) {
             }
         }, message: {
-            Text(vm.errorMessage?.errorDescription ?? "")
+            Text(errorVM.errorMessage?.errorDescription ?? "")
         })
     }
 }
@@ -89,5 +94,6 @@ struct SignUpView_Previews: PreviewProvider {
         SignUpView()
             .environmentObject(SignInSignUpViewModel())
             .environmentObject(NavigationViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }

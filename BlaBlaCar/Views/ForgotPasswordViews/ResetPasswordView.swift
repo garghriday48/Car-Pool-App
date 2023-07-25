@@ -10,13 +10,14 @@ import SwiftUI
 struct ResetPasswordView: View {
     @EnvironmentObject var vm: SignInSignUpViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     @Environment (\.dismiss) var dismiss
     
     var body: some View {
         VStack(alignment: .leading){
             Text(Constants.Headings.resetPassword)
-                .font(.largeTitle)
+                .font(.system(size: 24, design: .rounded))
                 .bold()
                 .padding(.bottom, 40)
             
@@ -26,7 +27,8 @@ struct ResetPasswordView: View {
                             title       :Constants.TextfieldPlaceholder.password,
                             isPassOrNot : true,
                             keyboardType: .default,
-                            capitalizationType: .never)
+                            capitalizationType: .never,
+                            borderColor: vm.changePassword.password.isEmpty ? .gray.opacity(0.6) : .black)
                 .padding(.bottom, (vm.passValid.isEmpty) ? 20 : 0)
                 
                 HStack{
@@ -34,8 +36,8 @@ struct ResetPasswordView: View {
                         Image(systemName: Constants.Images.infoImage)
                     }
                     Text(vm.passValid)
-                        .font(.system(size: 15))
                 }
+                .font(.system(size: 14))
                 .padding(.leading)
                 .foregroundColor(.red)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -44,23 +46,24 @@ struct ResetPasswordView: View {
                             title       :Constants.TextfieldPlaceholder.confirmPassword,
                             isPassOrNot : true,
                             keyboardType: .default,
-                            capitalizationType: .never)
+                            capitalizationType: .never,
+                            borderColor: vm.changePassword.password_confirmation.isEmpty ? .gray.opacity(0.6) : .black)
                 .padding(.bottom, (vm.confirmPass.isEmpty) ? 20 : 0)
                 HStack{
                     if !vm.confirmPass.isEmpty{
                         Image(systemName: Constants.Images.infoImage)
                     }
                     Text(vm.confirmPass)
-                        .font(.system(size: 15))
                 }
+                .font(.system(size: 14))
                 .padding(.leading)
                 .foregroundColor(.red)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
                 
                 Spacer()
-                if vm.isLoading {
-                    LoadingView(isLoading: $vm.loaderLoading)
+                if errorVM.isLoading {
+                    LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
                         .frame(maxWidth: .infinity, alignment: .center)
                 } else {
                     Button {
@@ -80,6 +83,7 @@ struct ResetPasswordView: View {
         .padding()
 
         .onAppear{
+            profileVM.otpFields = Array(repeating: "", count: 4)
             vm.passValid = ""
             vm.changePassword.password = ""
             vm.changePassword.password_confirmation = ""
@@ -99,6 +103,7 @@ struct ResetPasswordView_Previews: PreviewProvider {
         ResetPasswordView()
             .environmentObject(SignInSignUpViewModel())
             .environmentObject(ProfileViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }
 

@@ -17,8 +17,9 @@ struct ProfilePlusButton: View {
             Image(systemName: image)
             Text(name)
         }
-        .font(.title3)
+        .font(.system(size: 16, design: .rounded))
         .frame(maxWidth: .infinity, alignment: .leading)
+        .foregroundColor(Color(Color.redColor))
     }
 }
 

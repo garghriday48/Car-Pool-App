@@ -57,60 +57,33 @@ struct EditLocationSearch: View {
                         
                         /// to show all the places based on the searching done by user.
                         ForEach(places, id: \.self){place in
-                            
-                            /// whenever any searched location is tapped a map is shown that shows the searched location on map with also having a pin.
-                            Button {
-                                if let coordinate = place.location?.coordinate {
+                            if let name = Placemark(item: place){
+                                /// whenever any searched location is tapped a map is shown that shows the searched location on map with also having a pin.
+                                Button {
                                     
-                                    mapVM.pickedLocation = .init(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                                    if myRidesVM.isSource {
-                                        myRidesVM.editSourceCoordinate = coordinate
-                                        myRidesVM.editedSource = (place.name ?? "") + ", " + (place.locality ?? "")
+                                    if let coordinate = place.location?.coordinate {
+                                        
+                                        mapVM.pickedLocation = .init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                                        if myRidesVM.isSource {
+                                            myRidesVM.editSourceCoordinate = coordinate
+                                            myRidesVM.editedSource = (name.subLocation) + ", " + (name.subLocation)
+                                        }
+                                        if myRidesVM.isDestination {
+                                            myRidesVM.editDestCoordinate = coordinate
+                                            myRidesVM.editedDestination = (name.subLocation) + ", " + (name.subLocation)
+                                        }
                                     }
-                                    if myRidesVM.isDestination {
-                                        myRidesVM.editDestCoordinate = coordinate
-                                        myRidesVM.editedDestination = (place.name ?? "") + ", " + (place.locality ?? "")
-                                    }
+                                    myRidesVM.toDismissSearch.toggle()
+                                } label: {
+                                    LocationCell(name: name.subLocation , secondayName: name.subLocation )
                                 }
-                                myRidesVM.toDismissSearch.toggle()
-                            } label: {
-                                LocationCell(name: place.name ?? "", secondayName: place.locality ?? "")
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                     .listStyle(.plain)
                     
                 }
-                   // else {
-//
-//                    // MARK: live location button
-//                    Button {
-//                        /// MapView(mapVM: mapVM)
-//                        if let coordinate = mapVM.userLocation?.coordinate {
-//                            if myRidesVM.isSource {
-//                                myRidesVM.editSourceCoordinate = coordinate
-//                                myRidesVM.editedSource = (mapVM.pickedPlacemark?.subLocality ?? "") + ", " + (mapVM.pickedPlacemark?.locality ?? "")
-//                            }
-//                            if myRidesVM.isDestination {
-//                                myRidesVM.editDestCoordinate = coordinate
-//                                myRidesVM.editedDestination = (mapVM.pickedPlacemark?.subLocality ?? "") + ", " + (mapVM.pickedPlacemark?.locality ?? "")
-//                            }
-//                        }
-//                        myRidesVM.toDismissSearch.toggle()
-//
-//                    } label: {
-//                        Label {
-//                            Text(Constants.ButtonsTitle.currentLocation)
-//                        } icon: {
-//                            Image(systemName: Constants.Images.locationPointer)
-//                        }
-//                        .foregroundColor(Color(Color.redColor))
-//
-//                    }
-//                    .frame(maxWidth: .infinity ,alignment: .leading)
-//                }
-//
             }
             /// alert is used to show if permission to show map is not given.
             .alert(isPresented: $mapVM.permissionDenied) {

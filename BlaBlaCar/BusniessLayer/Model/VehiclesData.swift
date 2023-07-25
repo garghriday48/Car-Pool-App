@@ -250,7 +250,7 @@ struct VehiclesData {
         var years: [String] = []
         
         // set start year to 1940 (keep it as a constant)
-        let start = 1940
+        let start = 1975
         // set current year
         let current = Calendar.current.component(.year, from: Date())
         

@@ -11,6 +11,7 @@ struct LoginView: View {
     
     @EnvironmentObject var vm: SignInSignUpViewModel
     @EnvironmentObject var navigationVM: NavigationViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -20,18 +21,18 @@ struct LoginView: View {
 
 
         }
-        .alert(Constants.ErrorBox.error, isPresented: $vm.hasResponseError, actions: {
+        .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasResponseError, actions: {
             Button(Constants.ErrorBox.okay, role: .cancel) {
             }
         }, message: {
-            Text(vm.errorMessage1)
+            Text(errorVM.errorMessage1)
         })
 
-        .alert(Constants.ErrorBox.error, isPresented: $vm.hasError, actions: {
+        .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasError, actions: {
             Button(Constants.ErrorBox.okay, role: .cancel) {
             }
         }, message: {
-            Text(vm.errorMessage?.errorDescription ?? "")
+            Text(errorVM.errorMessage?.errorDescription ?? "")
         })
 
         .onAppear{
@@ -48,5 +49,8 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
+            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(NavigationViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }

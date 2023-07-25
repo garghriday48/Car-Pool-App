@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SeatSelectorView: View {
+    
     @Binding var toShowSeatSelector: Bool
     @Binding var value: Int
     
@@ -24,17 +25,18 @@ struct SeatSelectorView: View {
                     ZStack{
                         Button {
                             toShowSeatSelector.toggle()
-                            value = carPoolVM.rideSearchData.passCount
+                            if carPoolVM.rideMethod == .bookingRide {
+                                value = carPoolVM.rideSearchData.passCount
+                            }
                         } label: {
                             Text(Constants.ButtonsTitle.close)
-                                .font(.headline)
-                                .foregroundColor(Color(.systemGray))
+                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .foregroundColor(Color(Color.redColor))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
                         }
                         Text(Constants.Headings.selectSeats)
-                            .font(.title3)
-                            .bold()
+                            .font(.system(size: 18, weight: .semibold, design: .rounded))
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
@@ -45,11 +47,11 @@ struct SeatSelectorView: View {
                     } label: {
                         Image(systemName: Constants.Images.minusCircle)
                             .resizable()
-                            .foregroundColor(value <= 0 ? Color(Color.redColor).opacity(0.2) : Color(Color.redColor))
+                            .foregroundColor(value <= 1 ? Color(Color.redColor).opacity(0.2) : Color(Color.redColor))
                             .frame(width: 40, height: 40)
                         
                     }
-                    .disabled(value <= 0)
+                    .disabled(value <= 1)
                     Spacer()
                     VStack{
                         Text("\(value)")
@@ -73,11 +75,16 @@ struct SeatSelectorView: View {
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Button {
-                    carPoolVM.rideSearchData.passCount = carPoolVM.numOfSeats
+                    if carPoolVM.rideMethod == .bookingRide{
+                        carPoolVM.rideSearchData.passCount = carPoolVM.numOfSeats
+                    } else if carPoolVM.rideMethod == .offeringRide {
+                        carPoolVM.offerRideSelectorArray[1].text = String(carPoolVM.numOfSeatsPublish)
+                    }
                     presentationMode.wrappedValue.dismiss()
                 } label: {
                     ButtonView(buttonName: Constants.ButtonsTitle.confirmSeats , border: true)
                 }
+                .disabled(value < 1 || value >= 8)
                 .padding()
 
             }

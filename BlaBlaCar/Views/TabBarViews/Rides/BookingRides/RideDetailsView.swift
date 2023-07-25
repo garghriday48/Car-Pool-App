@@ -21,11 +21,10 @@ struct RideDetailsView: View {
                 BackButton(image: Constants.Images.backArrow) {
                     presentationMode.wrappedValue.dismiss()
                 }
-                .font(.title)
-                .bold()
+                .font(.system(size: 20, weight: .semibold ,design: .rounded))
                 Text(Constants.Headings.rideDetails)
                     .foregroundColor(.black)
-                    .font(.title2)
+                    .font(.system(size: 22, weight: .semibold ,design: .rounded))
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: 80 ,alignment: .leading)

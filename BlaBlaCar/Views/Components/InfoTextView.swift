@@ -12,7 +12,8 @@ struct InfoTextView: View {
     var text: String
     var body: some View {
         Text(text)
-            .font(.system(size: 18))
+            .foregroundColor(.black.opacity(0.5))
+            .font(.system(size: 14, design: .rounded))
             .padding(.top, 20)
     }
 }

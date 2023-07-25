@@ -19,6 +19,8 @@ enum AuthenticateError: LocalizedError{
     case userExists
     case noUserExists
     case alreadyBooked
+    case networkError
+    case incorrectHostname
     
     // MARK: custom error description for errors
     var errorDescription: String?{
@@ -43,6 +45,10 @@ enum AuthenticateError: LocalizedError{
             return "No Such User Exists,\n Sign Up to continue"
         case .alreadyBooked:
             return "You have already booked this ride"
+        case .networkError:
+            return "Connection error.\nCheck your internet and try again."
+        case .incorrectHostname:
+            return "Invalid request\nPlease try again later."
         }
     }
 }

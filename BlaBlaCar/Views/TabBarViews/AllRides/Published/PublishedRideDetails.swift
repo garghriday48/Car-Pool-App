@@ -48,7 +48,7 @@ struct PublishedRideDetails: View {
                         HStack{
                             Image(systemName: Constants.Images.clock)
                             if let estimatedTime = myRidesVM.publishResponseWithId.data.estimateTime {
-                                Text(DateTimeFormat.shared.timeFormat(date: estimatedTime, is24hrs: true) + " hrs")
+                                Text(DateTimeFormat.shared.timeFormat(date: estimatedTime, is24hrs: true, toNotReduce: false) + " hrs")
                             }
                         }
                         .foregroundColor(Color(.darkGray))
@@ -62,10 +62,10 @@ struct PublishedRideDetails: View {
                     ZStack(alignment: .topLeading){
                         VStack(alignment: .leading, spacing: 30) {
                             
-                            LocationInfo(location: myRidesVM.publishResponseWithId.data.source, exactLocation: myRidesVM.publishResponseWithId.data.source, time: DateTimeFormat.shared.timeFormat(date:  myRidesVM.publishResponseWithId.data.time ?? "", is24hrs: false), walkDist: "0.0")
+                            LocationInfo(location: myRidesVM.publishResponseWithId.data.source, exactLocation: myRidesVM.publishResponseWithId.data.source, time: DateTimeFormat.shared.timeFormat(date:  myRidesVM.publishResponseWithId.data.time ?? "", is24hrs: false, toNotReduce: false), walkDist: "0.0")
                                 .padding(.bottom, 100)
                             
-                            LocationInfo(location: myRidesVM.publishResponseWithId.data.destination, exactLocation: myRidesVM.publishResponseWithId.data.destination, time: DateTimeFormat.shared.timeFormat(date:  myRidesVM.publishResponseWithId.reachTime ?? "", is24hrs: false), walkDist: "0.0")
+                            LocationInfo(location: myRidesVM.publishResponseWithId.data.destination, exactLocation: myRidesVM.publishResponseWithId.data.destination, time: DateTimeFormat.shared.timeFormat(date:  myRidesVM.publishResponseWithId.reachTime ?? "", is24hrs: false, toNotReduce: false), walkDist: "0.0")
                         }
                         .padding(.horizontal, 25)
                         PointToPointView(color: Color(.darkGray), height: 103)
@@ -84,7 +84,7 @@ struct PublishedRideDetails: View {
                                     .font(.title3)
                                     .foregroundColor(Color(.darkGray))
                                 Spacer()
-                                Text(String(format: Constants.StringFormat.oneDigit, myRidesVM.publishResponseWithId.data.setPrice))
+                                Text("Rs \(String(format: Constants.StringFormat.zeroDigit, myRidesVM.publishResponseWithId.data.setPrice))")
                                     .font(.title2)
                                     .foregroundColor(.black)
                             }
@@ -135,10 +135,11 @@ struct PublishedRideDetails: View {
                     
                     VStack(alignment: .leading){
                         
-                        if myRidesVM.publishResponseWithId.data.status != RidePublishedType.cancel.rawValue {
+                        if myRidesVM.publishResponseWithId.data.status == RidePublishedType.pending.rawValue {
                             
-                            NavigationLink {
-                                EditPublishedRideView()
+                            Button {
+                                myRidesVM.toDismissEditView.toggle()
+                                
                             } label: {
                                 Text(Constants.Headings.editYourPublication).bold().padding(.top)
                                     .font(.title3)
@@ -159,13 +160,17 @@ struct PublishedRideDetails: View {
                 .cornerRadius(10)
             }
         }
+        .fullScreenCover(isPresented: $myRidesVM.toDismissEditView, content: {
+            EditPublishedRideView()
+        })
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
 
         .onAppear{
+            
             profileVM.vehicleId = String(myRidesVM.publishResponseWithId.data.vehicleID ?? 0)
             profileVM.getVehicleApiCall(method: .getVehicle, data: [:], httpMethod: .GET)
-            myRidesVM.time = DateTimeFormat.shared.timeFormat(date:  myRidesVM.publishResponseWithId.data.time ?? "", is24hrs: false)
+            myRidesVM.time = DateTimeFormat.shared.timeFormat(date:  myRidesVM.publishResponseWithId.data.time ?? "", is24hrs: false, toNotReduce: false)
         }
         .onChange(of: myRidesVM.isRideCancelled) { _ in
             if myRidesVM.isRideCancelled {
@@ -175,6 +180,7 @@ struct PublishedRideDetails: View {
         .onDisappear{
             myRidesVM.publishWithIdSuccess = false
         }
+        
     }
 }
 

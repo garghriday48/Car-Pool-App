@@ -10,18 +10,20 @@ import SwiftUI
 struct EmailView: View {
     
     @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     var body: some View {
         VStack(alignment: .leading){
             Text(Constants.Headings.enterEmail)
-                .font(.largeTitle)
+                .font(.system(size: 24,design: .rounded))
                 .bold()
                 .padding(.bottom, 40)
             InputFields(text        : $vm.forgotPassEmail,
                         title       : Constants.TextfieldPlaceholder.email,
                         isPassOrNot: false,
                         keyboardType: .emailAddress,
-                        capitalizationType: .never)
+                        capitalizationType: .never,
+                        borderColor: vm.forgotPassEmail.isEmpty ? .gray.opacity(0.5) : .black)
             
             .padding(.bottom, (vm.emailValid.isEmpty) ? 20 : 0)
 
@@ -30,10 +32,10 @@ struct EmailView: View {
                     Image(systemName: Constants.Images.infoImage)
                 }
                 Text(vm.emailValid)
-                    .font(.system(size: 15))
+                    
             }
+            .font(.system(size: 14))
             .animation(.easeOut, value: vm.forgotPasswordView.rawValue)
-            .padding(.leading)
             .foregroundColor(.red)
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -41,8 +43,8 @@ struct EmailView: View {
            
 
             Spacer()
-            if vm.isLoading {
-                LoadingView(isLoading: $vm.loaderLoading)
+            if errorVM.isLoading {
+                LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 Button {
@@ -61,7 +63,6 @@ struct EmailView: View {
         .padding()
         .onAppear{
             vm.emailValid = ""
-            vm.forgotPassEmail = ""
         }
         .onChange(of: vm.forgotPassEmail) { _ in
             if !vm.forgotPassEmail.isValidEmail() {
@@ -77,5 +78,6 @@ struct EmailView_Previews: PreviewProvider {
     static var previews: some View {
         EmailView()
             .environmentObject(SignInSignUpViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }

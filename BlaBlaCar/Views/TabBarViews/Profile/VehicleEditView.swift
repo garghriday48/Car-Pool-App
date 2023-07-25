@@ -19,16 +19,15 @@ struct VehicleEditView: View {
                 BackButton(image: Constants.Images.cross) {
                     profileVM.isGoingBack = true
                 }
-                .font(.title)
-                .bold()
+                .font(.title2)
                 
                 Text(profileVM.isAddingNewVehicle ? Constants.Headings.vehicleInfo : Constants.Headings.editVehicle)
-                    .font(.title3)
+                    .font(.system(size: 18, design: .rounded))
                     .padding(.horizontal)
                     .frame(maxWidth: .infinity ,alignment: .topLeading)
             }
             .padding()
-            DividerCapsule(height: 4, color: Color(.systemGray3))
+            DividerCapsule(height: 1, color: .gray.opacity(0.5))
             
             ScrollView{
                 VStack{
@@ -41,28 +40,29 @@ struct VehicleEditView: View {
                 Button {
                     if profileVM.isAddingNewVehicle {
                         profileVM.vehicleApiCall(method: .addVehicle, data: profileVM.makeDict(method: .addVehicle), httpMethod: .POST)
-                        profileVM.vehicleListApiCall(method: .vehicleList, data: profileVM.makeDict(method: .vehicleList), httpMethod: .GET)
-                    } else {
-                        profileVM.vehicleApiCall(method: .updateVehicle, data: profileVM.makeDict(method: .updateVehicle), httpMethod: .PUT)
                         
+                    } else if !profileVM.isAddingNewVehicle {
+                        profileVM.vehicleApiCall(method: .updateVehicle, data: profileVM.makeDict(method: .updateVehicle), httpMethod: .PUT)
                     }
-                    profileVM.toDismissVehicleList = true
+                    
                 } label: {
                     ButtonView(buttonName: Constants.ButtonsTitle.done, border: false)
                         .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
                                 .fill(Color(Color.redColor))
                             )
-                        .padding()
+                        .padding(.horizontal)
+                        .padding(.trailing, 8)
                 }
+                
                 if !profileVM.isAddingNewVehicle {
                     Button {
                         profileVM.toDeleteVehicle.toggle()
                     } label: {
                         ButtonView(buttonName: Constants.ButtonsTitle.delete, border: true)
                             .padding(.horizontal)
+                            .padding(.trailing, 8)
                     }
-
                 }
             }
             .sheet(isPresented: $profileVM.toShowVehicleOptionsList) {
@@ -83,7 +83,6 @@ struct VehicleEditView: View {
         .confirmationDialog(Constants.Headings.backAlertHeading, isPresented: $profileVM.isGoingBack, actions: {
             Button(Constants.ButtonsTitle.yes, role: .destructive) {
                 self.dismiss()
-  
             }
         }, message: {
             Text(Constants.Headings.backAlertHeading)
@@ -92,13 +91,10 @@ struct VehicleEditView: View {
             Button(Constants.ButtonsTitle.yes, role: .destructive) {
                 profileVM.vehicleApiCall(method: .deleteVehicle, data: profileVM.makeDict(method: .deleteVehicle), httpMethod: .DELETE)
                 self.dismiss()
-                profileVM.toDismissVehicleList = true
             }
-            
         }, message: {
             Text(Constants.Headings.deleteVehicleHeading)
         })
-
     }
 }
 

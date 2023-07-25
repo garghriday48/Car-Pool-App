@@ -11,6 +11,8 @@ struct PriceEditView: View {
     
     @EnvironmentObject var myRidesVM: MyRidesViewModel
     
+    @State var isDisabled = false
+    
     @Environment (\.presentationMode) var presentationMode
     
     var body: some View {
@@ -51,12 +53,25 @@ struct PriceEditView: View {
                 ButtonView(buttonName: Constants.ButtonsTitle.done, border: true)
                     .padding(.horizontal)
             }
-
+            .disabled(isDisabled)
         }
         .navigationBarBackButtonHidden()
         .frame(maxWidth: .infinity, maxHeight: .infinity ,alignment: .top)
         .onAppear{
-            myRidesVM.updatedPrice = String(myRidesVM.publishResponseWithId.data.setPrice)
+            myRidesVM.updatedPrice = String(format: Constants.StringFormat.zeroDigit, myRidesVM.publishResponseWithId.data.setPrice)
+        }
+        .onChange(of: myRidesVM.updatedPrice) { newValue in
+            if newValue.count > 8 {
+                myRidesVM.updatedPrice = String(newValue.prefix(8))
+                
+            }
+            if !newValue.onlyNum(){
+                myRidesVM.updatedPrice = ""
+                isDisabled = true
+            } else {
+                isDisabled = false
+            }
+            
         }
     }
 }

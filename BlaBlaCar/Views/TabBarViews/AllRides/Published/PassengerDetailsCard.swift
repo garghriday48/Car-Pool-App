@@ -36,29 +36,34 @@ struct PassengerDetailsCard: View {
                     }
                     
                     Spacer()
-                    
-                    if let image = array.image {
-                        AsyncImage(url: URL(string: image)) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            if array.image == nil {
-                                Image(Constants.Images.person)
+                    Group{
+                        if let image = array.image {
+                            AsyncImage(url: URL(string: image)) { image in
+                                image
                                     .resizable()
                                     .scaledToFill()
-                            } else {
-                                ZStack {
-                                    Color.gray.opacity(0.1)
-                                    ProgressView()
+                            } placeholder: {
+                                if array.image == nil {
+                                    Image(Constants.Images.person)
+                                        .resizable()
+                                        .scaledToFill()
+                                } else {
+                                    ZStack {
+                                        Color.gray.opacity(0.1)
+                                        ProgressView()
+                                    }
                                 }
                             }
+                        } else {
+                            Image(Constants.Images.person)
+                                .resizable()
+                                .scaledToFill()
                         }
-                        .frame(width: 100, height: 100)
-                        .clipShape(Circle())
-                        .overlay {
-                            Circle().stroke(lineWidth: 1)
-                        }
+                    }
+                    .frame(width: 100, height: 100)
+                    .clipShape(Circle())
+                    .overlay {
+                        Circle().stroke(lineWidth: 1)
                     }
                 }
                 .padding(.bottom, 40)
@@ -75,7 +80,7 @@ struct PassengerDetailsCard: View {
             
             VStack(spacing: 10) {
                 Group{
-                    Text("About").bold()
+                    Text(Constants.Headings.about).bold()
                         .font(.title2)
                         .padding(.bottom)
                     HStack {

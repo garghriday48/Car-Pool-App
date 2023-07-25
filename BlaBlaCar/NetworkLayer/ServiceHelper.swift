@@ -49,15 +49,11 @@ class ServiceHelper {
                             body.append(dataBodyStrings.lineBreak)
                         }
                     }
-
                 }
             }
         }
 
         body.append(dataBodyStrings.boudaryWithLineBreakFourHyphens)
-
-        print(body)
-
         return body
     }
     
@@ -172,4 +168,13 @@ class ServiceHelper {
         print(response)
         return (data, response)
     }
+    
+    func checkNetworkError(error: Error) -> AuthenticateError{
+        if error.localizedDescription == Constants.APIConstants.sslError {
+            return AuthenticateError.networkError
+        } else if error.localizedDescription == Constants.APIConstants.wrongUrl {
+            return AuthenticateError.incorrectHostname
+        } else {  return AuthenticateError.unknown }
+    }
+    
 }

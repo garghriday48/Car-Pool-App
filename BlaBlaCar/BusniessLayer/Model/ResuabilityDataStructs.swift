@@ -27,6 +27,7 @@ struct OfferRideSelectorOptions: Identifiable{
     var heading: String
     var text: String
     var isSelected: Bool
+    var image: String
 }
 
 

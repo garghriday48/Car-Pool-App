@@ -15,10 +15,6 @@ import SwiftUI
 
 class CarPoolRidesViewModel: ObservableObject {
     
-    // MARK: variables to check and get error so as to display an alert
-    @Published var hasError      = false
-    @Published var errorMessage  : AuthenticateError?
-    @Published var errorMessage1 = String()
     
     // MARK: To select between booking or offering ride
     @Published var rideMethod: RideMethods = .bookingRide
@@ -45,6 +41,7 @@ class CarPoolRidesViewModel: ObservableObject {
     //to check whether calender is shown or not
     @Published var toShowCalenderPicker = false
     @Published var departureDate = Date()
+    @Published var publishingDate = Date()
     
       
     @Published var offerRideSelectorArray: [OfferRideSelectorOptions] = []
@@ -64,7 +61,8 @@ class CarPoolRidesViewModel: ObservableObject {
     @Published var isRideDetails = true
     @Published var isSeatSelected = false
     @Published var toShowSeatSelector = false
-    @Published var numOfSeats = Int()
+    @Published var numOfSeats = 1
+    @Published var numOfSeatsPublish = 1
     @Published var numOfSeatsSelected = Int()
 
     // MARK: to get maximum and minimum price based on screen size
@@ -85,10 +83,12 @@ class CarPoolRidesViewModel: ObservableObject {
     @Published var bookApiSuccess = false
     
     @Published var navigateToMapRoute = false
+    @Published var toShowSearchDetails = false
+    @Published var RecentSearchesData: [DataArray] = []
     
     // MARK: computed property to disable button when conditions are not met
     var disableButton: Bool {
-        rideMethod == .offeringRide ? offerRideSelectorArray[0].text.isEmpty || offerRideSelectorArray[1].text.isEmpty || offerRideSelectorArray[2].text.isEmpty || driverPickupLocation == Constants.TextfieldPlaceholder.pickupLocation || driverDropLocation == Constants.TextfieldPlaceholder.dropLocation: pickupLocation == Constants.TextfieldPlaceholder.pickupLocation || dropLocation == Constants.TextfieldPlaceholder.dropLocation
+        rideMethod == .offeringRide ? offerRideSelectorArray[0].text.isEmpty || offerRideSelectorArray[1].text.isEmpty || offerRideSelectorArray[2].text.isEmpty || driverPickupLocation == Constants.TextfieldPlaceholder.pickupLocation || driverDropLocation == Constants.TextfieldPlaceholder.dropLocation : pickupLocation == Constants.TextfieldPlaceholder.pickupLocation || dropLocation == Constants.TextfieldPlaceholder.dropLocation || numOfSeats == 0
     }
     
     private var anyCancellable: AnyCancellable?
@@ -108,29 +108,26 @@ class CarPoolRidesViewModel: ObservableObject {
     init() {
         OfferRide()
         filterSelection()
+        
+
     }
     
     
     /// Function to get a Array of OfferRideSelectorOptions for reusability purposes
     func OfferRide(){
-        offerRideSelectorArray = [OfferRideSelectorOptions(heading: Constants.Headings.selectVehicle, text: "", isSelected: false),
-                                  OfferRideSelectorOptions(heading: Constants.Headings.availableSeats, text: publishRideData.publish.passengersCount, isSelected: false),
-                                  OfferRideSelectorOptions(heading: Constants.Headings.perSeatPrice, text: publishRideData.publish.setPrice, isSelected: false)]
+        offerRideSelectorArray = [OfferRideSelectorOptions(heading: Constants.Headings.selectVehicle, text: "", isSelected: false, image: Constants.Images.car),
+                                  OfferRideSelectorOptions(heading: Constants.Headings.availableSeats, text: publishRideData.publish.passengersCount, isSelected: false, image: Constants.Images.seat),
+                                  OfferRideSelectorOptions(heading: Constants.Headings.perSeatPrice, text: publishRideData.publish.setPrice, isSelected: false, image: Constants.Images.rupeeSign)]
         
     }
     
     /// Function to get a Array of FilterData for reusability purposes of filters
     func filterSelection() {
-        filtersArray = [FilterData(name: "Lowest Price", image: "bitcoinsign", isSelected: self.lowestPrice, order: "2"),
+        filtersArray = [FilterData(name: Constants.ButtonsTitle.lowestPrice, image: Constants.Images.rupeeSign, isSelected: self.lowestPrice, order: "2"),
                         
-                        FilterData(name: "Earliest Departure", image: "clock", isSelected: self.earliestDeparture, order: "1")]
+                        FilterData(name: Constants.ButtonsTitle.earliestDeparture, image: Constants.Images.clock, isSelected: self.earliestDeparture, order: "1")]
     }
-    
-    func locationDetailsFunc() {
-        locationDetails = [["Gurgaon", "Bus stand, Gurgaon, Haryana", "11:30 AM", "6 km from your pick up location"],
-                           ["Meerut", "NH-58 Bypass, Meerut, UP", "02:15 PM", "1.5 km from your pick up location"]]
-                          
-    }
+
     
     /// Function to convert a value to a string that contains no decimal points
     /// - Parameter value: A CGFloat value
@@ -165,19 +162,21 @@ class CarPoolRidesViewModel: ObservableObject {
     func publishRideApiCall(method: ApiRideMethods, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
-
-        anyCancellable = ApiManager.shared.apiRidesMethod(httpMethod: httpMethod, method: method, dataModel: publishRideData, url: url)
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: publishRideData, url: url)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
-                
+
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
                     
                 case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     NavigationViewModel.navigationVM.pop(to: .TabBarPage)
                 }
                 
@@ -197,27 +196,27 @@ class CarPoolRidesViewModel: ObservableObject {
     func searchRideApiCall(method: ApiRideMethods, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
-
-        anyCancellable = ApiManager.shared.apiRidesMethod(httpMethod: httpMethod, method: method, dataModel: rideSearchData, url: url)
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: rideSearchData, url: url)
             .receive(on: DispatchQueue.main)
-            .sink { [self] completion in
+            .sink { completion in
                 switch completion {
-                
-
+                    
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
                     
                 case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     print("Completed")
                     switch method {
                     case .searchRide:
                         NavigationViewModel.navigationVM.push(.carPoolBook)
                     default: break
                     }
-                    
                 }
                 
             } receiveValue: { [weak self] data in
@@ -236,18 +235,20 @@ class CarPoolRidesViewModel: ObservableObject {
     func bookRideApiCall(method: ApiRideMethods, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
-
-        anyCancellable = ApiManager.shared.apiRidesMethod(httpMethod: httpMethod, method: method, dataModel: bookRideData, url: url)
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: bookRideData, url: url)
             .receive(on: DispatchQueue.main)
             .sink { [self] completion in
                 switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
                     
                 case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     self.bookApiSuccess.toggle()
 
                 }
@@ -273,17 +274,11 @@ class CarPoolRidesViewModel: ObservableObject {
         rideSearchData.destinationLongitude = offerDestinationCoordinate.longitude
     }
     
-    
-    
-    
-    
-    
-    
     /// function to reset values 
     func resetPublishRideValues() {
         driverDropLocation = Constants.TextfieldPlaceholder.dropLocation
         driverPickupLocation = Constants.TextfieldPlaceholder.pickupLocation
-        departureDate = Date()
+        publishingDate = Date()
         numOfSeats = Int()
         
         for i in 0...2 {
@@ -298,4 +293,6 @@ class CarPoolRidesViewModel: ObservableObject {
         departureDate = Date()
         numOfSeats = Int()
     }
+    
+    
 }

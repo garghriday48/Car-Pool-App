@@ -14,7 +14,7 @@ struct EditProfileView: View {
     @ObservedObject var profileVM: ProfileViewModel
     @Environment (\.dismiss) var dismiss
     
-    @State var photosPicker: [PhotosPickerItem] = []
+    
     
     var genderArray = ["Male", "Female", "Other"]
     
@@ -24,100 +24,43 @@ struct EditProfileView: View {
                     BackButton(image: Constants.Images.cross) {
                         profileVM.isGoingBack = true
                     }
-                    .font(.title)
+                    .font(.title2)
                     .bold()
                     
                     Text(Constants.Headings.editProfile)
-                        .font(.title3)
+                        .font(.system(size: 18, design: .rounded))
                         .padding(.horizontal)
                         .frame(maxWidth: .infinity ,alignment: .topLeading)
                 }
                 .padding()
-                DividerCapsule(height: 4, color: Color(.systemGray3))
+            DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 ScrollView{
                     VStack{
-                        Text(Constants.Headings.aboutMe)
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                        
-                        //PhotoPickerView(selectedPic: $profileVM.selectedPic)
-                        //// profile can be changed
-                        //// by clicking on it
-                        AsyncImage(url: vm.profileResponse.imageUrl) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            if vm.profileResponse.imageUrl != nil {
-                                ZStack {
-                                    Color.gray.opacity(0.1)
-                                    ProgressView()
-                                }
-                            } else {
-                                Image(Constants.Images.person)
-                                    .resizable()
-                                    .scaledToFill()
-                                    
-                            }
-                        }
-                        .frame(width: 124, height: 124)
-                        .clipShape(Circle())
-                        .onTapGesture {
-                            // toggle edit profile button
-                            vm.editPhotos.toggle()
-                        }
-                        .photosPicker(isPresented: $vm.openPhotosPicker, selection: $photosPicker)
-                        .onChange(of: photosPicker) { _ in
-                            Task{
-                                guard let items = photosPicker.first else{ return }
-                                if let data = try? await items.loadTransferable(type: Data.self){
-                                    if let uiImage = UIImage(data: data) {
-                                        vm.apiCall(method: .addImage, httpMethod: .PUT, data: ["image": uiImage])
-
-                                        
-                                    }
-                                }
-                            }
-                        }
-                         ///confirmation dialog
-                         ///prompting user with options
-                         ///to get image from galler
-                         ///to click a picture
-                        .confirmationDialog("", isPresented : $vm.editPhotos) {
-                            Button(Constants.Headings.selectFromGallery) {
-                                vm.openPhotosPicker.toggle()
-                            }
-                        }
-
 
                         ForEach($vm.updatingUserArray){$profile in
                             ProfileTextField(profileVM: profileVM, vm: vm,  textField: $profile.textField, textFieldType: profile.type, heading: profile.heading, keyboardType: profile.keyboardType ?? .default, capitalizationType: profile.capitalizationType ?? .never)
                                 
                         }
-                        
-                        HStack{
-                            //Text("please print")
-                            if !vm.nameValid.isEmpty{
-                                Image(systemName: Constants.Images.infoImage)
-                            }
-                            Text(vm.nameValid)
-                                .font(.system(size: 15))
-                        }
-                        .foregroundColor(.red)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom)
-                        
                         Button {
                             vm.apiCall(method: .profileUpdate, httpMethod: .PUT, data: vm.getData(method: .profileUpdate))
 
                         } label: {
-                            ButtonView(buttonName: Constants.ButtonsTitle.done, border: false)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                        .fill(Color(Color.redColor))
-                                    )
-                                .padding(.top)
+                            ButtonView(buttonName: Constants.ButtonsTitle.done, border: true)
+                                .padding(.trailing, 8)
                         }
+                        .disabled(!vm.nameValid.isEmpty)
+                        
+                        HStack{
+                            if !vm.nameValid.isEmpty{
+                                Image(systemName: Constants.Images.infoImage)
+                            }
+                            Text(vm.nameValid)
+                                
+                        }
+                        .font(.system(size: 14))
+                        .foregroundColor(Color(Color.redColor))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom)
                     }
                     .padding()
                 }
@@ -126,10 +69,8 @@ struct EditProfileView: View {
                                toShowPicker : $profileVM.toShowPicker,
                                myDate       : $profileVM.myDate,
                                selectedIndex: $profileVM.selectedIndex)
-                    
-                    .frame(alignment: .bottom)
                     .animation(.easeIn, value: profileVM.toShowPicker)
-                    .presentationDetents([.fraction(0.32)])
+                    .presentationDetents(profileVM.isDatePicker ? [.height(240)] : [.fraction(0.30)])
                     
                 }
             

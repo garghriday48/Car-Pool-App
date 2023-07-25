@@ -10,6 +10,7 @@ import SwiftUI
 struct OtpInputView: View {
     @EnvironmentObject var vm: SignInSignUpViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     // MARK: textfield focusstate
     @FocusState var activeTextField: OTPField?
@@ -30,6 +31,7 @@ struct OtpInputView: View {
                             .textContentType(.oneTimeCode)
                             .multilineTextAlignment(.center)
                             .focused($activeTextField, equals: profileVM.activeStateForIndex(index: index))
+                            
                         
                         Rectangle()
                             .fill(activeTextField ==  profileVM.activeStateForIndex(index: index) ? .blue : .gray.opacity(0.5))
@@ -41,53 +43,79 @@ struct OtpInputView: View {
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.vertical)
-            if vm.isLoading {
-                LoadingView(isLoading: $vm.loaderLoading)
-                    .frame(maxWidth: .infinity, alignment: .center)
-            } else {
-                Button {
-                    switch vm.typeOfOtp {
-                    case .phoneVerification: break
-                    case .forgotPassword:
-                        vm.forgotPassApiCall(method: .otp, httpMethod: .POST, data: ["email": vm.forgotPassEmail, "otp": vm.otp])
-                    }
-                } label: {
-                    ButtonView(buttonName: Constants.ButtonsTitle.verify, border: false)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .fill(profileVM.checkStates() ? Color(Color.redColor) : Color(Color.redColor).opacity(0.2))
-                        )
+
+            Button {
+                switch vm.typeOfOtp {
+                case .phoneVerification: break
+                case .forgotPassword:
+                    
+                    vm.forgotPassApiCall(method: .otp, httpMethod: .POST, data: [Constants.DictionaryForApiCall.email : vm.forgotPassEmail, Constants.DictionaryForApiCall.otp: vm.otp])
                 }
-                .disabled(!profileVM.checkStates())
-                .padding(.vertical)
+            } label: {
+                ButtonView(buttonName: Constants.ButtonsTitle.verify, border: false)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(profileVM.checkStates() ? Color(Color.redColor) : Color(Color.redColor).opacity(0.2))
+                    )
             }
+            .disabled(!profileVM.checkStates())
+            .padding(.vertical)
             
             HStack(spacing: 12) {
-                Text("Didn't get otp?")
+                Text(Constants.Headings.didntGetOtp)
                     .font(.caption)
                     .foregroundColor(.gray)
                 Button {
                     switch vm.typeOfOtp {
                     case .phoneVerification: break
-                    case .forgotPassword: break
+                    case .forgotPassword:
+                        
+                        vm.forgotPassApiCall(method: .forgotPassEmail, httpMethod: .POST, data: [Constants.DictionaryForApiCall.email: vm.forgotPassEmail])
                     }
                 } label: {
-                    Text("Resend")
+                    Text(Constants.ButtonsTitle.resend)
                         .font(.callout)
                 }
 
             }
+            .padding(.bottom)
+            
+            if vm.typeOfOtp == .forgotPassword {
+                HStack(spacing: 12) {
+                    Text(Constants.Headings.changeEmail)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    Button {
+                        switch vm.typeOfOtp {
+                        case .phoneVerification: break
+                        case .forgotPassword:
+                            vm.forgotPasswordView = .email
+                            vm.forgotPassEmail = vm.forgotPassEmail
+                        }
+                    } label: {
+                        Text(Constants.ButtonsTitle.enterEmail)
+                            .font(.callout)
+                    }
+                }
+                .padding(.bottom)
+            }
+            
+            if errorVM.isLoading {
+                LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
+            
 
         }
         .padding()
         .frame(maxHeight: .infinity,alignment: .topLeading)
+            
         .onChange(of: profileVM.checkStates(), perform: { newValue in
             if newValue {
-                for index in profileVM.otpFields {
-                    vm.otp += index
-                }
-            }
+                for index in profileVM.otpFields {  vm.otp += index }
+            } else { vm.otp = "" }
         })
+        
         .onChange(of: profileVM.otpFields) { newValue in
             profileVM.OTPCondition(value: newValue)
             
@@ -112,6 +140,7 @@ struct OtpInputView_Previews: PreviewProvider {
         OtpInputView()
             .environmentObject(SignInSignUpViewModel())
             .environmentObject(ProfileViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }
 

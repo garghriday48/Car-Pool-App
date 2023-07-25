@@ -11,28 +11,28 @@ struct ForgotPasswordView: View {
     @Environment (\.dismiss) var dismiss
     
     @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     var body: some View {
         VStack {
             HStack{
                 BackButton(image: Constants.Images.cross) {
                     vm.isGoingBackToMainPage.toggle()
-                    vm.forgotPasswordView = .email
                 }
-                .font(.title)
-                .bold()
+                .font(.title2)
                 
                 Text(Constants.Headings.forgotPassword)
-                    .font(.title3)
+                    .font(.system(size: 18, design: .rounded))
                     .padding(.horizontal)
                     .frame(maxWidth: .infinity ,alignment: .topLeading)
             }
-            .padding()
-            DividerCapsule(height: 4, color: Color(.systemGray3))
+            .padding([.horizontal,.top])
+            DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 .padding(.bottom)
             
             Text("Step \(Int(vm.forgotPasswordView.rawValue/33.33)) of 3")
-                .font(.headline)
+                .font(.system(size: 14)).bold()
                 .foregroundColor(Color(Color.redColor))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading)
@@ -53,6 +53,10 @@ struct ForgotPasswordView: View {
         .confirmationDialog(Constants.Headings.backAlertHeading, isPresented: $vm.isGoingBackToMainPage, actions: {
             Button(Constants.ButtonsTitle.yes, role: .destructive) {
                 self.dismiss()
+                vm.forgotPasswordView = .email
+                vm.forgotPassEmail = ""
+                vm.emailValid = ""
+                profileVM.otpFields = Array(repeating: "", count: 4)
             }
         }, message: {
             Text(Constants.Headings.backAlertHeading)
@@ -64,5 +68,6 @@ struct ForgotPasswordView_Previews: PreviewProvider {
     static var previews: some View {
         ForgotPasswordView()
             .environmentObject(SignInSignUpViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }

@@ -33,9 +33,20 @@ extension String{
         
         return result
     }
+    
+    func onlyNum() -> Bool{
+        let numRegex = Constants.Regex.onlyNumRegex
+        return NSPredicate(format: Constants.Regex.selfMatch, numRegex).evaluate(with: self)
+    }
+    
     func containsNoNumbers() -> Bool {
         let numRegex = Constants.Regex.numRegex
         return NSPredicate(format: Constants.Regex.selfMatch, numRegex).evaluate(with: self)
+    }
+    
+    func containsOnlyAlphabets() -> Bool {
+        let alphaRegex = Constants.Regex.onlyAlphaRegex
+        return NSPredicate(format: Constants.Regex.selfMatch, alphaRegex).evaluate(with: self)
     }
     
     func containsNoAlphabet() -> Bool{

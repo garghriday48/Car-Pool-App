@@ -16,22 +16,22 @@ struct ButtonView: View {
             if border == false{
                 
                 Text(buttonName)
-                    .font(.title3)
-                    .fontWeight(.bold)
+                    .font(.system(size: 16, design: .rounded))
+                    .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
                     
             } else {
                 Text(buttonName)
-                    .font(.title3)
-                    .fontWeight(.bold)
+                    .font(.system(size: 16, design: .rounded))
+                    .fontWeight(.semibold)
                     .foregroundColor(Color(Color.redColor))
                     .frame(maxWidth: .infinity)
                     .padding()
                     .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color(Color.redColor), lineWidth: 2)
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(Color.redColor), lineWidth: 1)
                         )
                     
             }

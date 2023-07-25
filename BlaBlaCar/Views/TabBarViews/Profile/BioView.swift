@@ -29,16 +29,17 @@ struct BioView: View {
                 DividerCapsule(height: 4, color: Color(.systemGray3))
                 
             }
-            Text(Constants.Headings.miniBio)
-                .font(.title.bold())
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                
-            
-            Text(Constants.Description.bioDescription)
-                .font(.subheadline)
-                .padding(.leading, -30)
+            VStack(alignment: .leading){
+                Text(Constants.Headings.miniBio)
+                    .font(.title.bold())
+                    .padding(.bottom)
 
+                Text(Constants.Description.bioDescription)
+                    .font(.subheadline)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+            
             TextField(Constants.TextfieldPlaceholder.addBio, text: $vm.updateBio, axis: .vertical)
                 .lineLimit(4, reservesSpace: true)
                 .textFieldStyle(.roundedBorder)
@@ -59,11 +60,10 @@ struct BioView: View {
             
             Button {
                 vm.apiCall(method: .bioUpdate, httpMethod: .PUT, data: vm.getData(method: .bioUpdate))
-                //self.dismiss()
             } label: {
                 ButtonView(buttonName: Constants.ButtonsTitle.done, border: false)
                     .background(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
                             .fill(vm.updateBio.count > 50 || 0 >= vm.updateBio.count ? Color(Color.redColor).opacity(0.2) : Color(Color.redColor))
                         )
                     .padding(.top, vm.updateBio.count > 50 ? 0 : 40)

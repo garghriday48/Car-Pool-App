@@ -39,6 +39,17 @@ struct LocationSearchView: View {
                     /// textfield to search for the location entered by the user
                     TextField(Constants.TextfieldPlaceholder.findLocation, text: $mapVM.searchText)
                         .autocorrectionDisabled()
+                    if !mapVM.searchText.isEmpty {
+                        Button(action:
+                        {
+                            mapVM.searchText = ""
+                        })
+                        {
+                            Image(systemName: Constants.Images.crossFill)
+                                .foregroundColor(.gray.opacity(0.5))
+                        }
+                        
+                    }
                 }
                 .padding(.vertical, 12)
                 .padding(.horizontal)
@@ -52,33 +63,33 @@ struct LocationSearchView: View {
                 if let places = mapVM.fetchedPlaces, !places.isEmpty {
                     List{
                         
-                        /// to show all the places based on the searching done by user.
-                        ForEach(places, id: \.self){place in
-                            
-                            /// whenever any searched location is tapped a map is shown that shows the searched location on map with also having a pin.
-                            Button {
-                                if let coordinate = place.location?.coordinate {
-                                    
-                                    mapVM.pickedLocation = .init(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                                    mapVM.mapView.region = .init(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03))
-                                    mapVM.addDraggablePin(coordinate: coordinate, title: Constants.Headings.selectedLocation)
-                                    mapVM.updatePlacemark(location: .init(latitude: coordinate.latitude, longitude: coordinate.longitude))
+                            /// to show all the places based on the searching done by user.
+                            ForEach(places, id: \.self){place in
+                                if let name = Placemark(item: place){
+                                /// whenever any searched location is tapped a map is shown that shows the searched location on map with also having a pin.
+                                Button {
+                                    if let coordinate = place.location?.coordinate {
+                                        
+                                        mapVM.pickedLocation = .init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                                        mapVM.mapView.region = .init(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03))
+                                        mapVM.addDraggablePin(coordinate: coordinate, title: Constants.Headings.selectedLocation)
+                                        mapVM.updatePlacemark(location: .init(latitude: coordinate.latitude, longitude: coordinate.longitude))
+                                    }
+                                    /// to show map
+                                    mapVM.toShowMap.toggle()
+                                } label: {
+                                    LocationCell(name: name.location, secondayName: name.subLocation)
                                 }
-                                /// to show map
-                                mapVM.toShowMap.toggle()
-                            } label: {
-                                LocationCell(name: place.name ?? "", secondayName: place.locality ?? "")
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                     .listStyle(.plain)
-                    
                 } else {
 
                     // MARK: live location button
                     Button {
-                        /// MapView(mapVM: mapVM)
+                        
                         if let coordinate = mapVM.userLocation?.coordinate {
                             mapVM.mapView.region = .init(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03))
                             mapVM.addDraggablePin(coordinate: coordinate, title: Constants.Headings.selectedLocation)

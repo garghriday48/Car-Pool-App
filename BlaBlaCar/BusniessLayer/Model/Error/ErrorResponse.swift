@@ -21,3 +21,4 @@ struct ErrorStatus: Codable, Error{
     var error: String?
     var errors: [String]?
 }
+

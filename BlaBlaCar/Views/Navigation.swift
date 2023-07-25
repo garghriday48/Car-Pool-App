@@ -16,6 +16,8 @@ struct Navigation: View {
     @StateObject var mapVM = MapViewModel()
     @StateObject var profileVM = ProfileViewModel()
     @StateObject var myRidesVM = MyRidesViewModel()
+    @StateObject var errorVM = ResponseErrorViewModel.shared
+    @StateObject var messageVM = MessagesViewModel()
     
     var body: some View {
         NavigationStack(path: $navigationVM.paths) {
@@ -39,12 +41,14 @@ struct Navigation: View {
         .environmentObject(profileVM)
         .environmentObject(myRidesVM)
         .environmentObject(mapVM)
-        //.environmentObject(navigationVM)
+        .environmentObject(errorVM)
+        .environmentObject(messageVM)
     }
 }
 
 struct Navigation_Previews: PreviewProvider {
     static var previews: some View {
         Navigation()
+            .environmentObject(NavigationViewModel())
     }
 }

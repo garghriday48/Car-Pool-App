@@ -17,10 +17,10 @@ struct ProfileOptionsCellView: View {
                 VStack(alignment: .leading, spacing: 8){
                     
                     Text(mainText)
-                        .font(.title3)
+                        .font(.system(size: 16, design: .rounded)).bold()
                         .foregroundColor(.primary)
                     Text(secondaryText)
-                        .font(.subheadline)
+                        .font(.system(size: 14, design: .rounded))
                         .foregroundColor(Color(.darkGray))
 
                 }
@@ -29,9 +29,9 @@ struct ProfileOptionsCellView: View {
                 Image(systemName: Constants.Images.rightArrow)
                     .foregroundColor(.primary)
             }
-            DividerCapsule(height: 2, color: Color(.systemGray3))
+            DividerCapsule(height: 1, color: .gray.opacity(0.3))
         }
-        .padding()
+        .padding([.horizontal, .top])
     }
 }
 

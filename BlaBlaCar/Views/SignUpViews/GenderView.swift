@@ -13,6 +13,7 @@ struct GenderView: View {
     
     @EnvironmentObject var vm: SignInSignUpViewModel
     @ObservedObject var navigationVM: NavigationViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     var body: some View {
         VStack{
@@ -20,21 +21,26 @@ struct GenderView: View {
                 VStack(alignment: .leading) {
                     
                     Text(Constants.Headings.genderHeading)
-                        .font(.largeTitle)
+                        .font(.system(size: 24, design: .rounded))
                         .bold()
                         .padding(.bottom, 40)
                     VStack{
-                        TextViewFields(text: vm.selectedIndex == -1 ? Constants.TextfieldPlaceholder.gender : genderArray[vm.selectedIndex])
-                            .foregroundColor(vm.selectedIndex == -1 ? Color(.gray).opacity(0.6) : .black)
+                        TextViewFields(text: Constants.TextfieldPlaceholder.gender,
+                                       selectedText: vm.userAuthData.user.title,
+                                       horizontalSpace: .Element(),
+                                       isEmpty: vm.selectedIndex == -1)
+                            .foregroundColor(vm.userAuthData.user.dob.isEmpty ? Color(.gray).opacity(0.5) : .black)
+                        
                     }
                     .onTapGesture {
                         withAnimation{
+                            vm.selectedIndex = 0
                             vm.toShowPicker.toggle()
                         }
                     }
                     Spacer()
-                    if vm.isLoading{
-                        LoadingView(isLoading: $vm.isLoading)
+                    if errorVM.isLoading{
+                        LoadingView(isLoading: $errorVM.isLoading, size: 20)
                             .frame(maxWidth: .infinity, alignment: .center)
                     } else {
                         Button {
@@ -43,7 +49,7 @@ struct GenderView: View {
                             ButtonView(buttonName   : Constants.ButtonsTitle.done,
                                        border       : false)
                             .background(
-                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
                                     .fill(vm.genderBtnDisable ? Color(Color.redColor).opacity(0.2) : Color(Color.redColor))
                             )
                             
@@ -72,6 +78,7 @@ struct GenderView: View {
             }
         }
         .ignoresSafeArea(.keyboard)
+
         .onChange(of: vm.selectedIndex, perform: { _ in
             vm.userAuthData.user.title = genderArray[vm.selectedIndex]
         })
@@ -85,5 +92,6 @@ struct GenderView_Previews: PreviewProvider {
     static var previews: some View {
         GenderView(navigationVM: NavigationViewModel())
             .environmentObject(SignInSignUpViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }

@@ -11,6 +11,8 @@ struct DetailsCard: View {
     
     @EnvironmentObject var vm: SignInSignUpViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
+    
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
     
     @Binding var isRideDetails: Bool
@@ -25,8 +27,9 @@ struct DetailsCard: View {
                 VStack(alignment: .leading){
                     Text(Constants.Headings.tripInfo)
                         .foregroundColor(.black)
-                        .font(.title2)
+                        .font(.system(size: 20, weight: .bold, design: .rounded))
                         .padding(.bottom)
+                    
                     VStack(alignment: .leading, spacing: 10){
                         HStack{
                             Image(systemName: Constants.Images.calendar)
@@ -37,66 +40,66 @@ struct DetailsCard: View {
                         HStack{
                             Image(systemName: Constants.Images.clock)
                             if let estimatedTime = array.publish.estimateTime {
-                                Text(DateTimeFormat.shared.timeFormat(date: estimatedTime, is24hrs: true) + " hrs")
+                                Text(DateTimeFormat.shared.timeFormat(date: estimatedTime, is24hrs: true, toNotReduce: false) + " hrs")
                             }
                         }
                         .foregroundColor(Color(.darkGray))
                     }
-                    .font(.title2)
+                    .font(.system(size: 16, weight: .semibold ,design: .rounded))
                     .padding(.vertical)
                     
-                    DividerCapsule(height: 2, color: Color(.systemGray3))
+                    DividerCapsule(height: 1, color: .gray.opacity(0.3))
                     
                     
                     ZStack(alignment: .topLeading){
                         VStack(alignment: .leading, spacing: 30) {
                             
-                            LocationInfo(location: array.publish.source, exactLocation: array.publish.source, time: DateTimeFormat.shared.timeFormat(date:  array.publish.time, is24hrs: false), walkDist: String(array.publish.distance ?? 0))
+                            LocationInfo(location: array.publish.source, exactLocation: array.publish.source, time: DateTimeFormat.shared.timeFormat(date:  array.publish.time, is24hrs: false, toNotReduce: false), walkDist: String(array.publish.distance ?? 0))
                                 .padding(.bottom,90)
                             
-                            LocationInfo(location: array.publish.destination, exactLocation: array.publish.destination, time: DateTimeFormat.shared.timeFormat(date:  array.reachTime, is24hrs: false), walkDist: String(array.publish.distance ?? 0))
+                            LocationInfo(location: array.publish.destination, exactLocation: array.publish.destination, time: DateTimeFormat.shared.timeFormat(date:  array.reachTime, is24hrs: false, toNotReduce: false), walkDist: String(array.publish.distance ?? 0))
                         }
                         .padding(.horizontal, 25)
-                        PointToPointView(color: Color(.darkGray), height: 100)
+                        PointToPointView(color: Color(.darkGray), height: 95)
                             .padding(.top, 10)
                         
                     }
                     .padding(.vertical)
                     .padding(.bottom,60)
                     
-                    DividerCapsule(height: 2, color: Color(.systemGray3))
+                    DividerCapsule(height: 1, color: .gray.opacity(0.3))
                     
                         VStack(alignment: .leading){
                             HStack{
                                 Text(Constants.Description.bookedSeats)
-                                    .font(.title3)
+                                    .font(.system(size: 18, weight: .semibold ,design: .rounded))
                                     .foregroundColor(Color(.darkGray))
                                 Spacer()
                                 Text("\(NumOfSeatSelected)")
-                                    .font(.title2)
+                                    .font(.system(size: 20 ,design: .rounded))
                                     .foregroundColor(.black)
                             }
                             .padding(.top, -10)
                             
                             HStack{
                                 Text(Constants.Description.totalPrice)
-                                    .font(.title3)
+                                    .font(.system(size: 18, weight: .semibold ,design: .rounded))
                                     .foregroundColor(Color(.darkGray))
                                 Spacer()
                                 Text(String(format: Constants.StringFormat.oneDigit, array.publish.setPrice))
-                                    .font(.title2)
+                                    .font(.system(size: 20 ,design: .rounded))
                                     .foregroundColor(.black)
                             }
                             .padding(.top, -10)
                             
                             Text(Constants.Description.paymentType)
-                                .font(.subheadline)
+                                .font(.system(size: 14, weight: .semibold ,design: .rounded))
                                 .foregroundColor(Color(.systemGray2))
                             
                         }
-                        .padding(.vertical, 30)
+                        .padding(.vertical)
                         
-                        DividerCapsule(height: 2, color: Color(.systemGray3))
+                    DividerCapsule(height: 1, color: .gray.opacity(0.3))
                     
                     
                     HStack {
@@ -124,7 +127,7 @@ struct DetailsCard: View {
                         VStack(alignment: .leading, spacing: 4){
                             Text(array.name)
                                 .foregroundColor(.black)
-                                .font(.title3)
+                                .font(.system(size: 20 ,design: .rounded))
                             HStack{
                                 Text("4.5")
                                 Image(systemName: Constants.Images.starFilled)
@@ -132,23 +135,24 @@ struct DetailsCard: View {
                                     .frame(width: 5, height: 5)
                                 Text("27 Ratings")
                             }
-                            .font(.subheadline)
+                            .font(.system(size: 14, design: .rounded))
                             .foregroundColor(Color(.darkGray))
                         }
                     }
                     .padding(.vertical)
                     VStack(alignment: .leading) {
-                        Text(Constants.Headings.vehicleDetails).font(.title2)
+                        Text(Constants.Headings.vehicleDetails).font(.system(size: 18, weight: .semibold ,design: .rounded))
                             .padding(.bottom)
-                        Text(profileVM.getVehicleData.vehicleBrand).font(.title3) +
+                        
+                        Text(profileVM.getVehicleData.vehicleBrand).font(.system(size: 16 ,design: .rounded)) +
                         Text(" ") +
                         Text(profileVM.getVehicleData.vehicleName)
-                            .font(.title3) +
+                            .font(.system(size: 16 ,design: .rounded)) +
                         Text(Constants.Description.dash + profileVM.getVehicleData.vehicleType)
                         
                         Text(Constants.Description.number + profileVM.getVehicleData.vehicleNumber)
-                            .font(.subheadline)
-                        Text(Constants.Description.color + profileVM.getVehicleData.vehicleColor).font(.subheadline)
+                            .font(.system(size: 14 ,design: .rounded))
+                        Text(Constants.Description.color + profileVM.getVehicleData.vehicleColor).font(.system(size: 14 ,design: .rounded))
                         DividerCapsule(height: 2, color: Color(.systemGray3))
                         
                     }
@@ -161,22 +165,22 @@ struct DetailsCard: View {
                 .cornerRadius(10)
                 
             }
-            DividerCapsule(height: 2, color: Color(.systemGray3))
+            DividerCapsule(height: 1, color: .gray.opacity(0.5))
             HStack{
                 VStack(alignment: .leading){
                     
                     Text(Constants.Headings.paymentMethod)
-                        .font(.title3)
+                        .font(.system(size: 18, weight: .semibold ,design: .rounded))
                     Text(Constants.Description.toCompletePayment)
                         .foregroundColor(Color(.darkGray))
-                        .font(.subheadline)
+                        .font(.system(size: 14 ,design: .rounded))
                     
                     Button {
                         carPoolVM.bookRideApiCall(method: .bookRide, httpMethod: .POST)
                     } label: {
                         ButtonView(buttonName: Constants.ButtonsTitle.confirmRide, border: false)
                             .background(Color(Color.redColor))
-                            .cornerRadius(50)
+                            .cornerRadius(10)
                     }
                 }
                 
@@ -193,6 +197,13 @@ struct DetailsCard: View {
             carPoolVM.bookRideData.passenger.publishId = array.publish.id
             carPoolVM.bookRideData.passenger.seats = carPoolVM.numOfSeats
         }
+        .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasResponseError, actions: {
+            Button(Constants.ErrorBox.okay, role: .cancel) {
+                
+            }
+        }, message: {
+            Text(errorVM.errorMessage1)
+        })
     }
 }
 
@@ -201,6 +212,7 @@ struct DetailsCard_Previews: PreviewProvider {
         DetailsCard(carPoolVM: CarPoolRidesViewModel(), isRideDetails: .constant(true), isSeatSelected: .constant(false), NumOfSeatSelected: .constant(1), array: .constant(DataArray(id: 0, name: "", reachTime: "", imageURL: nil, averageRating: nil, aboutRide: "", publish: PublishResponse(id: 0, source: "rtyj yj yjwy jw jtwy jwtrj j wry jwry trh", destination: "jetyetjetje jtytejye etjy eyj etjy tyj tyj ", passengersCount: 0, addCity: "", date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: "", midSeat: "", selectRoute: SelectRoute(), status: "", estimateTime: "", addCityLongitude: 0.0, addCityLatitude: 0.0, distance: nil, bearing: nil))))
             .environmentObject(SignInSignUpViewModel())
             .environmentObject(ProfileViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }
 
@@ -217,16 +229,19 @@ struct LocationInfo: View {
                 VStack(alignment: .leading, spacing: 4){
                     Text(location)
                         .foregroundColor(.black)
-                        .font(.title2)
-                    Text(exactLocation)
-                    Text(time)
+                        .font(.system(size: 18, weight: .semibold ,design: .rounded))
+                    Group{
+                        Text(exactLocation)
+                        Text(time)
+                    }
+                    .font(.system(size: 16, design: .rounded))
                     HStack{
                         Image(systemName: Constants.Images.walkingFig)
                             .foregroundColor(Color.green)
-                        Text(walkDist + " km from location")
-                            .font(.subheadline)
+                        Text(String(format: Constants.StringFormat.twoDigit, walkDist) + " km from location")
                             .foregroundColor(Color(.systemGray2))
                     }
+                    .font(.system(size: 14, weight: .semibold ,design: .rounded))
                 }
                 .foregroundColor(Color(.darkGray))
             }

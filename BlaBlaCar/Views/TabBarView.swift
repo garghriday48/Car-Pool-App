@@ -14,6 +14,7 @@ struct TabBarView: View {
     @EnvironmentObject var carPoolVM: CarPoolRidesViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var mapVM: MapViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     var body: some View {
             TabView{
@@ -35,12 +36,28 @@ struct TabBarView: View {
                     }
                 }
             }
+            .blur(radius: errorVM.hasResponseError ? 5 : 0)
             .ignoresSafeArea()
             .environmentObject(carPoolVM)
             .environmentObject(profileVM)
-            .onAppear{
-                profileVM.vehicleListApiCall(method: .vehicleList, data: [:], httpMethod: .GET)
-            }
+            .environmentObject(errorVM)
+            
+            .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasResponseError, actions: {
+                Button(Constants.ErrorBox.okay, role: .cancel) {
+                    if errorVM.errorMessage1 == Constants.ErrorBox.toLoginAgain {
+                        navigationVM.paths = []
+                    }
+                }
+            }, message: {
+                Text(errorVM.errorMessage1)
+            })
+
+            .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasError, actions: {
+                Button(Constants.ErrorBox.okay, role: .cancel) {
+                }
+            }, message: {
+                Text(errorVM.errorMessage?.errorDescription ?? "")
+            })
 
     }
 }

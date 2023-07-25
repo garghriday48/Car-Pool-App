@@ -30,17 +30,18 @@ struct AllRidesView: View {
                     BackButton(image: Constants.Images.backArrow) {
                         presentationMode.wrappedValue.dismiss()
                     }
-                    .font(.title)
-                    .bold()
+                    .font(.title2)
                     VStack(alignment: .leading, spacing: 7){
                         HStack{
                             Text(carPoolVM.pickupLocation)
                             Image(systemName: Constants.Images.bigRightArrow)
                             Text(carPoolVM.dropLocation)
                         }
-                        .font(.title3)
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(2)
+                        .font(.system(size: 18, design: .rounded))
                         Text(carPoolVM.rideMethod == .bookingRide ? carPoolVM.departureDate.formatted(date: .omitted, time: .shortened) : "")
-                            .font(.subheadline)
+                            .font(.system(size: 14, design: .rounded))
                     }
                 }
                 .padding()
@@ -51,11 +52,11 @@ struct AllRidesView: View {
                 /// horizontal scroll to show all the sorting parameters in less space.
                 ScrollView(.horizontal){
                     HStack{
-                        Button {
-                            carPoolVM.filterAndSort.toggle()
-                        } label: {
-                            FilterBox(name: "Filter and sort", image: "slider.horizontal.3", isSelected: carPoolVM.filterAndSort)
-                        }
+//                        Button {
+//                            carPoolVM.filterAndSort.toggle()
+//                        } label: {
+//                            FilterBox(name: "Filter and sort", image: "slider.horizontal.3", isSelected: carPoolVM.filterAndSort)
+//                        }
                         ForEach(0..<2){ filter in
                             Button {
                                 carPoolVM.filtersArray[filter].isSelected.toggle()
@@ -87,20 +88,27 @@ struct AllRidesView: View {
                 /// Vertical scroll view to show all the rides searched.
                 ScrollView{
                     VStack(alignment: .leading){
-                        Text("Showing \(carPoolVM.rideSearchResponse.data.count) rides")
-                            .font(.subheadline)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor(Color(.darkGray))
-                            .padding(.bottom)
+                        HStack{
+                            Text("Showing \(carPoolVM.rideSearchResponse.data.count)")
+                            Text(carPoolVM.rideSearchResponse.data.count == 1 ? Constants.Description.ride : Constants.Description.rides)
+                        }
+                        .font(.system(size: 14, design: .rounded))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(Color(.darkGray))
+                        .padding(.bottom)
+                        
                         ForEach($carPoolVM.rideSearchResponse.data, id: \.self){ $name in
                             
                             /// navigation link to see details of ride selected.
-                            NavigationLink {
-                                RideDetailsView(carPoolVM: carPoolVM, array: $name)
+                            Button {
+                                carPoolVM.toShowSearchDetails.toggle()
+                                
                             } label: {
                                 RideCard(carPoolVM: carPoolVM, array: $name)
                             }
-                            
+                            .navigationDestination(isPresented: $carPoolVM.toShowSearchDetails, destination: {
+                                RideDetailsView(carPoolVM: carPoolVM, array: $name)
+                            })
                         }
                     }
                     .padding()

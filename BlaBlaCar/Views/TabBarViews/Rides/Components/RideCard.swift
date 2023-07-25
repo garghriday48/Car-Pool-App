@@ -18,20 +18,26 @@ struct RideCard: View {
         ZStack{
             VStack(alignment: .leading, spacing: 7){
                 HStack{
-                    Text(array.publish.source)
-                    Image(systemName: Constants.Images.bigRightArrow)
-                    Text(array.publish.destination)
+                    Group {
+                        Text(array.publish.source)
+                        Image(systemName: Constants.Images.bigRightArrow)
+                        Text(array.publish.destination)
+                    }
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .multilineTextAlignment(.leading)
                     Spacer()
                     Text("Rs \(Int(array.publish.setPrice))")
+                        .font(.system(size: 18, design: .rounded))
                 }
+                .lineLimit(2)
                 .foregroundColor(.black)
-                .font(.title3)
+                
                 HStack{
-                    Text("\(DateTimeFormat.shared.timeFormat(date: array.publish.time, is24hrs: false)) to \(DateTimeFormat.shared.timeFormat(date: array.reachTime, is24hrs: false))")
+                    Text("\(DateTimeFormat.shared.timeFormat(date: array.publish.time, is24hrs: false, toNotReduce: false)) to \(DateTimeFormat.shared.timeFormat(date: array.reachTime, is24hrs: false, toNotReduce: false))")
                     Spacer()
-                    Text(array.publish.passengersCount == 1 ? "\(array.publish.passengersCount) seat" : "\(array.publish.passengersCount) seats")
+                    Text(array.publish.passengersCount == 1 ? "\(array.publish.passengersCount) \(Constants.Description.seat)" : "\(array.publish.passengersCount) \(Constants.Description.seats)")
                 }
-                .font(.subheadline)
+                .font(.system(size: 14, design: .rounded))
                 .padding(.bottom)
                 .foregroundColor(Color(.darkGray))
                 HStack{
@@ -46,9 +52,10 @@ struct RideCard: View {
                         .foregroundColor(.green)
                     Text(Constants.Description.distToWalk)
                 }
-                .font(.subheadline)
+                .font(.system(size: 14, design: .rounded))
                 .foregroundColor(Color(.darkGray))
-                DividerCapsule(height: 2, color: Color(.systemGray3))
+                
+                DividerCapsule(height: 1, color: .gray.opacity(0.3))
                 HStack {
                     AsyncImage(url: array.imageURL) { image in
                                 image
@@ -74,7 +81,7 @@ struct RideCard: View {
                     VStack(alignment: .leading, spacing: 4){
                         Text(array.name)
                             .foregroundColor(.black)
-                            .font(.title3)
+                            .font(.system(size: 18, design: .rounded))
                         HStack{
                             Text("4.5")
                             Image(systemName: Constants.Images.starFilled)
@@ -82,7 +89,7 @@ struct RideCard: View {
                                 .frame(width: 5, height: 5)
                             Text("27 Ratings")
                         }
-                        .font(.subheadline)
+                        .font(.system(size: 14, design: .rounded))
                         .foregroundColor(Color(.darkGray))
                         
                     }
@@ -104,6 +111,6 @@ struct RideCard: View {
 
 struct RideCard_Previews: PreviewProvider {
     static var previews: some View {
-        RideCard( carPoolVM: CarPoolRidesViewModel(), array: .constant(DataArray(id: 0, name: "", reachTime: "", imageURL: nil, averageRating: nil, aboutRide: "", publish: PublishResponse(id: 0, source: "", destination: "", passengersCount: 0, addCity: "", date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: "", midSeat: "", selectRoute: SelectRoute(), status: "", estimateTime: "", addCityLongitude: 0.0, addCityLatitude: 0.0, distance: nil, bearing: nil))))
+        RideCard( carPoolVM: CarPoolRidesViewModel(), array: .constant(DataArray(id: 0, name: "", reachTime: "", imageURL: nil, averageRating: nil, aboutRide: "", publish: PublishResponse(id: 0, source: "chandigarh arportnfgshnsfhnsfhnsfnhnnfnnfsnfgn", destination: "delhi airport vfdnibgfrbnsfgrnsfnnsfnfsgnfsg", passengersCount: 0, addCity: "", date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: "", midSeat: "", selectRoute: SelectRoute(), status: "", estimateTime: "", addCityLongitude: 0.0, addCityLatitude: 0.0, distance: nil, bearing: nil))))
     }
 }

@@ -11,11 +11,12 @@ struct EmailPasswordView: View {
     
     @EnvironmentObject var vm: SignInSignUpViewModel
     @ObservedObject var navigationVM: NavigationViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     var body: some View {
         VStack(alignment: .leading){
             Text(Constants.Headings.emailPassHeading)
-                .font(.largeTitle)
+                .font(.system(size: 24, design: .rounded))
                 .bold()
                 .padding(.bottom, 40)
             
@@ -23,18 +24,19 @@ struct EmailPasswordView: View {
                         title       : Constants.TextfieldPlaceholder.email,
                         isPassOrNot : false,
                         keyboardType: .emailAddress,
-                        capitalizationType: .never)
+                        capitalizationType: .never,
+                        borderColor: vm.userAuthData.user.email.isEmpty ? .gray.opacity(0.6) : .black)
             .padding(.bottom, (vm.emailValid.isEmpty && vm.isNewUser) ? 20 : 0)
+            .padding(.bottom, vm.isNewUser ? 0 : 10)
             if vm.isNewUser{
                 HStack{
                     if !vm.emailValid.isEmpty{
                         Image(systemName: Constants.Images.infoImage)
                     }
                     Text(vm.emailValid)
-                        .font(.system(size: 15))
                 }
+                .font(.system(size: 14))
                 .animation(.easeOut, value: vm.signUpViews.rawValue)
-                .padding(.leading)
                 .foregroundColor(.red)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -43,7 +45,8 @@ struct EmailPasswordView: View {
                         title       :Constants.TextfieldPlaceholder.password,
                         isPassOrNot : true,
                         keyboardType: .default,
-                        capitalizationType: .never)
+                        capitalizationType: .never,
+                        borderColor: vm.userAuthData.user.password.isEmpty ? .gray.opacity(0.6) : .black)
             .padding(.bottom, (vm.passValid.isEmpty && vm.isNewUser) ? 20 : 0)
             if vm.isNewUser{
                 HStack{
@@ -51,28 +54,29 @@ struct EmailPasswordView: View {
                         Image(systemName: Constants.Images.infoImage)
                     }
                     Text(vm.passValid)
-                        .font(.system(size: 15))
                 }
-                .padding(.leading)
+                .font(.system(size: 14))
                 .foregroundColor(.red)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             if vm.isNewUser {
                 InfoTextView(text: Constants.passDesc)
+                    .padding(.leading, 2)
             }
             if !vm.isNewUser {
                 NavigationLink {
                     ForgotPasswordView()
                 } label: {
-                    Text("Forgot password?")
+                    Text(Constants.Headings.forgotPass)
                         .font(.headline)
+                        .fontDesign(.rounded)
                         .foregroundColor(Color(Color.redColor))
                 }
-                .padding()
+                .padding(.vertical)
             }
             Spacer()
-            if vm.isLoading {
-                LoadingView(isLoading: $vm.loaderLoading)
+            if errorVM.isLoading {
+                LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
                     .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 Button {
@@ -85,7 +89,7 @@ struct EmailPasswordView: View {
                     ButtonView(buttonName: vm.isNewUser ? Constants.ButtonsTitle.next : Constants.ButtonsTitle.done,
                                border    : false)
                     .background(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
                             .fill((vm.isNewUser && vm.emailPassBtnDisable) ? Color(Color.redColor).opacity(0.2) : Color(Color.redColor))
                         )
                 }
@@ -106,5 +110,6 @@ struct EmailPasswordView_Previews: PreviewProvider {
     static var previews: some View {
         EmailPasswordView(navigationVM: NavigationViewModel())
             .environmentObject(SignInSignUpViewModel())
+            .environmentObject(ResponseErrorViewModel.shared)
     }
 }

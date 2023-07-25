@@ -32,21 +32,18 @@ struct AccountSettingsView: View {
             
             ScrollView{
                 VStack(alignment: .leading){
-                    ForEach(0..<2){item in
+                    
                         Button {
                             vm.toShowChangePassword.toggle()
                         } label: {
                             HStack{
-                                Text(DataArrays.accountSettingsArray[item])
+                                Text(DataArrays.accountSettingsArray[1])
                                 Spacer()
                                 Image(systemName: Constants.Images.rightArrow)
                             }
                             .padding(.vertical)
                         }
-
-                        
-                        DividerCapsule(height: 2, color: Color(.systemGray3))
-                    }
+                        .foregroundColor(.primary)
                     
                     ForEach(0..<3){item in
                         HStack{

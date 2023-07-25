@@ -82,6 +82,11 @@ enum ApiMyRidesMethods: String {
     case updatePublishedRide = "PUT"
 }
 
+enum ApiMessagingMethods: String {
+    case messageList = "GET"
+    case message = "POST"
+}
+
 enum TabViews: RawRepresentable, CaseIterable {
     case carPool
     case myRides
@@ -115,7 +120,7 @@ enum RideBookedType: String {
 }
 
 enum RidePublishedType: String {
-    case confirm = "confirmed"
+    case confirm = "completed"
     case pending = "pending"
     case cancel = "cancelled"
 }
@@ -182,4 +187,9 @@ enum ForgotPasswordViews: Float {
     case email = 33.33
     case otp = 66.66
     case resetPassword = 99.99
+}
+
+enum MessageDirection {
+        case left
+        case right
 }

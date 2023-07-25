@@ -28,5 +28,5 @@ struct RideSearchData: Codable {
 
 
 extension RideSearchData {
-    static var initialize = RideSearchData(sourceLongitude: 0.0, sourceLatitude: 0.0, destinationLongitude: 0.0, destinationLatitude: 0.0, passCount: 0, date: "", order: nil)
+    static var initialize = RideSearchData(sourceLongitude: 0.0, sourceLatitude: 0.0, destinationLongitude: 0.0, destinationLatitude: 0.0, passCount: 1, date: "", order: nil)
 }

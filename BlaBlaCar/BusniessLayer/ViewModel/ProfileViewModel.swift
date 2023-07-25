@@ -12,15 +12,9 @@ import SwiftUI
 class ProfileViewModel: ObservableObject {
     
     
-    // MARK: variables to check and get error so as to display an alert
-    @Published var hasError      = false
-    @Published var errorMessage  : AuthenticateError?
-    @Published var errorMessage1 = String()
-    
-    
     @Published var isVehicleViewSelected = false
     @Published var isGoingBack = false
-    @Published var toDismissVehicleList = false
+    //@Published var toDismissVehicleList = false
     @Published var isAddingNewVehicle = false
     @Published var toDeleteVehicle = false
     
@@ -94,32 +88,32 @@ class ProfileViewModel: ObservableObject {
     
     ///  Function to get an array of EditProfileOptions for reusing of textfields
     func makeEditProfileArray() {
-        editProfileArray = [EditProfileOptions(heading: "First Name", textField: firstName, type: .firstName, keyboardType: .default, capitalizationType: .words),
-                            EditProfileOptions(heading: "Last Name", textField: lastName, type: .secondName, keyboardType: .default, capitalizationType: .words ),
-                            EditProfileOptions(heading: "Gender", textField: gender, type: .gender),
-                            EditProfileOptions(heading: "Date of birth", textField: dob, type: .dob),
-                            EditProfileOptions(heading: "Email", textField: email, type: .email, keyboardType: .emailAddress, capitalizationType: .never),
-                            EditProfileOptions(heading: "Phone number", textField: phnNumber, type: .phnNum, keyboardType: .numberPad, capitalizationType: .never)]
+        editProfileArray = [EditProfileOptions(heading: Constants.TextfieldReuse.firstName, textField: firstName, type: .firstName, keyboardType: .default, capitalizationType: .words),
+                            EditProfileOptions(heading: Constants.TextfieldReuse.lastName, textField: lastName, type: .secondName, keyboardType: .default, capitalizationType: .words ),
+                            EditProfileOptions(heading: Constants.TextfieldReuse.gender, textField: gender, type: .gender),
+                            EditProfileOptions(heading: Constants.TextfieldReuse.dob, textField: dob, type: .dob),
+                            EditProfileOptions(heading: Constants.TextfieldReuse.email, textField: email, type: .email, keyboardType: .emailAddress, capitalizationType: .never),
+                            EditProfileOptions(heading: Constants.TextfieldReuse.phoneNum, textField: phnNumber, type: .phnNum, keyboardType: .numberPad, capitalizationType: .never)]
         
     }
     
     
     /// Function to get an array of VehicleOptions for reusing of textfields
     func makeVehicleOptionsArray() {
-        vehicleOptionsArray = [VehicleOptions(heading: "Country", textField: country, textFieldType: .country),
-                               VehicleOptions(heading: "Name", textField: vehicleName, textFieldType: .name, keyboardType: .default, capitalizationType: .words),
-                               VehicleOptions(heading: "Brand", textField: vehicleBrand, textFieldType: .brand, keyboardType: .default, capitalizationType: .words),
-                               VehicleOptions(heading: "Number", textField: vehicleNumber, textFieldType: .number, keyboardType: .numberPad, capitalizationType: .never),
-                               VehicleOptions(heading: "Type", textField: vehicleType, textFieldType: .vehicleType),
-                               VehicleOptions(heading: "Color", textField: vehicleColor, textFieldType: .color),
-                               VehicleOptions(heading: "Year", textField: vehicleYear, textFieldType: .year)]
+        vehicleOptionsArray = [VehicleOptions(heading: Constants.TextfieldReuse.country, textField: country, textFieldType: .country),
+                               VehicleOptions(heading: Constants.TextfieldReuse.name, textField: vehicleName, textFieldType: .name, keyboardType: .default, capitalizationType: .words),
+                               VehicleOptions(heading: Constants.TextfieldReuse.brand, textField: vehicleBrand, textFieldType: .brand, keyboardType: .default, capitalizationType: .words),
+                               VehicleOptions(heading: Constants.TextfieldReuse.number, textField: vehicleNumber, textFieldType: .number, keyboardType: .default, capitalizationType: .never),
+                               VehicleOptions(heading: Constants.TextfieldReuse.type, textField: vehicleType, textFieldType: .vehicleType),
+                               VehicleOptions(heading: Constants.TextfieldReuse.color, textField: vehicleColor, textFieldType: .color),
+                               VehicleOptions(heading: Constants.TextfieldReuse.year, textField: vehicleYear, textFieldType: .year)]
     }
     
     
     /// Function to get array based on vehicleOptionSelector cases
     /// - Returns: An array of strings
-    func toGetVehicleOptionsList() -> [String] {
-        switch vehicleOptionSelector{
+    func toGetVehicleOptionsList(method: VehicleTextFieldType) -> [String] {
+        switch method{
         case .name, .brand, .number:
             return []
         case .country:
@@ -140,21 +134,15 @@ class ProfileViewModel: ObservableObject {
     /// - Returns: dictionary of type [String: Any]
     func makeDict(method: ApiVehicleMethods) -> [String:Any] {
         switch method {
-        case .addVehicle:
-            
-            return ["vehicle": ["country": addingVehicleArray[0].textField, "vehicle_number": addingVehicleArray[3].textField, "vehicle_brand": addingVehicleArray[2].textField, "vehicle_name": addingVehicleArray[1].textField, "vehicle_type": addingVehicleArray[4].textField, "vehicle_color": addingVehicleArray[5].textField, "vehicle_model_year": addingVehicleArray[6].textField]]
-        case .vehicleList:
-            return [:]
-        case .updateVehicle:
-            return ["vehicle": ["country": addingVehicleArray[0].textField, "vehicle_number": addingVehicleArray[3].textField, "vehicle_brand": addingVehicleArray[2].textField, "vehicle_name": addingVehicleArray[1].textField, "vehicle_type": addingVehicleArray[4].textField, "vehicle_color": addingVehicleArray[5].textField, "vehicle_model_year": addingVehicleArray[6].textField]]
-        case .deleteVehicle:
-            return [:]
-        case .getVehicle:
-            return [:]
+        case .addVehicle: return self.toGiveVehicleDict()
+        case .updateVehicle: return self.toGiveVehicleDict()
+        default: return [:]
         }
     }
     
-    
+    func toGiveVehicleDict() -> [String:Any] {
+        return [Constants.DictionaryForApiCall.vehicle: [Constants.DictionaryForApiCall.country: addingVehicleArray[0].textField, Constants.DictionaryForApiCall.vehicleNum: addingVehicleArray[3].textField, Constants.DictionaryForApiCall.vehicleBrand: addingVehicleArray[2].textField, Constants.DictionaryForApiCall.vehicleName: addingVehicleArray[1].textField, Constants.DictionaryForApiCall.vehicleType: addingVehicleArray[4].textField, Constants.DictionaryForApiCall.vehicleColor: addingVehicleArray[5].textField, Constants.DictionaryForApiCall.vehicleYear: addingVehicleArray[6].textField]]
+    }
     
     /// function to get URLs for all ApiVehicleMethods for api call
     /// - Parameter method: ApiVehicleMethods
@@ -185,7 +173,7 @@ class ProfileViewModel: ObservableObject {
     func vehicleApiCall(method: ApiVehicleMethods, data: [String:Any]?, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
-
+        ResponseErrorViewModel.shared.isLoading = true
         
         anyCancellable = ApiManager.shared.apiMethodsWithDict(httpMethod: httpMethod, method: method, dataModel: data, url: url)
             .receive(on: DispatchQueue.main)
@@ -193,24 +181,25 @@ class ProfileViewModel: ObservableObject {
                 switch completion {
                     
                 case .failure(let error as ErrorResponse):
-                    print(error)
-                    if error.status?.error != nil{
-                        self.errorMessage1 = error.status?.error ?? ""
-                    } else {
-                        self.errorMessage1 = error.status?.message ?? ""
-                    }
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
                     
                 case .failure(let error):
-                    print(error)
-                    self.hasError = true
-                    self.errorMessage1 = error.localizedDescription
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
-                    print("Completed")
+                    ResponseErrorViewModel.shared.isLoading = false
                 }
                 
             } receiveValue: { [weak self] data in
-                self?.toDismiss.toggle()
+                //self?.toDismiss.toggle()
+                switch method {
+                case .addVehicle:
+                    self?.toDismiss = true
+                case .updateVehicle:
+                    self?.toDismiss = true
+                default: break
+                    
+                }
                 self?.vehicleResponse = data ?? VehicleResponse.initialize
                 print(self?.vehicleResponse as Any)
             }
@@ -226,19 +215,21 @@ class ProfileViewModel: ObservableObject {
     func vehicleListApiCall(method: ApiVehicleMethods, data: [String:Any]?, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
-
+        ResponseErrorViewModel.shared.isLoading = true
+        
         anyCancellable1 = ApiManager.shared.apiMethodsWithDict(httpMethod: httpMethod, method: method, dataModel: data, url: url)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                     
                 case .failure(let error as ErrorResponse):
-                    print(error)
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
                     
                 case .failure(let error):
-                    print(error)
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     print("Completed")
                 }
                 
@@ -257,19 +248,21 @@ class ProfileViewModel: ObservableObject {
     func getVehicleApiCall(method: ApiVehicleMethods, data: [String:Any]?, httpMethod: HttpMethod){
         
         let url = URL(string: toGetURL(method: method))
-
+        ResponseErrorViewModel.shared.isLoading = true
+        
         anyCancellable2 = ApiManager.shared.apiMethodsWithDict(httpMethod: httpMethod, method: method, dataModel: data, url: url)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                     
                 case .failure(let error as ErrorResponse):
-                    print(error)
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
                     
                 case .failure(let error):
-                    print(error)
+                    ResponseErrorViewModel.shared.toShowError(error: error)
                     
                 case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
                     print("Completed")
                 }
                 

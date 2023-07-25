@@ -10,15 +10,6 @@ import Foundation
 
 struct Constants {
     
-    struct ErrorBox {
-        static var error = "Error"
-        static var okay = "Okay"
-        static var retry = "Retry"
-        static var done = "Done"
-        static var userExists = "User already exists \n Please Sign In to Continue"
-        static var noUserExists = "No such user exists \n Register to continue"
-    }
-    
     struct Images {
         static var eyeClose      = "eye.slash"
         static var eye           = "eye"
@@ -49,6 +40,8 @@ struct Constants {
         static var location = "mappin.circle.fill"
         static var magnifyingGlass = "magnifyingglass"
         static var locationPointer = "location.north.circle.fill"
+        static var rupeeSign = "indianrupeesign"
+        static var crossFill = "multiply.circle.fill"
     }
     
     struct Headings {
@@ -62,18 +55,20 @@ struct Constants {
         static var dobHeading = "What's your date of birth?"
         static var genderHeading = "What's your gender?"
         static var signUpPagesHeading = "Finish signing up"
+        static var welcome = "Welcome to ride share app"
         static var onBoardingPage = "Your pick of rides at low prices"
         static var signUpHeading = "How do you want to Sign up?"
         static var loginHeading = "How do you want to Log in?"
         static var isMember = "Already a member?"
         static var notMember = "Not a Member?"
+        static var logOutHeading = "Are you sure you want to log out?\nYou'll need to login again."
         static var backAlertHeading = "Are You Sure?\nIf you go back your progress will be lost."
         static var deleteVehicleHeading = "Are you Sure? \n You want to delete the vehicle"
         static var backAlertSubHeading = "Data will not be saved"
         static var recentSearches = "Recent searches"
         static var selectSeats = "Selected seats"
         static var tripInfo = "Trip Info"
-        static var paymentMethod = "Payment method"
+        static var paymentMethod = "Payment:"
         static var departureDate = "Date of departure"
         static var departureDateAndTime = "Date and time of departure"
         static var selectDate = "Select a date"
@@ -87,6 +82,7 @@ struct Constants {
         static var selectVehicle = "Select a Vehicle"
         static var routeSelection = "Route selection"
         static var carPool = "Car Pool"
+        static var messages = "Messages"
         static var myRides = "My rides"
         static var perSeatPrice = "Price per seat"
         static var profile = "Profile"
@@ -103,7 +99,7 @@ struct Constants {
         static var accountSettings = "Account settings"
         static var vehicles = "Vehicles"
         static var phoneVerification = "Phone Verification"
-        static var forgotPassword = "Forgot password"
+        static var forgotPassword = "Forgot password?"
         static var miniBio = "Mini bio:"
         static var vehicleDetails = "Vehicle Details: "
         static var totalDistanceInKm = "Total distance (in km)"
@@ -116,6 +112,10 @@ struct Constants {
         static var cancelBooking = "Cancel Booking"
         static var cancelYOurRide = "Cancel your ride"
         static var passengers = "Passengers:"
+        static var forgotPass = "Forgot password?"
+        static var about = "About"
+        static var didntGetOtp = "Didn't get otp?"
+        static var changeEmail = "Want to change email?"
     }
     
     struct ButtonsTitle{
@@ -125,13 +125,13 @@ struct Constants {
         static var delete = "Delete"
         static var verify = "Verify"
         static var yes = "Yes"
-        static var okay = "Okay"
+        static var okay = "Ok"
         static var signUp = "Sign up"
         static var logIn = "Log in"
         static var logOut = "Log out"
         static var continueWithEmail = "Continue with Email"
         static var seeAll = "See all"
-        static var close = "close"
+        static var close = "Close"
         static var confirmSeats = "Confirm seats"
         static var continueBtn  = "Continue"
         static var confirmRide  = "Confirm Ride"
@@ -147,6 +147,10 @@ struct Constants {
         static var currentLocation = "Use current location"
         static var settings = "Settings"
         static var cancel = "Cancel"
+        static var resend = "Resend"
+        static var enterEmail = "Enter email"
+        static var lowestPrice = "Lowest Price"
+        static var earliestDeparture = "Earliest Departure"
     }
     
     struct TextfieldPlaceholder {
@@ -159,8 +163,8 @@ struct Constants {
         static var dob = "Date Of Birth"
         static var phoneNum = "Phone Number"
         
-        static var dropLocation = "Enter Drop Location"
-        static var pickupLocation = "Enter Pickup Location"
+        static var dropLocation = "Drop Location"
+        static var pickupLocation = "Pickup Location"
         static var addBio = "Add bio"
         static var country = "Country"
         static var type = "Type"
@@ -175,6 +179,8 @@ struct Constants {
         
         static var emailRegex       = "^[a-zA-Z0-9.!$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]{2,64}){1,2}"
         static var numRegex         = ".*[A-Za-z!@#$%^&*()\\-_=+{}|?>.<]+.*"
+        static var onlyNumRegex     = "^[0-9]+$"
+        static var onlyAlphaRegex   = "^[a-zA-Z]+$"
         static var alphabetRegex    = ".*[0-9!@#$%^&*()\\-_=+{}|?>.<]+.*"
         static var containsChRegex  = ".*[!@#$%^&*()\\-_=+{}|?>.<]+.*"
         static var isLowerRegex     = ".*[a-z]+.*"
@@ -245,6 +251,17 @@ struct Constants {
         static var allFieldsMandatory = "All fields are mandatory."
         static var seatBooked = " seat booked"
         static var seatsBooked = " seats booked"
+        static var date = "Date"
+        static var time = "Time"
+        static var hour = " hrs"
+        static var minute = " mins"
+        static var kilometer = " km"
+        static var ride = "ride"
+        static var rides = "rides"
+        static var confirmed = "CONFIRMED"
+        static var cancelled = "CANCELLED"
+        static var completed = "COMPLETED"
+        static var pending = "ACTIVE"
     }
     
     struct StringFormat {
@@ -253,7 +270,7 @@ struct Constants {
         static var twoDigit = "%.2f"
     }
     
-    static let passDesc = "In order to protect your account, make sure your password: \n\nLength must be between 8 and 16\n Includes a Uppercase letter \nIncludes a Lowercase letter\nIncludes a Special Character"
+    static let passDesc = "In order to protect your account, make sure your password: \n\nLength must be between 8 and 16\nIncludes a Uppercase letter \nIncludes a Lowercase letter\nIncludes a Special Character"
     static let pDesc = "Password must be between 8 to 16 in length, contain at least one uppercase, one lowercase, one special character"
     static let fullNameDesc = "Enter the same name as on your government ID\n(Fields should not be empty)"
     static let dobDesc = "Enter the same DOB as on your government ID"

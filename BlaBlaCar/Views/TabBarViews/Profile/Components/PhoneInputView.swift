@@ -25,7 +25,8 @@ struct PhoneInputView: View {
                         title       : Constants.TextfieldPlaceholder.phoneNum,
                         isPassOrNot : false,
                         keyboardType: .numberPad,
-                        capitalizationType: .never)
+                        capitalizationType: .never,
+                        borderColor: vm.phoneNum.isEmpty ? .gray.opacity(0.6) : .black)
             
             HStack{
                 if !vm.phoneNumValid.isEmpty{

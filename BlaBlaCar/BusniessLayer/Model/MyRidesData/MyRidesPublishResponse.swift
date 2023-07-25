@@ -61,7 +61,7 @@ struct Empty: Codable {
 // MARK: - GetPublishResponse
 struct GetPublishResponse: Codable {
     let id: Int
-    let source, destination: String
+    var source, destination: String
     var passengersCount: Int
     let addCity: String?
     let date: String

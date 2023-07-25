@@ -19,40 +19,53 @@ struct RidesPublishedCard: View {
         ZStack{
             VStack(alignment: .leading, spacing: 7){
                 HStack{
-                    Text(array.source)
-                        .lineLimit(2)
-                    Image(systemName: Constants.Images.bigRightArrow)
-                    Text(array.destination)
-                        .lineLimit(2)
+                    Group {
+                        Text(array.source.capitalized)
+                        Image(systemName: Constants.Images.bigRightArrow)
+                        Text(array.destination.capitalized)
+                            
+                    }
+                    .lineLimit(2)
+                    .font(.system(size: 16, weight: .semibold ,design: .rounded))
+                    .multilineTextAlignment(.leading)
+                    
                     Spacer()
-                    Text(publishedType.0).font(.caption).bold().foregroundColor(publishedType.1)
-                        .frame(width: 100, height: 20)
-                        .background(publishedType.1.opacity(0.2))
+                    Text(publishedType.0).foregroundColor(publishedType.1)
+                        .font(.system(size: 12, weight: .semibold ,design: .rounded))
+                        .frame(width: 100, height: 30)
+                        .background(
+                            RoundedRectangle(cornerRadius: 7)
+                                .fill(publishedType.1.opacity(0.2))
+                        )
+                    
                 }
                 .foregroundColor(.black)
-                .font(.title3)
                 VStack(spacing: 5){
-                    Text("Rs \(String(format: Constants.StringFormat.oneDigit, array.setPrice)) per seat")
-                        .font(.headline).foregroundColor(.black)
+                    Text("Rs \(String(format: Constants.StringFormat.zeroDigit, array.setPrice)) per seat")
+                        .font(.system(size: 18, weight: .semibold ,design: .rounded))
+                        .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.bottom)
-                    HStack{
-                        Image(systemName: Constants.Images.calendar)
-                        Text(DateTimeFormat.shared.dateFormat(date: array.date))
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    HStack{
-                        Image(systemName: Constants.Images.clock)
-                        if let sourceTime = array.estimateTime{
-                            Text(DateTimeFormat.shared.timeFormat(date: sourceTime, is24hrs: true) + " hrs")
+                    Group{
+                        HStack{
+                            Image(systemName: Constants.Images.calendar)
+                            Text(DateTimeFormat.shared.dateFormat(date: array.date))
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack{
+                            Image(systemName: Constants.Images.clock)
+                            if let sourceTime = array.estimateTime{
+                                Text(DateTimeFormat.shared.timeFormat(date: sourceTime, is24hrs: true, toNotReduce: false) + Constants.Description.hour)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack{
+                            Image(systemName: Constants.Images.person)
+                            Text("\(array.passengersCount) seats left")
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    HStack{
-                        Image(systemName: Constants.Images.person)
-                        Text("\(array.passengersCount) seats left")
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.system(size: 14, design: .rounded))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.subheadline)
@@ -73,5 +86,6 @@ struct RidesPublishedCard: View {
 struct RidesPublishedCard_Previews: PreviewProvider {
     static var previews: some View {
         RidesPublishedCard(array: GetPublishResponse(id: 12, source: "Gurgoan", destination: "Meerut", passengersCount: 1, addCity: nil, date: "", time: "", setPrice: 0.0, aboutRide: nil, userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: nil, midSeat: nil, status: "", estimateTime: "", addCityLongitude: nil, addCityLatitude: nil))
+            .environmentObject(MyRidesViewModel())
     }
 }

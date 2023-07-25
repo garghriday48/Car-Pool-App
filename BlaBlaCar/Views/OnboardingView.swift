@@ -16,28 +16,36 @@ struct OnboardingView: View {
         VStack{
             Image(Constants.Images.background)
                 .resizable()
-                //.ignoresSafeArea()
                 .padding()
             
             // to show heading and buttons for signin and signup
             VStack(alignment: .leading){
-                Text(Constants.Headings.onBoardingPage)
-                    .font(.largeTitle)
-                    .bold()
+                VStack {
+                    Text(Constants.Headings.welcome)
+                        .font(.system(size: 28,design: .rounded))
+                        .bold()
+                        
+                    
+                    Text(Constants.Headings.onBoardingPage)
+                        .font(.system(size: 18,design: .rounded))
+                        .foregroundColor(.black.opacity(0.5))
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                
                 Spacer()
                 Button {
                     vm.isNewUser = true
-                    navigationVM.push(.MainSigninSignupView)
+                    navigationVM.push(.SignupPage)
                 } label: {
                     ButtonView(buttonName: Constants.ButtonsTitle.signUp, border: false)
                         .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
                                 .fill(Color(Color.redColor))
                             )
                 }
                 Button {
                     vm.isNewUser = false
-                    navigationVM.push(.MainSigninSignupView)
+                    navigationVM.push(.LoginPage)
                 } label: {
                     ButtonView(buttonName: Constants.ButtonsTitle.logIn, border: true)
                 }

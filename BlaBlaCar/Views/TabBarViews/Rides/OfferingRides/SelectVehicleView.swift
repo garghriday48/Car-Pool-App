@@ -27,14 +27,13 @@ struct SelectVehicleView: View {
                             toShowSelectVehicle.toggle()
                         } label: {
                             Text(Constants.ButtonsTitle.close)
-                                .font(.headline)
-                                .foregroundColor(Color(.systemGray))
+                                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                .foregroundColor(Color(Color.redColor))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal)
                         }
                         Text(Constants.Headings.selectVehicle)
-                            .font(.title3)
-                            .bold()
+                            .font(.system(size: 18, weight: .semibold, design: .rounded))
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
@@ -43,39 +42,14 @@ struct SelectVehicleView: View {
             .padding(.vertical)
             ScrollView{
                 ForEach(profileVM.vehicleResponseList.data){data in
-                    SelectVehicleCellView(mainText: data.vehicleName, secondaryText: data.vehicleColor)
+                    SelectVehicleCellView(data: data)
                         .onTapGesture {
-                            carPoolVM.offerRideSelectorArray[0].text = data.vehicleName
+                            carPoolVM.offerRideSelectorArray[0].text = data.vehicleBrand + " " + data.vehicleName
                             carPoolVM.publishRideData.publish.vehicleID = data.id
                             presentationMode.wrappedValue.dismiss()
                         }
                 }
             }
-            
-//            HStack{
-//                DividerCapsule(height: 1, color: Color(.systemGray5))
-//                Text(Constants.Description.or)
-//                DividerCapsule(height: 1, color: Color(.systemGray5))
-//            }
-//            HStack{
-//                Button {
-//
-//                } label: {
-//                    VStack(alignment: .leading, spacing: 8){
-//                        HStack{
-//                            Image(systemName: Constants.Images.plusCircle)
-//                            Text(Constants.ButtonsTitle.addNewVehicle)
-//                        }
-//                        .padding()
-//                        .bold()
-//                        .foregroundColor(Color(Color.redColor))
-//                        .font(.title2)
-//                    }
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//
-//            }
-
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity ,alignment: .top)
     }

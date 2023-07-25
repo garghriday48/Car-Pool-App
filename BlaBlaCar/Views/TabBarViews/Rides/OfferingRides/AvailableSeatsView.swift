@@ -44,10 +44,10 @@ struct AvailableSeatsView: View {
                 ForEach(1..<9){seat in
                     VStack(alignment: .leading){
                         if seat == 1{
-                            Text ("\(seat) seat")
+                            Text ("\(seat) \(Constants.Description.seat)")
                                 
                          } else{
-                            Text("\(seat) seats")
+                             Text("\(seat) \(Constants.Description.seats)")
                                 
                         }
                         DividerCapsule(height: 2, color: Color(.systemGray3))

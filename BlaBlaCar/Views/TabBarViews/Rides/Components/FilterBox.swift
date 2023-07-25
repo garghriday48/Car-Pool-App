@@ -21,7 +21,7 @@ struct FilterBox: View {
                 Text(name)
             }
         }
-        .font(.subheadline)
+        .font(.system(size: 14, weight: .bold, design: .rounded))
         .fontWeight(.bold)
         .foregroundColor(isSelected ? Color(Color.redColor) : Color(.darkGray))
         .padding(10)
