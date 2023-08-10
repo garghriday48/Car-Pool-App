@@ -14,8 +14,8 @@ struct BlaBlaCarApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ChatRoomView()
-            //Navigation()
+            //ChatRoomView()
+            Navigation()
                 .environmentObject(navigationVM)
             
         }

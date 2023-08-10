@@ -60,7 +60,6 @@ class ApiManager {
                         UserDefaults.standard.set(bearer, forKey: Constants.UserDefaultKeys.session)
                     }
                 }
-
                 // return data and response
                 return (data, response)
                 
@@ -188,6 +187,8 @@ class ApiManager {
                         } else {
                             throw AuthenticateError.badResponse
                         }
+                    } else if dataModel is ChatRoomData {
+                        throw try JSONDecoder().decode(ChatRoomResponse.self, from: data)
                     } else {
                         throw try JSONDecoder().decode(ErrorResponse.self, from: data)
                     }

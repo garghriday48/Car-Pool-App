@@ -33,5 +33,5 @@ struct RideElement: Codable {
 
 
 extension BookingListResponse {
-    static var initialize = BookingListResponse(code: Int(), rides: [RideElement(ride: GetPublishResponse(id: 0, source: "", destination: "", passengersCount: 0, addCity: nil, date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: nil, midSeat: nil, status: "", estimateTime: "", addCityLongitude: nil, addCityLatitude: nil), bookingID: 0, seat: 0, status: "", reachTime: "", totalPrice: 0.0)])
+    static var initialize = BookingListResponse(code: Int(), rides: [RideElement(ride: GetPublishResponse.initialize, bookingID: 0, seat: 0, status: "", reachTime: "", totalPrice: 0.0)])
 }

@@ -16,7 +16,7 @@ struct UserStatus: Codable{
     var message: String?
     var error: String?
     var errors: [String]?
-    var data: Dataresponse?
+    var data: DataResponse?
     var imageUrl: URL?
     
     enum CodingKeys: String, CodingKey{
@@ -29,7 +29,7 @@ struct UserStatus: Codable{
     }
 }
 
-struct Dataresponse: Codable{
+struct DataResponse: Codable{
     var id: Int
     var email : String
     var created_at: String
@@ -54,5 +54,9 @@ struct Dataresponse: Codable{
 }
 
 extension UserResponse {
-    static var initializeData = UserResponse(status: UserStatus(code: Int(), message: String(), error: nil, errors: nil, data: Dataresponse(id: Int(), email: "", created_at: "", updated_at: "", jti: "", first_name: "", last_name: "", dob: "", title: "", activation_digest: "", activated: false, activate_token: "", average_rating: "", otp: 0, phone_verified: false)))
+    static var initializeData = UserResponse(status: UserStatus(code: Int(), message: String(), error: nil, errors: nil, data: DataResponse.initialize))
+}
+
+extension DataResponse {
+    static var initialize = DataResponse(id: Int(), email: "", created_at: "", updated_at: "", jti: "", first_name: "", last_name: "", dob: "", title: "", activation_digest: "", activated: false, activate_token: "", average_rating: "", otp: 0, phone_verified: false)
 }

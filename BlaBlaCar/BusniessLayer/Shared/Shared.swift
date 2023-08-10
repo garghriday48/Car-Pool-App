@@ -71,7 +71,7 @@ struct DateTimeFormat {
             
             if let date = dateFormatter.date(from: date) {
                 let outputDateFormatter = DateFormatter()
-                outputDateFormatter.dateFormat = "EEEE, MMMM dd, yyyy"
+                outputDateFormatter.dateFormat = "yyyy-MM-dd"
                 //guard let dateMinus6Hours = Calendar.current.date(byAdding: .hour, value: -5, to: date) else {return ""}
                 //guard let dateMinus30Mins = Calendar.current.date(byAdding: .minute, value: -30, to: dateMinus6Hours) else {return ""}
                 return outputDateFormatter.string(from: date)

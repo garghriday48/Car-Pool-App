@@ -83,7 +83,10 @@ enum ApiMyRidesMethods: String {
 }
 
 enum ApiMessagingMethods: String {
+    case chatRoom = "POST "
+    case chatRoomList = " GET"
     case messageList = "GET"
+    case singleChatRoom = "GET "
     case message = "POST"
 }
 

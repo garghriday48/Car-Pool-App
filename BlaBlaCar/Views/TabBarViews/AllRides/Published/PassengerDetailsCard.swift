@@ -10,6 +10,8 @@ import SwiftUI
 struct PassengerDetailsCard: View {
     
     @Environment (\.presentationMode) var presentationMode
+    @EnvironmentObject var messageVM: MessagesViewModel
+    @EnvironmentObject var myRidesVM: MyRidesViewModel
     
     var array: Passengers
     
@@ -67,8 +69,11 @@ struct PassengerDetailsCard: View {
                     }
                 }
                 .padding(.bottom, 40)
-                Text("\(array.seats)") +
-                Text(array.seats == 1 ? Constants.Description.seatBooked : Constants.Description.seatsBooked )
+                HStack{
+                    Text("\(array.seats)") +
+                    Text(array.seats == 1 ? Constants.Description.seatBooked : Constants.Description.seatsBooked )
+                    Spacer()
+                }
                 
             }
             .bold()
@@ -89,7 +94,7 @@ struct PassengerDetailsCard: View {
                     }
                     HStack {
                         Image(systemName: Constants.Images.starFilled)
-                        Text(array.averageRating ?? "0.0")
+                        Text(array.averageRating ?? "4.0")
                     }
                     
                 }
@@ -97,9 +102,24 @@ struct PassengerDetailsCard: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
+            
+            Button {
+                NavigationViewModel.navigationVM.tabView = 2
+                messageVM.toChatRoomFromRides.toggle()
+                messageVM.chatRoomApiCall(method: .chatRoom, httpMethod: .POST, model: ChatRoomData(chat: ChatData(receiverID: array.userID, publishID: myRidesVM.publishId)))
+                
+            } label: {
+                ButtonView(buttonName: Constants.ButtonsTitle.message, border: true)
+                    .padding()
+            }
+
+            
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $messageVM.toChatRoomFromRides) {
+            ChatRoomView(chatData: messageVM.singleChatRoomData)
+        }
     }
 }
 

@@ -183,11 +183,14 @@ class SignInSignUpViewModel: ObservableObject {
                     switch method {
                     case .signUp:
                         NavigationViewModel.navigationVM.paths = [.TabBarPage]
+                        NavigationViewModel.navigationVM.tabView = 0
                         UserDefaults.standard.set(self.userAuthData.user.password, forKey: Constants.UserDefaultKeys.password)
+                        UserDefaults.standard.set(self.userResponse.status.data?.id, forKey: Constants.UserDefaultKeys.userId)
                     case .signIn:
                         NavigationViewModel.navigationVM.paths = [.TabBarPage]
+                        NavigationViewModel.navigationVM.tabView = 0
                         UserDefaults.standard.set(self.userAuthData.user.password, forKey: Constants.UserDefaultKeys.password)
-
+                        UserDefaults.standard.set(self.userResponse.status.data?.id, forKey: Constants.UserDefaultKeys.userId)
                     case .signOut:
                         UserDefaults.standard.set("", forKey: Constants.UserDefaultKeys.session)
                         NavigationViewModel.navigationVM.paths = []

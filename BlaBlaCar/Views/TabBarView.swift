@@ -15,18 +15,20 @@ struct TabBarView: View {
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var mapVM: MapViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
+    @EnvironmentObject var messageVM: MessagesViewModel
+    
     
     var body: some View {
-            TabView{
+        TabView(selection: $navigationVM.tabView){
                 /// for each to show all the tabs in tabbar
                 /// group is used so that their is no need to give each tab its image and name
                 ForEach(TabViews.allCases, id: \.self){views in
                     Group{
                         switch views{
-                        case .carPool: CarPoolView(mapVM: mapVM, carPoolVM: carPoolVM)
-                        case .myRides: MyRidesView()
-                        case .messages: MessagesView()
-                        case .profile: ProfileView(vm: vm, profileVM: profileVM)
+                        case .carPool: CarPoolView(mapVM: mapVM, carPoolVM: carPoolVM).tag(0)
+                        case .myRides: MyRidesView().tag(1)
+                        case .messages: MessagesView().tag(2)
+                        case .profile: ProfileView(vm: vm, profileVM: profileVM).tag(3)
                         }
                     }
                     .padding(.bottom)
@@ -36,6 +38,8 @@ struct TabBarView: View {
                     }
                 }
             }
+            .navigationBarBackButtonHidden()
+            .accentColor(Color(Color.redColor).opacity(0.8))
             .blur(radius: errorVM.hasResponseError ? 5 : 0)
             .ignoresSafeArea()
             .environmentObject(carPoolVM)
@@ -58,6 +62,10 @@ struct TabBarView: View {
             }, message: {
                 Text(errorVM.errorMessage?.errorDescription ?? "")
             })
+            .onAppear{
+                guard let id = UserDefaults.standard.value(forKey: Constants.UserDefaultKeys.userId) else {return}
+                messageVM.senderId = id as? Int ?? 0
+            }
 
     }
 }

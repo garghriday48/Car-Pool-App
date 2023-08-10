@@ -67,7 +67,7 @@ struct GetPublishResponse: Codable {
     let date: String
     let time: String?
     let setPrice: Double
-    let aboutRide: String?
+    let aboutRide: String
     let userID: Int
     let createdAt, updatedAt: String
     let sourceLatitude, sourceLongitude, destinationLatitude, destinationLongitude: Double
@@ -102,9 +102,13 @@ struct GetPublishResponse: Codable {
 }
 
 extension PublishListResponse {
-    static var initialize = PublishListResponse(code: Int(), data: [GetPublishResponse(id: 0, source: "", destination: "", passengersCount: 0, addCity: "", date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: "", midSeat: "", status: "", estimateTime: "", addCityLongitude: 0.0, addCityLatitude: 0.0)])
+    static var initialize = PublishListResponse(code: Int(), data: [GetPublishResponse.initialize])
 }
 
 extension PublishResponseWithId {
-    static var initialize = PublishResponseWithId(code: Int(), data: GetPublishResponse(id: 0, source: "gvewgewrgwe gheq rgh hger eghe heqgh gh er e erg ergew egege g rwegh rtghrt hrt", destination: "g erge grg er htymnynten tnetnetntbngntbtegbetnbtbntn bhtrt hnrhrtg", passengersCount: 0, addCity: "", date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: "", midSeat: "", status: "", estimateTime: "", addCityLongitude: 0.0, addCityLatitude: 0.0), reachTime: nil, passengers: [Passengers(userID: Int(), firstName: "", lastName: "", dob: "", phoneNumber: "", phoneVerified: false, image: "", averageRating: nil, bio: "", travelPreferences: nil, seats: 0)])
+    static var initialize = PublishResponseWithId(code: 0, data: GetPublishResponse.initialize, reachTime: nil, passengers: [Passengers(userID: 0, firstName: "", lastName: "", dob: "", phoneNumber: "", phoneVerified: false, image: "", averageRating: nil, bio: "", travelPreferences: nil, seats: 0)])
+}
+
+extension GetPublishResponse {
+    static var initialize = GetPublishResponse(id: 0, source: "gvewgewrgwe gheq rgh hger eghe heqgh gh er e erg ergew egege g rwegh rtghrt hrt", destination: "g erge grg er htymnynten tnetnetntbngntbtegbetnbtbntn bhtrt hnrhrtg", passengersCount: 0, addCity: "", date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: "", midSeat: "", status: "", estimateTime: "", addCityLongitude: 0.0, addCityLatitude: 0.0)
 }

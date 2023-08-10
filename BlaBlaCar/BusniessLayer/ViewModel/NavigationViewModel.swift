@@ -15,6 +15,7 @@ class NavigationViewModel:ObservableObject{
     static let navigationVM = NavigationViewModel()
     
     @Published var paths: [ViewID] = []
+    @Published var tabView: Int = 0
     
     init (){
     

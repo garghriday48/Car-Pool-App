@@ -10,15 +10,14 @@ import SwiftUI
 struct ChatRoomView: View {
     
     @EnvironmentObject var myRidesVM: MyRidesViewModel
-    @StateObject var messageVM = MessagesViewModel()
+    @EnvironmentObject var messageVM: MessagesViewModel
     
     @Environment (\.dismiss) var dismiss
     
-    var array = Passengers(userID: 0, firstName: "Hriday", lastName: "Garg", dob: "2001-12-06", phoneNumber: "", phoneVerified: false, image: "", averageRating: "", bio: "", travelPreferences: "", seats: 2)
+    var chatData: ChatsList
     
 
-    @State var message = ""
-    @State var newArray: [String] = []
+    //@State var message = ""
     
     
     var body: some View {
@@ -32,13 +31,13 @@ struct ChatRoomView: View {
                         .font(.title2)
                         .padding(.trailing)
                         
-                        if let image = array.image {
+                        if let image = messageVM.isSender ? chatData.receiverImage : chatData.senderImage{
                             AsyncImage(url: URL(string: image)) { image in
                                 image
                                     .resizable()
                                     .scaledToFill()
                             } placeholder: {
-                                if array.image == nil {
+                                if (messageVM.isSender ? chatData.receiverImage : chatData.senderImage) == nil {
                                     Image(Constants.Images.person)
                                         .resizable()
                                         .scaledToFill()
@@ -53,15 +52,15 @@ struct ChatRoomView: View {
                             .frame(width: 60, height: 60)
                             .clipShape(Circle())
                             .overlay {
-                                Circle().stroke(.white ,lineWidth: 1)
+                                Circle().stroke(.black ,lineWidth: 1)
                             }
                             VStack(alignment: .leading, spacing: 4){
-                                Text(array.firstName + " " + array.lastName)
-                                    .foregroundColor(.white)
+                                Text((messageVM.isSender ? chatData.receiver.first_name : chatData.sender.first_name) + " " + (messageVM.isSender ? chatData.receiver.last_name : chatData.sender.last_name))
+                                    .foregroundColor(.black)
                                     .font(.system(size: 18, weight: .semibold, design: .rounded))
-                                Text("\(Age.shared.calcAge(birthday: array.dob)) y/o")
-                                    .font(.system(size: 14, design: .rounded))
-                                    .foregroundColor(.white)
+//                                Text("\(Age.shared.calcAge(birthday: chatData.sender.dob)) y/o")
+//                                    .font(.system(size: 14, design: .rounded))
+//                                    .foregroundColor(.black)
                             }
                         }
                     }
@@ -77,7 +76,7 @@ struct ChatRoomView: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                     }
                     .padding()
                 }
@@ -88,24 +87,26 @@ struct ChatRoomView: View {
                     ScrollView {
                         
                         
-                        ForEach(newArray ,id: \.self){date in
+                        ForEach(0..<(messageVM.dateWiseMessagesList?.count ?? 0), id: \.self){index in
                             VStack{
-                                Text(date).font(.system(size: 16, weight: .bold ,design: .rounded)).padding(.top)
-                                ForEach(messageVM.dateWiseMessagesList[date] ?? [], id: \.id){message in
+                                Text(DateTimeFormat.shared.dateFormat(date: messageVM.dateWiseMessagesList?[index].key ?? "")).font(.system(size: 16, weight: .bold ,design: .rounded)).padding(.top)
+                                ForEach(messageVM.dateWiseMessagesList?[index].value ?? [], id: \.id){message in
                                     
                                     //messageVM.messageDirection = .right
-                                    ChatBubble(message: message, messageDirection: message.senderID == 279 ? .left : .right)
+                                    ChatBubble(message: message, messageDirection: message.receiverID == messageVM.senderId ? .left : .right)
                                     
                                 }
                             }
                             
                         }
+                        .refreshable {
+                            messageVM.messageListApiCall(method: .messageList, httpMethod: .GET)
+                        }
                     }
-                    
-                    
+
                     HStack{
                         HStack(spacing: 15) {
-                            TextField("Message", text: $message)
+                            TextField("Message", text: $messageVM.message)
                             
                             //                        Button(action: {}) {
                             //                            Image(systemName: "paperclip.circle.fill")
@@ -120,9 +121,9 @@ struct ChatRoomView: View {
                         
                         /// Send button
                         /// Only to be shown when message is not empty
-                        if self.message != "" {
+                        if messageVM.message != "" {
                             Button {
-                                messageVM.MessageApiCall(method: .message, httpMethod: .POST, data: MessageData(message: SingleMessageData(content: self.message, receiver_id: 279)))
+                                messageVM.MessageApiCall(method: .message, httpMethod: .POST, data: MessageData(message: SingleMessageData(content: messageVM.message, receiver_id: messageVM.isSender ? chatData.receiverID : chatData.senderID)))
                                 
                             } label: {
                                 Image(systemName: "paperplane.fill")
@@ -137,22 +138,14 @@ struct ChatRoomView: View {
                         }
                     }
                     .padding(.horizontal, 10)
-                    .animation(.easeOut, value: self.message)
+                    .animation(.easeOut, value: messageVM.message)
                 }
                 .padding(.bottom, 25)
                 .background(.white)
                 .clipShape(RoundedShape())
-                .onAppear{
-                    messageVM.MessageListApiCall(method: .messageList, httpMethod: .GET)
-                    newArray = Array(messageVM.dateWiseMessagesList.keys)
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.9){
-////                        scroll.scrollTo(messageVM.dateWiseMessagesList[newArray[newArray.count - 1]]?[newArray[newArray.count - 1].count - 1])
-//
-//                    }
-                }
                 .onChange(of: messageVM.messagesListResponse.messages.count, perform: { _ in
                     //DispatchQueue.main.asyncAfter(deadline: .now() + 1){
-                        scroll.scrollTo(messageVM.messagesListResponse.messages[0])
+                    scroll.scrollTo(messageVM.messagesListResponse.messages[0])
                     //}
                 })
 //                (of: messageVM.messagesListResponse.messages.count) { count in
@@ -160,20 +153,24 @@ struct ChatRoomView: View {
 //                        //scroll.scrollTo(messageVM.dateWiseMessagesList[newArray[newArray.count - 1]]?[messageVM.lastMsg - 1])
 //                }
             }
+            .onAppear{
+                if messageVM.senderId == chatData.senderID {
+                    messageVM.isSender = true
+                } else {
+                    messageVM.isSender = false
+                }
+            }
         }
+        .navigationBarBackButtonHidden()
         .edgesIgnoringSafeArea(.bottom)
-        .background(Color(Color.redColor))
-        .onChange(of: messageVM.dateWiseMessagesList.count, perform: { newValue in
-            print(newValue)
-            newArray = Array(messageVM.dateWiseMessagesList.keys)
-        })
+        .background(Color(Color.redColor).opacity(0.9))
         .environmentObject(messageVM)
     }
 }
 
 struct ChatRoomView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatRoomView()
+        ChatRoomView(chatData: ChatsList.initialize)
             .environmentObject(MyRidesViewModel())
             //.environmentObject(MessagesViewModel())
     }

@@ -37,7 +37,12 @@ class ResponseErrorViewModel: ObservableObject {
     func toShowError(error: Error) {
         self.isLoading = false
         print(error.localizedDescription)
-        self.errorMessage = error as? AuthenticateError
+        if let error = error as? AuthenticateError {
+            self.errorMessage = error
+        }
+//        else {
+//            self.errorMessage = AuthenticateError.tryAgain
+//        }
         self.hasError = true
     }
 }

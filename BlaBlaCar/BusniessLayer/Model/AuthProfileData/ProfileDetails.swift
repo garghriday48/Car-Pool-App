@@ -15,7 +15,7 @@ struct ProfileDetails: Codable {
     var message: String?
     var error: String?
     var errors: [String]?
-    var user: Dataresponse?
+    var user: DataResponse?
     var imageUrl: URL?
     
     enum CodingKeys: String, CodingKey{
@@ -30,5 +30,5 @@ struct ProfileDetails: Codable {
 
 
 extension ProfileDetails {
-    static var initializeData = ProfileDetails(code: Int(), message: String(), user: Dataresponse(id: Int(), email: "", created_at: "", updated_at: "", jti: "", first_name: "", last_name: "", dob: "", title: "", activation_digest: "", activated: false, activate_token: "", average_rating: "", otp: 0, phone_verified: false))
+    static var initializeData = ProfileDetails(code: Int(), message: String(), user: DataResponse(id: Int(), email: "", created_at: "", updated_at: "", jti: "", first_name: "", last_name: "", dob: "", title: "", activation_digest: "", activated: false, activate_token: "", average_rating: "", otp: 0, phone_verified: false))
 }

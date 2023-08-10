@@ -10,7 +10,7 @@ import Foundation
 extension Constants {
     
     struct Url {
-        static var baseURL      = "https://ea32-112-196-113-2.ngrok-free.app"
+        static var baseURL      = "http://192.180.2.134:3001"
         static var signupKey    = "/users"
         static var signinKey    = "/users/sign_in"
         static var signoutKey   = "/users/sign_out"
@@ -38,7 +38,9 @@ extension Constants {
         static var cancelRide  = "/cancel_booking"
         static var cancelPublishedRide = "/cancel_publish"
         
-        static var messageList = "/chats/67/messages"
+        static var chatRoom = "/chats"
+        static var messageList = "/chats/"
+        static var messages = "/messages"
     }
     
     struct APIConstants {

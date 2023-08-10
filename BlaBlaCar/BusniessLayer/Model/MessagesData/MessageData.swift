@@ -21,7 +21,7 @@ struct SingleMessageData: Codable {
 
 struct MessageDataResponse: Codable {
     let code: Int
-    var message: SingleMessageResponse
+    var message: SingleMessageResponse?
 }
 
 

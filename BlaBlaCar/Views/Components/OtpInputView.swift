@@ -34,7 +34,7 @@ struct OtpInputView: View {
                             
                         
                         Rectangle()
-                            .fill(activeTextField ==  profileVM.activeStateForIndex(index: index) ? .blue : .gray.opacity(0.5))
+                            .fill(activeTextField ==  profileVM.activeStateForIndex(index: index) ? .red : .gray.opacity(0.5))
                             .frame(height: 4)
                         
                     }

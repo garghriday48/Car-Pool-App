@@ -63,7 +63,7 @@ struct PublishResponse: Codable {
 }
 
 extension PublishRideResponse {
-    static var initialize = PublishRideResponse(code: Int(), publish: PublishResponse(id: 0, source: "", destination: "", passengersCount: 0, addCity: "", date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: "", midSeat: "", selectRoute: SelectRoute(), status: "", estimateTime: "", addCityLongitude: 0.0, addCityLatitude: 0.0, distance: nil, bearing: nil))
+    static var initialize = PublishRideResponse(code: Int(), publish: PublishResponse.initialize)
 }
 
 extension PublishResponse {

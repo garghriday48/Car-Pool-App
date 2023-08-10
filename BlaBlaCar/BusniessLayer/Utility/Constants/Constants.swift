@@ -151,6 +151,7 @@ struct Constants {
         static var enterEmail = "Enter email"
         static var lowestPrice = "Lowest Price"
         static var earliestDeparture = "Earliest Departure"
+        static var message = "Message"
     }
     
     struct TextfieldPlaceholder {
@@ -211,6 +212,7 @@ struct Constants {
 
     struct UserDefaultKeys {
         
+        static let userId = "userId"
         static let password = "password"
         static let session = "SessionAuthToken"
         static let profileData = "UserProfileData"

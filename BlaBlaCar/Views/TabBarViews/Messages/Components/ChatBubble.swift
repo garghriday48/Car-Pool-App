@@ -23,10 +23,11 @@ struct ChatBubble: View {
                 VStack(alignment: messageDirection == .left ? .leading : .trailing){
                     Text(message.content)
                         .padding()
-                        .background(messageDirection == .left ? Color(Color.redColor) : .black.opacity(0.07))
-                        .foregroundColor(messageDirection == .left ? .white : .black)
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .background(messageDirection == .right ? Color(Color.redColor).opacity(0.9) : .black.opacity(0.07))
+                        .foregroundColor(messageDirection == .right ? .white : .black)
                         .clipShape(ChatBubbleShape(direction: messageDirection))
-                    Text(DateTimeFormat.shared.timeFormat(date: message.createdAt, is24hrs: false, toNotReduce: true)).font(.system(size: 13, design: .rounded))
+                    Text(DateTimeFormat.shared.timeFormat(date: message.createdAt, is24hrs: false, toNotReduce: true)).font(.system(size: 12, design: .rounded))
                         .padding(messageDirection == .left ? .leading : .trailing , 12)
                         .foregroundColor(Color(.darkGray))
                         

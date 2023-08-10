@@ -15,21 +15,36 @@ struct MessagesView: View {
     var body: some View {
         VStack{
             Text(Constants.Headings.messages)
-                .font(.title)
-                .bold()
+                .font(.system(size: 24, weight: .bold, design: .rounded))
                 .frame(maxWidth: .infinity ,alignment: .topLeading)
                 .padding()
             
-            DividerCapsule(height: 4, color: Color(.systemGray3))
+            DividerCapsule(height: 1, color: Color(.gray).opacity(0.5))
             
-            List {
-                ForEach(0..<3){_ in
-                    PersonListCard()
-                        .listRowSeparator(.hidden)
+            List(messageVM.chatRoomListResponse.chats, id: \.id){chat in
+                    Button {
+                        messageVM.toChatRoom.toggle()
+                        messageVM.chatRoomId = chat.id
+                        messageVM.singleChatRoomData = chat
+                        messageVM.messageListApiCall(method: .messageList, httpMethod: .GET)
+                    } label: {
+                        PersonListCard(data: chat)
+                    }
+                    .listRowSeparator(.hidden)
+
                 }
-            }
-            .listStyle(.plain)
             
+            .listStyle(.plain)
+            .refreshable {
+                messageVM.chatRoomListApiCall(method: .chatRoomList, httpMethod: .GET)
+            }
+            
+        }
+        .fullScreenCover(isPresented: $messageVM.toChatRoom, content: {
+            ChatRoomView(chatData: messageVM.singleChatRoomData)
+        })
+        .onAppear{
+            messageVM.chatRoomListApiCall(method: .chatRoomList, httpMethod: .GET)
         }
     }
 }

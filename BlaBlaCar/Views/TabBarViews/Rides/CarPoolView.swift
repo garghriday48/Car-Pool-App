@@ -23,11 +23,11 @@ struct CarPoolView: View {
     var body: some View {
         VStack {
             VStack{
-                Text(Constants.Headings.carPool)
-                    .font(.system(size: 24, design: .rounded))
-                    .bold()
-                    .frame(maxWidth: .infinity ,alignment: .topLeading)
-                    .padding()
+                    Text(Constants.Headings.carPool)
+                        .font(.system(size: 24, design: .rounded))
+                        .bold()
+                        .frame(maxWidth: .infinity ,alignment: .topLeading)
+                        .padding()
                 
                 DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 HStack{

@@ -85,7 +85,7 @@ struct RidesPublishedCard: View {
 
 struct RidesPublishedCard_Previews: PreviewProvider {
     static var previews: some View {
-        RidesPublishedCard(array: GetPublishResponse(id: 12, source: "Gurgoan", destination: "Meerut", passengersCount: 1, addCity: nil, date: "", time: "", setPrice: 0.0, aboutRide: nil, userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: nil, midSeat: nil, status: "", estimateTime: "", addCityLongitude: nil, addCityLatitude: nil))
+        RidesPublishedCard(array: GetPublishResponse.initialize)
             .environmentObject(MyRidesViewModel())
     }
 }

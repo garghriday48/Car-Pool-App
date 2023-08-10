@@ -14,19 +14,40 @@ class MessagesViewModel: ObservableObject {
     @Published var messagesListResponse = MessagesListResponse.initialize
     @Published var messageData = MessageData.initialize
     @Published var messageDataResponse = MessageDataResponse.initialize
-    @Published var dateWiseMessagesList: [String:[SingleMessageResponse]] = [:]
+    @Published var dateWiseMessagesList:  [Dictionary<String, [SingleMessageResponse]>.Element]?
     
+    @Published var chatRoomData = ChatRoomData.initialize
+    @Published var chatRoomResponse = ChatRoomResponse.initialize
+    @Published var singleChatRoomData = ChatsList.initialize
+    
+    @Published var chatRoomListResponse = ChatRoomListResponse.initialize
+    @Published var chatRoomWithIdResponse = ChatRoomWithIdResponse.initialize
+    
+    @Published var numOfChatRoom = 0
+    
+    @Published var senderId = 0
     @Published var lastMsg = 0
+    
+    @Published var message = ""
+    
+    @Published var toChatRoom = false
+    @Published var chatRoomId = 0
+    
+    @Published var toChatRoomFromRides = false
+    @Published var chatRoomIdFromRides = 0
+    //@Published var newMessageArray: [String] = []
+    @Published var isSender = false
     
     private var empty = Empty()
     private var anyCancellable: AnyCancellable?
     private var anyCancellable1: AnyCancellable?
+    private var anyCancellable2: AnyCancellable?
     
     
     /// Function to convert MessageListReposne into a dictionary with dates as keys
     /// - Parameter data: MessageListResponse
     /// - Returns: A dictionary with dates as keys and values as array of MessageData struct
-    func datewiseMessageList(data: MessagesListResponse) -> [String: [SingleMessageResponse]]{
+    func datewiseMessageList(data: MessagesListResponse){
         var resultData: [String: [SingleMessageResponse]] = [:]
         
         for i in data.messages.reversed() {
@@ -41,34 +62,42 @@ class MessagesViewModel: ObservableObject {
                 
             }
         }
-        return resultData
+        let sorted = resultData.sorted(by: { $0.key < $1.key })
+
+        self.dateWiseMessagesList = sorted
     }
     
     
     /// function to get url based on different methods
     func toGetURL(method: ApiMessagingMethods) -> String{
         switch method {
+        case .chatRoom, .chatRoomList:
+            return Constants.Url.baseURL + Constants.Url.chatRoom
         case .messageList, .message:
-            return Constants.Url.baseURL + Constants.Url.messageList
+            return Constants.Url.baseURL + Constants.Url.messageList + "\(chatRoomId)" + Constants.Url.messages
+        case .singleChatRoom:
+            return Constants.Url.baseURL + Constants.Url.chatRoom + "/\(chatRoomIdFromRides)"
         }
     }
-        
-    /// function to call API that are related to bookRideData
+    
+    
+    /// function to call API that is used to get all the messages that are done in a particular chat room.
     /// - Parameters:
     ///   - method: to specify ride method for performing different functions
     ///   - httpMethod: to specify httpmethod like GET, POST, etc.
-    func MessageListApiCall(method: ApiMessagingMethods, httpMethod: HttpMethod){
+    func chatRoomApiCall(method: ApiMessagingMethods, httpMethod: HttpMethod, model: ChatRoomData){
         
         let url = URL(string: toGetURL(method: method))
         ResponseErrorViewModel.shared.isLoading = true
         
-        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: model, url: url)
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                 case .failure(let error as ErrorResponse):
                     if error.error == "Chat already exists" {
-                        
+                        self.getData(data: error)
+                        self.chatRoomWithIdApiCall(method: .singleChatRoom, httpMethod: .GET)
                     } else {
                         ResponseErrorViewModel.shared.toShowResponseError(error: error)
                     }
@@ -78,8 +107,117 @@ class MessagesViewModel: ObservableObject {
                     
                 case .finished:
                     ResponseErrorViewModel.shared.isLoading = false
-                    self.dateWiseMessagesList = self.datewiseMessageList(data: self.messagesListResponse)
-                    print(self.dateWiseMessagesList as Any)
+                    self.chatRoomIdFromRides = self.chatRoomResponse.chat.id
+                    self.chatRoomWithIdApiCall(method: .singleChatRoom, httpMethod: .GET)
+                }
+                
+            } receiveValue: { [weak self] data in
+                self?.chatRoomResponse = data ?? ChatRoomResponse.initialize
+                print(self?.chatRoomResponse as Any)
+                
+                
+            }
+        
+    }
+    
+    func getData(data: ErrorResponse){
+        if let id = data.chat?.id {
+            self.chatRoomIdFromRides = id
+        }
+    }
+    
+    /// function to call API that is used to get all the messages that are done in a particular chat room.
+    /// - Parameters:
+    ///   - method: to specify ride method for performing different functions
+    ///   - httpMethod: to specify httpmethod like GET, POST, etc.
+    func chatRoomListApiCall(method: ApiMessagingMethods, httpMethod: HttpMethod){
+        
+        let url = URL(string: toGetURL(method: method))
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                    
+                case .failure(let error):
+                    ResponseErrorViewModel.shared.toShowError(error: error)
+                    
+                case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
+                    self.numOfChatRoom = self.chatRoomListResponse.chats.count
+                }
+                
+            } receiveValue: { [weak self] data in
+                self?.chatRoomListResponse = data ?? ChatRoomListResponse.initialize
+                print(self?.chatRoomListResponse as Any)
+                
+                
+            }
+        
+    }
+    
+    
+    /// function to call API that is used to get all the messages that are done in a particular chat room.
+    /// - Parameters:
+    ///   - method: to specify ride method for performing different functions
+    ///   - httpMethod: to specify httpmethod like GET, POST, etc.
+    func chatRoomWithIdApiCall(method: ApiMessagingMethods, httpMethod: HttpMethod){
+        
+        let url = URL(string: toGetURL(method: method))
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                    
+                case .failure(let error):
+                    ResponseErrorViewModel.shared.toShowError(error: error)
+                    
+                case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
+                    self.singleChatRoomData = self.chatRoomWithIdResponse.chat
+                }
+                
+            } receiveValue: { [weak self] data in
+                self?.chatRoomWithIdResponse = data ?? ChatRoomWithIdResponse.initialize
+                print(self?.chatRoomWithIdResponse as Any)
+                
+                
+            }
+        
+    }
+    
+    
+    /// function to call API that is used to get all the messages that are done in a particular chat room.
+    /// - Parameters:
+    ///   - method: to specify ride method for performing different functions
+    ///   - httpMethod: to specify httpmethod like GET, POST, etc.
+    func messageListApiCall(method: ApiMessagingMethods, httpMethod: HttpMethod){
+        
+        let url = URL(string: toGetURL(method: method))
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable1 = ApiManager.shared.apiMethodWithStruct(httpMethod: httpMethod, method: method, dataModel: empty, url: url)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                    
+                case .failure(let error):
+                    ResponseErrorViewModel.shared.toShowError(error: error)
+                    
+                case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
+                    self.datewiseMessageList(data: self.messagesListResponse)
+                    //self.newMessageArray = Array(self.dateWiseMessagesList)
+                    //print(self.dateWiseMessagesList as Any)
                 }
                 
             } receiveValue: { [weak self] data in
@@ -91,7 +229,7 @@ class MessagesViewModel: ObservableObject {
         
     }
     
-    /// function to call API that are related to bookRideData
+    /// function to call API that is used to post the message send from the user to server.
     /// - Parameters:
     ///   - method: to specify ride method for performing different functions
     ///   - httpMethod: to specify httpmethod like GET, POST, etc.
@@ -116,11 +254,12 @@ class MessagesViewModel: ObservableObject {
                     
                 case .finished:
                     ResponseErrorViewModel.shared.isLoading = false
-                    self.MessageListApiCall(method: .messageList, httpMethod: .GET)
+                    self.messageListApiCall(method: .messageList, httpMethod: .GET)
                 }
                 
             } receiveValue: { [weak self] data in
                 self?.messageDataResponse = data ?? MessageDataResponse.initialize
+                self?.message = ""
                 print(self?.messageDataResponse as Any)
                 
                 

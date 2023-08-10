@@ -21,6 +21,7 @@ enum AuthenticateError: LocalizedError{
     case alreadyBooked
     case networkError
     case incorrectHostname
+    case tryAgain
     
     // MARK: custom error description for errors
     var errorDescription: String?{
@@ -49,6 +50,8 @@ enum AuthenticateError: LocalizedError{
             return "Connection error.\nCheck your internet and try again."
         case .incorrectHostname:
             return "Invalid request\nPlease try again later."
+        case .tryAgain:
+            return "Unable to respond currently.\nPlease try again later."
         }
     }
 }
