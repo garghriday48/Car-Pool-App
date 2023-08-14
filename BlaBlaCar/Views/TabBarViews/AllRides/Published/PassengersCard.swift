@@ -15,36 +15,10 @@ struct PassengersCard: View {
     
     var body: some View {
         HStack {
-            Group{
-                if let image = array.image {
-                    AsyncImage(url: URL(string: image)) { image in
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    } placeholder: {
-                        if array.image == ""{
-                            Image(Constants.Images.person)
-                                .resizable()
-                                .scaledToFill()
-                        } else {
-                            ZStack {
-                                Color.gray.opacity(0.1)
-                                ProgressView()
-                            }
-                        }
-                    }
-                    
-                } else {
-                    Image(Constants.Images.person)
-                        .resizable()
-                        .scaledToFill()
-                }
-            }
-            .frame(width: 60, height: 60)
-            .clipShape(Circle())
-            .overlay {
-                Circle().stroke(lineWidth: 1)
-            }
+            ImageView(size: 60,
+                      imageName: array.image,
+                      condition: array.image == "")
+
             
             VStack(alignment: .leading, spacing: 4){
                 Text(array.firstName + " " + array.lastName)

@@ -133,6 +133,7 @@
 		C9EE4E282A2A352E00D9478A /* NumOfSeatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE4E272A2A352E00D9478A /* NumOfSeatsView.swift */; };
 		C9F1080B2A83578F00253F41 /* ChatRoomData+Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F1080A2A83578F00253F41 /* ChatRoomData+Response.swift */; };
 		C9F1080D2A837A4400253F41 /* ChatRoomListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F1080C2A837A4400253F41 /* ChatRoomListResponse.swift */; };
+		C9F4627D2A8A2148000F7BE2 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F4627C2A8A2148000F7BE2 /* ImageView.swift */; };
 		C9FA90B02A3844F900E59A54 /* BookedRideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FA90AF2A3844F900E59A54 /* BookedRideView.swift */; };
 		C9FA90BA2A3857F500E59A54 /* RidePublishResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FA90B92A3857F500E59A54 /* RidePublishResponse.swift */; };
 		C9FA90BE2A386AF000E59A54 /* RidesBookedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FA90BD2A386AF000E59A54 /* RidesBookedCard.swift */; };
@@ -275,6 +276,7 @@
 		C9EE4E272A2A352E00D9478A /* NumOfSeatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumOfSeatsView.swift; sourceTree = "<group>"; };
 		C9F1080A2A83578F00253F41 /* ChatRoomData+Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatRoomData+Response.swift"; sourceTree = "<group>"; };
 		C9F1080C2A837A4400253F41 /* ChatRoomListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomListResponse.swift; sourceTree = "<group>"; };
+		C9F4627C2A8A2148000F7BE2 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		C9FA90AF2A3844F900E59A54 /* BookedRideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookedRideView.swift; sourceTree = "<group>"; };
 		C9FA90B92A3857F500E59A54 /* RidePublishResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RidePublishResponse.swift; sourceTree = "<group>"; };
 		C9FA90BD2A386AF000E59A54 /* RidesBookedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RidesBookedCard.swift; sourceTree = "<group>"; };
@@ -591,6 +593,7 @@
 				C9BB86CA2A20D75E0002CCD3 /* LoadingView.swift */,
 				E4E141A32A2AD6A4004562B4 /* PlaceholderView.swift */,
 				C9BD99D42A528D5A004AD670 /* RoundedShape.swift */,
+				C9F4627C2A8A2148000F7BE2 /* ImageView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -980,6 +983,7 @@
 				C90526752A1CC791007471DC /* VehicleListView.swift in Sources */,
 				C9050C692A15EE8C00FA20DE /* FilterBox.swift in Sources */,
 				C9B4EAF12A149A00008145FD /* PricePerSeatView.swift in Sources */,
+				C9F4627D2A8A2148000F7BE2 /* ImageView.swift in Sources */,
 				C909F57E2A3753B8004ADCDE /* ProfileDetails.swift in Sources */,
 				C99FB8FD2A0B969400D54DDA /* BlaBlaCarApp.swift in Sources */,
 				C9BD99DA2A52CE8E004AD670 /* MessagesListResponse.swift in Sources */,

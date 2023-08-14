@@ -14,21 +14,23 @@ struct PlaceholderView: View {
     var image: String
     var title: String
     var caption: String
+    var needBackBtn: Bool
     
     @Environment (\.presentationMode) var presentationMode
     
     var body: some View {
         ZStack {
-            
-            HStack{
-                BackButton(image: Constants.Images.backArrow) {
-                    presentationMode.wrappedValue.dismiss()
+            if needBackBtn {
+                HStack{
+                    BackButton(image: Constants.Images.backArrow) {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .font(.title)
+                    .bold()
                 }
-                .font(.title)
-                .bold()
+                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity ,alignment: .topLeading)
             }
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity ,alignment: .topLeading)
             
             VStack{
                 // image view
@@ -65,6 +67,6 @@ struct PlaceholderView: View {
 
 struct PlaceholderView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaceholderView(image: Constants.EmptyRidesView.image, title: Constants.EmptyRidesView.title, caption: Constants.EmptyRidesView.caption)
+        PlaceholderView(image: Constants.EmptyRidesView.image, title: Constants.EmptyRidesView.title, caption: Constants.EmptyRidesView.caption, needBackBtn: true)
     }
 }

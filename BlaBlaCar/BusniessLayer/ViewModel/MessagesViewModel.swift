@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 class MessagesViewModel: ObservableObject {
     
@@ -18,7 +19,7 @@ class MessagesViewModel: ObservableObject {
     
     @Published var chatRoomData = ChatRoomData.initialize
     @Published var chatRoomResponse = ChatRoomResponse.initialize
-    @Published var singleChatRoomData = ChatsList.initialize
+    ///@Published var singleChatRoomData = ChatsList.initialize
     
     @Published var chatRoomListResponse = ChatRoomListResponse.initialize
     @Published var chatRoomWithIdResponse = ChatRoomWithIdResponse.initialize
@@ -34,14 +35,21 @@ class MessagesViewModel: ObservableObject {
     @Published var chatRoomId = 0
     
     @Published var toChatRoomFromRides = false
-    @Published var chatRoomIdFromRides = 0
+    //@Published var chatRoomIdFromRides = 0
     //@Published var newMessageArray: [String] = []
     @Published var isSender = false
+    
+    @Published var keyboardHeight: CGFloat = 0
     
     private var empty = Empty()
     private var anyCancellable: AnyCancellable?
     private var anyCancellable1: AnyCancellable?
     private var anyCancellable2: AnyCancellable?
+    
+    
+    init(){
+        listenForKeyboardNotifications()
+    }
     
     
     /// Function to convert MessageListReposne into a dictionary with dates as keys
@@ -54,10 +62,9 @@ class MessagesViewModel: ObservableObject {
             let date = DateTimeFormat.shared.dateFromApiFormat(date: i.createdAt)
             
             if resultData[date] == nil {
-                self.lastMsg = 1
                 resultData[date] = [i]
             } else {
-                self.lastMsg += 1
+                
                 resultData[date]?.append(i)
                 
             }
@@ -76,7 +83,7 @@ class MessagesViewModel: ObservableObject {
         case .messageList, .message:
             return Constants.Url.baseURL + Constants.Url.messageList + "\(chatRoomId)" + Constants.Url.messages
         case .singleChatRoom:
-            return Constants.Url.baseURL + Constants.Url.chatRoom + "/\(chatRoomIdFromRides)"
+            return Constants.Url.baseURL + Constants.Url.chatRoom + "/\(chatRoomId)"
         }
     }
     
@@ -97,6 +104,7 @@ class MessagesViewModel: ObservableObject {
                 case .failure(let error as ErrorResponse):
                     if error.error == "Chat already exists" {
                         self.getData(data: error)
+                        
                         self.chatRoomWithIdApiCall(method: .singleChatRoom, httpMethod: .GET)
                     } else {
                         ResponseErrorViewModel.shared.toShowResponseError(error: error)
@@ -107,7 +115,7 @@ class MessagesViewModel: ObservableObject {
                     
                 case .finished:
                     ResponseErrorViewModel.shared.isLoading = false
-                    self.chatRoomIdFromRides = self.chatRoomResponse.chat.id
+                    self.chatRoomId = self.chatRoomResponse.chat.id
                     self.chatRoomWithIdApiCall(method: .singleChatRoom, httpMethod: .GET)
                 }
                 
@@ -122,7 +130,7 @@ class MessagesViewModel: ObservableObject {
     
     func getData(data: ErrorResponse){
         if let id = data.chat?.id {
-            self.chatRoomIdFromRides = id
+            self.chatRoomId = id
         }
     }
     
@@ -181,7 +189,18 @@ class MessagesViewModel: ObservableObject {
                     
                 case .finished:
                     ResponseErrorViewModel.shared.isLoading = false
-                    self.singleChatRoomData = self.chatRoomWithIdResponse.chat
+                    
+                    self.toChatRoomFromRides.toggle()
+                    //self.singleChatRoomData = self.chatRoomWithIdResponse.chat
+                    
+                    self.chatRoomId = self.chatRoomWithIdResponse.chat.id
+                    self.messageListApiCall(method: .messageList, httpMethod: .GET)
+                    
+                    if self.senderId == self.chatRoomWithIdResponse.chat.senderID {
+                        self.isSender = true
+                    } else {
+                        self.isSender = false
+                    }
                 }
                 
             } receiveValue: { [weak self] data in
@@ -216,6 +235,9 @@ class MessagesViewModel: ObservableObject {
                 case .finished:
                     ResponseErrorViewModel.shared.isLoading = false
                     self.datewiseMessageList(data: self.messagesListResponse)
+                    if !self.messagesListResponse.messages.isEmpty {
+                        self.lastMsg = self.messagesListResponse.messages[0].id
+                    } else {self.lastMsg = 0}
                     //self.newMessageArray = Array(self.dateWiseMessagesList)
                     //print(self.dateWiseMessagesList as Any)
                 }
@@ -264,6 +286,25 @@ class MessagesViewModel: ObservableObject {
                 
                 
             }
-        
     }
+        
+        
+    /// Function is used to get the height of keyboard based on keyboard is shown or not.
+    private func listenForKeyboardNotifications() {
+            NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification,
+               object: nil,
+               queue: .main) { (notification) in
+                guard let userInfo = notification.userInfo,
+                    let keyboardRect = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+                
+                self.keyboardHeight = keyboardRect.height
+            }
+            
+            NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification,
+               object: nil,
+               queue: .main) { (notification) in
+                self.keyboardHeight = 0
+            }
+        }
+        
 }

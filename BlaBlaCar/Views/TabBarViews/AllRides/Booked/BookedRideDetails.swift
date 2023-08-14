@@ -105,27 +105,30 @@ struct BookedRideDetails: View {
                     
                     
                     HStack {
-                        AsyncImage(url: vm.profileResponse.imageUrl) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                } placeholder: {
-                                    if vm.profileResponse.imageUrl == nil {
-                                        Image(Constants.Images.person)
-                                            .resizable()
-                                            .scaledToFill()
-                                    } else {
-                                        ZStack {
-                                            Color.gray.opacity(0.1)
-                                            ProgressView()
-                                        }
-                                    }
-                                }
-                            .frame(width: 60, height: 60)
-                            .clipShape(Circle())
-                            .overlay {
-                                Circle().stroke(lineWidth: 1)
-                            }
+                        ImageView(size: 60,
+                                  imageName: vm.profileResponse.imageUrl,
+                                  condition: vm.profileResponse.imageUrl == nil)
+//                        AsyncImage(url: vm.profileResponse.imageUrl) { image in
+//                                    image
+//                                        .resizable()
+//                                        .scaledToFill()
+//                                } placeholder: {
+//                                    if vm.profileResponse.imageUrl == nil {
+//                                        Image(Constants.Images.person)
+//                                            .resizable()
+//                                            .scaledToFill()
+//                                    } else {
+//                                        ZStack {
+//                                            Color.gray.opacity(0.1)
+//                                            ProgressView()
+//                                        }
+//                                    }
+//                                }
+//                            .frame(width: 60, height: 60)
+//                            .clipShape(Circle())
+//                            .overlay {
+//                                Circle().stroke(lineWidth: 1)
+//                            }
                         VStack(alignment: .leading, spacing: 4){
                             if let firstName = vm.profileResponse.user?.first_name, let lastName = vm.profileResponse.user?.last_name {
                                 Text(firstName + " " + lastName)

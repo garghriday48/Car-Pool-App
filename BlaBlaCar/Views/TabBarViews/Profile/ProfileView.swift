@@ -45,24 +45,27 @@ struct ProfileView: View {
                                 Group{
                                     //// profile can be changed
                                     //// by clicking on it
-                                    AsyncImage(url: vm.profileResponse.imageUrl) { image in
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                        
-                                    } placeholder: {
-                                        if vm.profileResponse.imageUrl != nil || errorVM.isLoading {
-                                            ZStack {
-                                                LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
-                                                    .frame(maxWidth: .infinity, alignment: .center)
-                                            }
-                                        } else {
-                                            Image(Constants.Images.person)
-                                                .resizable()
-                                                .scaledToFill()
-                                            
-                                        }
-                                    }
+                                    ImageView(size: 124,
+                                              imageName: vm.profileResponse.imageUrl,
+                                              condition: vm.profileResponse.imageUrl != nil || errorVM.isLoading)
+//                                    AsyncImage(url: vm.profileResponse.imageUrl) { image in
+//                                        image
+//                                            .resizable()
+//                                            .scaledToFill()
+//
+//                                    } placeholder: {
+//                                        if vm.profileResponse.imageUrl != nil || errorVM.isLoading {
+//                                            ZStack {
+//                                                LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
+//                                                    .frame(maxWidth: .infinity, alignment: .center)
+//                                            }
+//                                        } else {
+//                                            Image(Constants.Images.person)
+//                                                .resizable()
+//                                                .scaledToFill()
+//
+//                                        }
+//                                    }
                                     if errorVM.isLoading {
                                         LoadingView(isLoading: $errorVM.loaderLoading, size: 20)
                                             .frame(maxWidth: .infinity, alignment: .center)
@@ -73,7 +76,7 @@ struct ProfileView: View {
                                 .overlay(alignment: .bottomTrailing) {
                                     Image(systemName: "pencil.circle.fill")
                                         .font(.system(size: 30)).foregroundColor(Color(Color.redColor))
-                                    
+
                                 }
                             }
                             .onTapGesture {

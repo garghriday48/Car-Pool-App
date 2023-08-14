@@ -25,7 +25,7 @@ struct DataArray: Codable, Hashable {
     
     let id: Int
     let name, reachTime: String
-    let imageURL: URL?
+    let imageURL: String?
     var averageRating: Double?
     let aboutRide: String?
     let publish: PublishResponse

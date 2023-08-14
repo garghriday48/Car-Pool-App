@@ -39,36 +39,50 @@ struct MyRidesView: View {
                                 
                                 if myRidesVM.rideType == ride {
                                     DividerCapsule(height: 2, color: Color(Color.redColor))
-                                       
+                                    
                                 } else {
                                     DividerCapsule(height: 2, color: .clear)
                                 }
                             }
                             .onTapGesture {
                                 myRidesVM.rideType = ride
-//                                withAnimation(.easeIn){
-//                                    myRidesVM.rideType = ride
-//                                }
+                                //                                withAnimation(.easeIn){
+                                //                                    myRidesVM.rideType = ride
+                                //                                }
                             }
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                     
-                    
+                    /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
+                    //                    if carPoolVM.rideSearchResponse.message == Constants.Description.noRidesFound {
+                    //
+                    //                        PlaceholderView(image: Constants.EmptyRidesView.image,
+                    //                                        title: Constants.EmptyRidesView.noBookedRides,
+                    //                                        caption: Constants.EmptyRidesView.caption)
+                    //                    }
                     if myRidesVM.rideType == .booked {
-                        List{
-                            ForEach(searchBookedResults, id: \.bookingID){rides in
-                                if rides.ride.id != 0{
-                                    RidesBookedCard(array: rides)
-                                        .listRowSeparator(.hidden)
-                                        .background(
-                                            NavigationLink {
-                                                BookedRideDetails(carPoolVM: carpoolVM, array: rides)
-                                            } label: {
-                                                EmptyView()
-                                            }
-                                        )
+                        if myRidesVM.bookingListResponse.rides[0].ride.id == 0 {
+                            
+                            /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
+                            PlaceholderView(image: Constants.EmptyRidesView.image,
+                                            title: Constants.EmptyRidesView.noBookedRides,
+                                            caption: Constants.EmptyRidesView.caption,
+                                            needBackBtn: false)
+                        } else {
+                            List{
+                                ForEach(searchBookedResults, id: \.bookingID){rides in
+                                    if rides.ride.id != 0{
+                                        RidesBookedCard(array: rides)
+                                            .listRowSeparator(.hidden)
+                                            .background(
+                                                NavigationLink {
+                                                    BookedRideDetails(carPoolVM: carpoolVM, array: rides)
+                                                } label: {
+                                                    EmptyView()
+                                                }
+                                            )
                                     }
                                 }
                             }
@@ -77,31 +91,41 @@ struct MyRidesView: View {
                             .searchable(text: $searchBookedLocation)
                             .refreshable {
                                 myRidesVM.bookingRideApiCall(method: .bookingList, httpMethod: .GET)
+                            }
                         }
                     }
                     
                     
                     
                     if myRidesVM.rideType == .published {
-                        List{
-                            ForEach(searchPublishedResults, id: \.id){data in
-                                if data.id != 0{
-                                    Button {
-                                        myRidesVM.publishId = data.id
-                                        myRidesVM.publishWithIdApiCall(method: .publishById, httpMethod: .GET)
-                                    } label: {
-                                        RidesPublishedCard(array: data)
-                                        
+                        if myRidesVM.publishListResponse.data[0].id == 0{
+                            
+                            /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
+                            PlaceholderView(image: Constants.EmptyRidesView.image,
+                                            title: Constants.EmptyRidesView.noPublishedRides,
+                                            caption: Constants.EmptyRidesView.caption,
+                                            needBackBtn: false)
+                        } else {
+                            List{
+                                ForEach(searchPublishedResults, id: \.id){data in
+                                    if data.id != 0{
+                                        Button {
+                                            myRidesVM.publishId = data.id
+                                            myRidesVM.publishWithIdApiCall(method: .publishById, httpMethod: .GET)
+                                        } label: {
+                                            RidesPublishedCard(array: data)
+                                            
+                                        }
+                                        .listRowSeparator(.hidden)
                                     }
-                                    .listRowSeparator(.hidden)
                                 }
                             }
-                        }
-                        .listStyle(.plain)
-                        .scrollIndicators(.hidden)
-                        .searchable(text: $searchPublishedLocation)
-                        .refreshable {
-                            myRidesVM.publishRideApiCall(method: .publishList, httpMethod: .GET)
+                            .listStyle(.plain)
+                            .scrollIndicators(.hidden)
+                            .searchable(text: $searchPublishedLocation)
+                            .refreshable {
+                                myRidesVM.publishRideApiCall(method: .publishList, httpMethod: .GET)
+                            }
                         }
                     }
                 }

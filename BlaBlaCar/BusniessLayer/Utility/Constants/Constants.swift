@@ -223,6 +223,8 @@ struct Constants {
         static let image    = "emptyRideImage"
         static let title    = "Currently their are no rides present."
         static let caption  = "Find the perfect ride from thousands of destinations, or publish to share your travel costs."
+        static let noPublishedRides = "You have not published any ride."
+        static let noBookedRides = "You have not booked any ride."
     }
     
     struct Description {

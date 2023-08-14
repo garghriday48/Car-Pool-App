@@ -103,27 +103,30 @@ struct DetailsCard: View {
                     
                     
                     HStack {
-                        AsyncImage(url: array.imageURL) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                } placeholder: {
-                                    if array.imageURL == nil {
-                                        Image(Constants.Images.person)
-                                            .resizable()
-                                            .scaledToFill()
-                                    } else {
-                                        ZStack {
-                                            Color.gray.opacity(0.1)
-                                            ProgressView()
-                                        }
-                                    }
-                                }
-                            .frame(width: 60, height: 60)
-                            .clipShape(Circle())
-                            .overlay {
-                                Circle().stroke(lineWidth: 1)
-                            }
+                        ImageView(size: 60,
+                                  imageName: array.imageURL,
+                                  condition: array.imageURL == nil)
+//                        AsyncImage(url: array.imageURL) { image in
+//                                    image
+//                                        .resizable()
+//                                        .scaledToFill()
+//                                } placeholder: {
+//                                    if array.imageURL == nil {
+//                                        Image(Constants.Images.person)
+//                                            .resizable()
+//                                            .scaledToFill()
+//                                    } else {
+//                                        ZStack {
+//                                            Color.gray.opacity(0.1)
+//                                            ProgressView()
+//                                        }
+//                                    }
+//                                }
+//                            .frame(width: 60, height: 60)
+//                            .clipShape(Circle())
+//                            .overlay {
+//                                Circle().stroke(lineWidth: 1)
+//                            }
                         VStack(alignment: .leading, spacing: 4){
                             Text(array.name)
                                 .foregroundColor(.black)

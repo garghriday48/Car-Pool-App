@@ -15,7 +15,7 @@ struct ChatRoomListResponse: Codable {
 }
 
 // MARK: - Chat
-struct ChatsList: Codable {
+struct ChatsList: Codable, Identifiable {
     let id, receiverID, senderID, publishID: Int
     let publish: GetPublishResponse?
     let receiver, sender: DataResponse
@@ -42,7 +42,7 @@ extension ChatRoomListResponse {
 }
 
 extension ChatsList {
-    static var initialize = ChatsList(id: 0, receiverID: 0, senderID: 0, publishID: 0, publish: GetPublishResponse.initialize, receiver: DataResponse.initialize, sender: DataResponse.initialize, receiverImage: "", senderImage: "")
+    static var initialize = ChatsList(id: 0, receiverID: 0, senderID: 0, publishID: 0, publish: GetPublishResponse.initialize, receiver: DataResponse.initialize, sender: DataResponse.initialize, receiverImage: nil, senderImage: nil)
 }
 
 extension ChatRoomWithIdResponse {

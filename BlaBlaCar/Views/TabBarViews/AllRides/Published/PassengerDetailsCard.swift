@@ -38,35 +38,9 @@ struct PassengerDetailsCard: View {
                     }
                     
                     Spacer()
-                    Group{
-                        if let image = array.image {
-                            AsyncImage(url: URL(string: image)) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                            } placeholder: {
-                                if array.image == nil {
-                                    Image(Constants.Images.person)
-                                        .resizable()
-                                        .scaledToFill()
-                                } else {
-                                    ZStack {
-                                        Color.gray.opacity(0.1)
-                                        ProgressView()
-                                    }
-                                }
-                            }
-                        } else {
-                            Image(Constants.Images.person)
-                                .resizable()
-                                .scaledToFill()
-                        }
-                    }
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
-                    .overlay {
-                        Circle().stroke(lineWidth: 1)
-                    }
+                    ImageView(size: 100,
+                              imageName: array.image,
+                              condition: array.image == nil)
                 }
                 .padding(.bottom, 40)
                 HStack{
@@ -104,8 +78,6 @@ struct PassengerDetailsCard: View {
             .padding()
             
             Button {
-                NavigationViewModel.navigationVM.tabView = 2
-                messageVM.toChatRoomFromRides.toggle()
                 messageVM.chatRoomApiCall(method: .chatRoom, httpMethod: .POST, model: ChatRoomData(chat: ChatData(receiverID: array.userID, publishID: myRidesVM.publishId)))
                 
             } label: {
@@ -118,7 +90,7 @@ struct PassengerDetailsCard: View {
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
         .navigationDestination(isPresented: $messageVM.toChatRoomFromRides) {
-            ChatRoomView(chatData: messageVM.singleChatRoomData)
+            ChatRoomView()
         }
     }
 }

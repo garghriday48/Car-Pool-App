@@ -10,14 +10,12 @@ import Foundation
 
 struct ErrorResponse: Codable, Error {
     var status: ErrorStatus?
-    var code: String?
+    var code: Int?
     var error: String?
-    var chat: ChatResponse1?
+    var chat: ChatResponse?
     
 }
-struct ChatResponse1: Codable, Error {
-    var id: Int
-}
+
 
 struct ErrorStatus: Codable, Error{
     var code: Int

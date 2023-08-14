@@ -58,5 +58,5 @@ extension UserResponse {
 }
 
 extension DataResponse {
-    static var initialize = DataResponse(id: Int(), email: "", created_at: "", updated_at: "", jti: "", first_name: "", last_name: "", dob: "", title: "", activation_digest: "", activated: false, activate_token: "", average_rating: "", otp: 0, phone_verified: false)
+    static var initialize = DataResponse(id: Int(), email: "", created_at: "", updated_at: "", jti: "", first_name: "No", last_name: "Name", dob: "", title: "", activation_digest: "", activated: false, activate_token: "", average_rating: "", otp: 0, phone_verified: false)
 }

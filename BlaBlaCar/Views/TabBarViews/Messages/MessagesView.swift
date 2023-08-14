@@ -25,7 +25,8 @@ struct MessagesView: View {
                     Button {
                         messageVM.toChatRoom.toggle()
                         messageVM.chatRoomId = chat.id
-                        messageVM.singleChatRoomData = chat
+                        //messageVM.singleChatRoomData = chat
+                        messageVM.chatRoomWithIdApiCall(method: .singleChatRoom, httpMethod: .GET)
                         messageVM.messageListApiCall(method: .messageList, httpMethod: .GET)
                     } label: {
                         PersonListCard(data: chat)
@@ -41,10 +42,12 @@ struct MessagesView: View {
             
         }
         .fullScreenCover(isPresented: $messageVM.toChatRoom, content: {
-            ChatRoomView(chatData: messageVM.singleChatRoomData)
+            ChatRoomView()
         })
         .onAppear{
             messageVM.chatRoomListApiCall(method: .chatRoomList, httpMethod: .GET)
+            
+            
         }
     }
 }

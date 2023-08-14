@@ -21,7 +21,8 @@ struct AllRidesView: View {
             
             PlaceholderView(image: Constants.EmptyRidesView.image,
                             title: Constants.EmptyRidesView.title,
-                            caption: Constants.EmptyRidesView.caption)
+                            caption: Constants.EmptyRidesView.caption,
+                            needBackBtn: true)
         } else {
             
             /// to show the view consisting of all the rides that matches the searching parameters.

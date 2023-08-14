@@ -16,7 +16,7 @@ struct ProfileDetails: Codable {
     var error: String?
     var errors: [String]?
     var user: DataResponse?
-    var imageUrl: URL?
+    var imageUrl: String?
     
     enum CodingKeys: String, CodingKey{
         case code
