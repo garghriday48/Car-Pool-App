@@ -302,7 +302,7 @@ class MessagesViewModel: ObservableObject {
             
             NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidHideNotification,
                object: nil,
-               queue: .main) { (notification) in
+               queue: .main) { _ in
                 self.keyboardHeight = 0
             }
         }

@@ -32,7 +32,8 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
     @Published var pickedPlacemark: CLPlacemark?
     
     @Published var updatedPlacemark: CLPlacemark?
-    
+    @Published var mapRoutes: [MKRoute]?
+    @Published var isFirstRoute = false
     
     // MARK: whether to show map or not
     @Published var toShowMap: Bool = false
@@ -79,23 +80,6 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
     func searchPlace(_ place: String) {
             
         }
-//    Task {
-//        do {
-//            let request = MKLocalSearch.Request()
-//            request.naturalLanguageQuery = value
-//
-//            let response = try await MKLocalSearch(request: request).start()
-//
-//            DispatchQueue.main.async {
-//                self.fetchedPlaces = response.mapItems.compactMap({ item -> CLPlacemark? in
-//                    return item.placemark
-//                })
-//            }
-//        } catch {
-//
-//        }
-//    }
-//    print(fetchedPlaces)
     
     // MARK: function to fetch place using MKLocalSearch
     func fetchValue(value: String) {
@@ -114,7 +98,6 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
                        return item.placemark
                    })
                }
-               print(self.fetchedPlaces)
            }
         }
     }
@@ -170,7 +153,7 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
         let marker = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "LocationPin")
         marker.isDraggable = true
         marker.canShowCallout = false
-        
+
         return marker
     }
     
@@ -206,8 +189,9 @@ class MapViewModel: NSObject, ObservableObject, MKMapViewDelegate, CLLocationMan
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         
         let render = MKPolylineRenderer(overlay: overlay)
-        render.strokeColor = .red
-        render.lineWidth = 5
+        render.strokeColor = self.isFirstRoute ? .red : .gray
+        render.lineWidth = 7
+        
         
         return render
         

@@ -30,18 +30,20 @@ struct VehicleListView: View {
             DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 .padding(.bottom)
             ScrollView{
-                ForEach(profileVM.vehicleResponseList.data){data in
-                    Button {
-                        profileVM.isVehicleViewSelected.toggle()
-                        profileVM.toSetVehicleOptions(data: data)
-                        profileVM.vehicleId = String(data.id)
-                        profileVM.isAddingNewVehicle = false
-                        profileVM.toDismiss = false
-                    } label: {
-                        SelectVehicleCellView(data: data)
+                if profileVM.vehicleResponseList.data[0].id != 0{
+                    ForEach(profileVM.vehicleResponseList.data){data in
+                        Button {
+                            profileVM.isVehicleViewSelected.toggle()
+                            profileVM.toSetVehicleOptions(data: data)
+                            profileVM.vehicleId = String(data.id)
+                            profileVM.isAddingNewVehicle = false
+                            profileVM.toDismiss = false
+                        } label: {
+                            SelectVehicleCellView(data: data)
+                        }
                     }
                 }
-
+                    
                 Button(action: {
                     profileVM.isVehicleViewSelected.toggle()
                     profileVM.resetVehicleOptions()

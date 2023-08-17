@@ -81,6 +81,7 @@ class CarPoolRidesViewModel: ObservableObject {
     
     @Published var searchApiSuccess = false
     @Published var bookApiSuccess = false
+    @Published var publishApiSuccess = false
     
     @Published var navigateToMapRoute = false
     @Published var toShowSearchDetails = false
@@ -177,7 +178,7 @@ class CarPoolRidesViewModel: ObservableObject {
                     
                 case .finished:
                     ResponseErrorViewModel.shared.isLoading = false
-                    NavigationViewModel.navigationVM.pop(to: .TabBarPage)
+                    self.publishApiSuccess.toggle()
                 }
                 
             } receiveValue: { [weak self] data in

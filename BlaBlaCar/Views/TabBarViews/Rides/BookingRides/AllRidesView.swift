@@ -19,9 +19,9 @@ struct AllRidesView: View {
         /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
         if carPoolVM.rideSearchResponse.message == Constants.Description.noRidesFound {
             
-            PlaceholderView(image: Constants.EmptyRidesView.image,
-                            title: Constants.EmptyRidesView.title,
-                            caption: Constants.EmptyRidesView.caption,
+            PlaceholderView(image: Constants.EmptyView.image,
+                            title: Constants.EmptyView.title,
+                            caption: Constants.EmptyView.caption,
                             needBackBtn: true)
         } else {
             

@@ -40,15 +40,19 @@ struct SelectVehicleView: View {
                 Divider()
             }
             .padding(.vertical)
-            ScrollView{
-                ForEach(profileVM.vehicleResponseList.data){data in
-                    SelectVehicleCellView(data: data)
-                        .onTapGesture {
-                            carPoolVM.offerRideSelectorArray[0].text = data.vehicleBrand + " " + data.vehicleName
-                            carPoolVM.publishRideData.publish.vehicleID = data.id
-                            presentationMode.wrappedValue.dismiss()
-                        }
+            if profileVM.vehicleResponseList.data[0].id != 0{
+                ScrollView{
+                    ForEach(profileVM.vehicleResponseList.data){data in
+                        SelectVehicleCellView(data: data)
+                            .onTapGesture {
+                                carPoolVM.offerRideSelectorArray[0].text = data.vehicleBrand + " " + data.vehicleName
+                                carPoolVM.publishRideData.publish.vehicleID = data.id
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                    }
                 }
+            } else {
+                PlaceholderView(image: Constants.EmptyView.myRideImage, title: "No vehicle found", caption: "Add new vehicle to continue", needBackBtn: false , height: 100, width: 150)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity ,alignment: .top)

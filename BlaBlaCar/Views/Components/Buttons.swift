@@ -11,6 +11,7 @@ struct ButtonView: View {
     
         var buttonName: String
         var border: Bool
+        var color: Color = Color(Color.redColor)
     
         var body: some View {
             if border == false{
@@ -26,12 +27,12 @@ struct ButtonView: View {
                 Text(buttonName)
                     .font(.system(size: 16, design: .rounded))
                     .fontWeight(.semibold)
-                    .foregroundColor(Color(Color.redColor))
+                    .foregroundColor(color)
                     .frame(maxWidth: .infinity)
                     .padding()
                     .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(Color.redColor), lineWidth: 1)
+                                .stroke(color, lineWidth: 1)
                         )
                     
             }

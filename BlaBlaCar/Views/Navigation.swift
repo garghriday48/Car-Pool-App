@@ -31,7 +31,7 @@ struct Navigation: View {
                     case .SignupPage: SignUpView()
                     case .LoginPage: LoginView()
                     case .TabBarPage: TabBarView()
-                    case .carPoolPublish: RouteSelectionView(mapVM: mapVM, carPoolVM: carPoolVM)
+                    case .carPoolPublish: RouteSelectionView(mapVM: mapVM, carPoolVM: carPoolVM, myRidesVM: myRidesVM)
                     case .carPoolBook: AllRidesView(carPoolVM: carPoolVM)
                     }
                 }

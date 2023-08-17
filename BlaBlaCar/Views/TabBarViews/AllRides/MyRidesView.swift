@@ -55,24 +55,17 @@ struct MyRidesView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
                     
-                    /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
-                    //                    if carPoolVM.rideSearchResponse.message == Constants.Description.noRidesFound {
-                    //
-                    //                        PlaceholderView(image: Constants.EmptyRidesView.image,
-                    //                                        title: Constants.EmptyRidesView.noBookedRides,
-                    //                                        caption: Constants.EmptyRidesView.caption)
-                    //                    }
                     if myRidesVM.rideType == .booked {
                         if myRidesVM.bookingListResponse.rides[0].ride.id == 0 {
                             
                             /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
-                            PlaceholderView(image: Constants.EmptyRidesView.image,
-                                            title: Constants.EmptyRidesView.noBookedRides,
-                                            caption: Constants.EmptyRidesView.caption,
-                                            needBackBtn: false)
+                            PlaceholderView(image: Constants.EmptyView.myRideImage,
+                                            title: Constants.EmptyView.noBookedRides,
+                                            caption: Constants.EmptyView.caption,
+                                            needBackBtn: false, height: 150, width: 200)
                         } else {
                             List{
-                                ForEach(searchBookedResults, id: \.bookingID){rides in
+                                ForEach(searchBookedResults.reversed(), id: \.bookingID){rides in
                                     if rides.ride.id != 0{
                                         RidesBookedCard(array: rides)
                                             .listRowSeparator(.hidden)
@@ -101,13 +94,13 @@ struct MyRidesView: View {
                         if myRidesVM.publishListResponse.data[0].id == 0{
                             
                             /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
-                            PlaceholderView(image: Constants.EmptyRidesView.image,
-                                            title: Constants.EmptyRidesView.noPublishedRides,
-                                            caption: Constants.EmptyRidesView.caption,
-                                            needBackBtn: false)
+                            PlaceholderView(image: Constants.EmptyView.myRideImage,
+                                            title: Constants.EmptyView.noPublishedRides,
+                                            caption: Constants.EmptyView.caption,
+                                            needBackBtn: false, height: 150, width: 200)
                         } else {
                             List{
-                                ForEach(searchPublishedResults, id: \.id){data in
+                                ForEach(searchPublishedResults.reversed(), id: \.id){data in
                                     if data.id != 0{
                                         Button {
                                             myRidesVM.publishId = data.id

@@ -29,9 +29,9 @@ struct MapRoute: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         
         let map = mapVM.mapView
-        
         let region = MKCoordinateRegion(center: sourceCoordinate, span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03))
         
+        // To add pins of source and destination according to coordinates
         mapVM.addDraggablePin(coordinate: sourceCoordinate, title: "Source")
         
         mapVM.addDraggablePin(coordinate: destinationCoordinate, title: "Destination")
@@ -43,26 +43,41 @@ struct MapRoute: UIViewRepresentable {
         request.source = MKMapItem(placemark: MKPlacemark(coordinate: sourceCoordinate))
         request.destination = MKMapItem(placemark: MKPlacemark(coordinate: destinationCoordinate))
         request.requestsAlternateRoutes = true
+        request.transportType = .automobile
     
         
         let directions = MKDirections(request: request)
         
-        directions.calculate { directions, error in
-            
-            if error != nil {
-                //print(error?.localizedDescription)
+        
+        directions.calculate { response, error in
+            if error != nil{
+//                        self.showAlert(message: "Route not found")
+                return
+            }
+            guard let mapRoutes = response?.routes else {
                 return
             }
             
-            myRidesVM.totalDistance = directions?.routes.first ?? MKRoute()
-            carPoolVM.totalDistance = directions?.routes.first ?? MKRoute()
+            mapVM.mapRoutes = mapRoutes
             
-            myRidesVM.estimatedTime = directions?.routes.first?.expectedTravelTime ?? 0
-            carPoolVM.estimatedTime = directions?.routes.first?.expectedTravelTime ?? 0
-            
-            let polyline = directions?.routes.last?.polyline
-            map.addOverlay(polyline!)
-            map.setRegion(MKCoordinateRegion(polyline!.boundingMapRect), animated: true)
+            for route in response!.routes{
+                
+                if route == response!.routes.last {
+                    mapVM.isFirstRoute = true
+                } else {mapVM.isFirstRoute = false}
+                let polyline = route.polyline
+                
+                // To add overlays in map to show route between source and destination
+                map.addOverlay(polyline)
+                map.setRegion(MKCoordinateRegion(polyline.boundingMapRect), animated: true)
+                
+                // To get estimated time and distance of a selected route
+                myRidesVM.totalDistance = route
+                carPoolVM.totalDistance = route
+                
+                myRidesVM.estimatedTime = route.expectedTravelTime
+                carPoolVM.estimatedTime = route.expectedTravelTime
+            }
         }
         return map
     }

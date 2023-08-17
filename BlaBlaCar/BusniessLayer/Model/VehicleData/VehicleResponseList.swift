@@ -15,5 +15,5 @@ struct VehicleResponseList: Codable {
 }
 
 extension VehicleResponseList{
-     static var initialize = VehicleResponseList(code: Int(), data: [VehicleData(id: Int(), country: "", vehicleNumber: "", vehicleBrand: "", vehicleName: "", vehicleType: "", vehicleColor: "", vehicleModelYear: Int(), userID: Int(), createdAt: "", updatedAt: "")])
+     static var initialize = VehicleResponseList(code: 0, data: [VehicleData(id: 0, country: "", vehicleNumber: "", vehicleBrand: "", vehicleName: "", vehicleType: "", vehicleColor: "", vehicleModelYear: Int(), userID: Int(), createdAt: "", updatedAt: "")])
 }

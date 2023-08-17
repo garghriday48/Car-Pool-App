@@ -81,7 +81,7 @@ struct PassengerDetailsCard: View {
                 messageVM.chatRoomApiCall(method: .chatRoom, httpMethod: .POST, model: ChatRoomData(chat: ChatData(receiverID: array.userID, publishID: myRidesVM.publishId)))
                 
             } label: {
-                ButtonView(buttonName: Constants.ButtonsTitle.message, border: true)
+                ButtonView(buttonName: Constants.ButtonsTitle.message, border: true, color: .blue)
                     .padding()
             }
 

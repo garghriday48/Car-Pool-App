@@ -192,7 +192,7 @@ struct DetailsCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .navigationDestination(isPresented: $carPoolVM.bookApiSuccess, destination: {
-            BookedRideView(carPoolVM: carPoolVM)
+            CompletedView(carPoolVM: carPoolVM, heading: Constants.Headings.rideBooked)
         })
         .onAppear{
             profileVM.vehicleId = String(array.publish.vehicleID)

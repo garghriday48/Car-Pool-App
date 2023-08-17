@@ -13,7 +13,7 @@ struct ImageView: View {
     var imageName: String?
     var condition: Bool
     
-    
+    @State var isLoading = true
     
     var body: some View {
         
@@ -26,7 +26,8 @@ struct ImageView: View {
                     
                     
                 } placeholder: {
-                    if condition {
+                    if condition || !self.isLoading{
+                        
                         Image(Constants.Images.person)
                             .resizable()
                             .scaledToFill()
@@ -47,6 +48,11 @@ struct ImageView: View {
         .clipShape(Circle())
         .overlay {
             Circle().stroke(lineWidth: 1)
+        }
+        .onAppear{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5){
+                self.isLoading = false
+            }
         }
     }
 }

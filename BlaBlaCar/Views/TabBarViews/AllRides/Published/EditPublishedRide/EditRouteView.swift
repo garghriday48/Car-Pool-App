@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct EditRouteView: View {
     
@@ -36,7 +37,34 @@ struct EditRouteView: View {
                      destinationCoordinate: myRidesVM.editDestCoordinate,
                      mapVM: mapVM,
                      carPoolVM: carPoolVM)
-
+            .onTapGesture(perform: {location in
+                
+                let coordinate = mapVM.mapView.convert(location, toCoordinateFrom: nil)
+                
+                let mappoint = MKMapPoint(coordinate)
+                for route in (mapVM.mapRoutes ?? []){
+//                for overlay in mapVM.mapView.overlays {
+                    
+                     let polyline = route.polyline
+                        
+                    guard let renderer = mapVM.mapView.renderer(for: polyline) as? MKPolylineRenderer else { continue }
+                    let tapPoint = renderer.point(for: mappoint)
+                    
+                    if renderer.path.contains(tapPoint) {
+                        mapVM.isFirstRoute = true
+                        print("Tap was inside this polyline")
+                        myRidesVM.totalDistance = route
+                        carPoolVM.totalDistance = route
+                        //
+                        myRidesVM.estimatedTime = route.expectedTravelTime
+                        carPoolVM.estimatedTime = route.expectedTravelTime
+                        //break // If you have overlapping overlays then you'll need an array of overlays which the touch is in, so remove this line.
+                    }
+                    
+                    continue
+                    
+                }
+            })
             
             Spacer()
             VStack{

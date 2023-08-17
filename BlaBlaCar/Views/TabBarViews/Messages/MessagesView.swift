@@ -21,23 +21,29 @@ struct MessagesView: View {
             
             DividerCapsule(height: 1, color: Color(.gray).opacity(0.5))
             
-            List(messageVM.chatRoomListResponse.chats, id: \.id){chat in
-                    Button {
-                        messageVM.toChatRoom.toggle()
-                        messageVM.chatRoomId = chat.id
-                        //messageVM.singleChatRoomData = chat
-                        messageVM.chatRoomWithIdApiCall(method: .singleChatRoom, httpMethod: .GET)
-                        messageVM.messageListApiCall(method: .messageList, httpMethod: .GET)
-                    } label: {
-                        PersonListCard(data: chat)
+            if messageVM.chatRoomListResponse.chats[0].id == 0 {
+                PlaceholderView(image: Constants.EmptyView.noMsgImage, title: Constants.EmptyView.noInboxTitle, caption: Constants.EmptyView.checkAgain, needBackBtn: false, height: 150, width: 150)
+            } else {
+                List(messageVM.chatRoomListResponse.chats, id: \.id){chat in
+                    if chat.publish != nil {
+                        Button {
+                            messageVM.toChatRoom.toggle()
+                            messageVM.chatRoomId = chat.id
+                            //messageVM.singleChatRoomData = chat
+                            messageVM.chatRoomWithIdApiCall(method: .singleChatRoom, httpMethod: .GET)
+                            messageVM.messageListApiCall(method: .messageList, httpMethod: .GET)
+                        } label: {
+                            PersonListCard(data: chat)
+                        }
+                        .listRowSeparator(.hidden)
+                        
                     }
-                    .listRowSeparator(.hidden)
-
                 }
-            
-            .listStyle(.plain)
-            .refreshable {
-                messageVM.chatRoomListApiCall(method: .chatRoomList, httpMethod: .GET)
+                
+                .listStyle(.plain)
+                .refreshable {
+                    messageVM.chatRoomListApiCall(method: .chatRoomList, httpMethod: .GET)
+                }
             }
             
         }

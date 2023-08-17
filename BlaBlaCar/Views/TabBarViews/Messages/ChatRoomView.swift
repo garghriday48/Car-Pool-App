@@ -14,11 +14,6 @@ struct ChatRoomView: View {
     
     @Environment (\.dismiss) var dismiss
     
-    //var chatData: ChatsList
-    
-
-    //@State var message = ""
-    
     
     var body: some View {
         VStack{
@@ -27,6 +22,7 @@ struct ChatRoomView: View {
                     HStack {
                         BackButton(image: Constants.Images.backArrow) {
                             self.dismiss()
+                            messageVM.message = ""
                         }
                         .font(.title2)
                         .padding(.trailing)
@@ -40,28 +36,37 @@ struct ChatRoomView: View {
                             Text((messageVM.isSender ? messageVM.chatRoomWithIdResponse.chat.receiver.first_name : messageVM.chatRoomWithIdResponse.chat.sender.first_name) + " " + (messageVM.isSender ? messageVM.chatRoomWithIdResponse.chat.receiver.last_name : messageVM.chatRoomWithIdResponse.chat.sender.last_name))
                                 .foregroundColor(.black)
                                 .font(.system(size: 18, weight: .semibold, design: .rounded))
-                                Text("\(Age.shared.calcAge(birthday: messageVM.chatRoomWithIdResponse.chat.sender.dob)) y/o")
-                                    .font(.system(size: 14, design: .rounded))
-                                    .foregroundColor(.black)
+                            Text(messageVM.chatRoomWithIdResponse.chat.publish?.userID == messageVM.senderId ? "Passenger" : "Driver")
+//                                Text("\(Age.shared.calcAge(birthday: messageVM.chatRoomWithIdResponse.chat.sender.dob)) y/o")
+                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                .foregroundColor(.black)
                         }
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Button {
-                        
-                    } label: {
-                        HStack{
-                            Text("Ride Details")
-                            Image(systemName: Constants.Images.bigRightArrow)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundColor(.black)
-                    }
-                    .padding()
                 }
             }
+            
+            VStack(alignment: .leading, spacing: 7){
+                HStack{
+                    Text(messageVM.chatRoomWithIdResponse.chat.publish?.source ?? "")
+                        
+                    Image(systemName: Constants.Images.bigRightArrow)
+                    Text(messageVM.chatRoomWithIdResponse.chat.publish?.destination ?? "")
+                        
+                }
+                .font(.system(size: 14, weight: .none, design: .rounded))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(2)
+                
+                
+                if let sourceTime = messageVM.chatRoomWithIdResponse.chat.publish?.time, let sourceDate = messageVM.chatRoomWithIdResponse.chat.publish?.date {
+                    Text("\(DateTimeFormat.shared.dateFormat(date: sourceDate)), \(DateTimeFormat.shared.timeFormat(date: sourceTime, is24hrs: false, toNotReduce: false))")
+                }
+            }
+            .font(.system(size: 12, weight: .semibold, design: .rounded))
+            .foregroundColor(Color(.black))
+            .padding(.horizontal)
             
             VStack{
                 ScrollViewReader { scroll in
@@ -105,6 +110,7 @@ struct ChatRoomView: View {
                     .padding(.horizontal)
                     .background(.black.opacity(0.06))
                     .clipShape(Capsule())
+                    .autocorrectionDisabled()
                     
                     /// Send button
                     /// Only to be shown when message is not empty
@@ -132,14 +138,6 @@ struct ChatRoomView: View {
             .padding(.bottom, messageVM.keyboardHeight == 0 ? 25 : 0)
             .background(.white)
             .clipShape(RoundedShape())
-//            .onAppear{
-//                if messageVM.senderId == chatData.senderID {
-//                    messageVM.isSender = true
-//                } else {
-//                    messageVM.isSender = false
-//                }
-//            }
-        
         }
         .navigationBarBackButtonHidden()
         .edgesIgnoringSafeArea(.bottom)
@@ -152,6 +150,7 @@ struct ChatRoomView_Previews: PreviewProvider {
     static var previews: some View {
         ChatRoomView()
             .environmentObject(MyRidesViewModel())
+            .environmentObject(MessagesViewModel())
             //.environmentObject(MessagesViewModel())
     }
 }

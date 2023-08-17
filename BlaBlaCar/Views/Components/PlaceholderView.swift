@@ -15,6 +15,8 @@ struct PlaceholderView: View {
     var title: String
     var caption: String
     var needBackBtn: Bool
+    var height:CGFloat = 194
+    var width:CGFloat = 300
     
     @Environment (\.presentationMode) var presentationMode
     
@@ -36,7 +38,7 @@ struct PlaceholderView: View {
                 // image view
                 Image(image)
                     .resizable()
-                    .frame(width: 300, height: 194)
+                    .frame(width: width, height: height)
                     .padding()
                 
                 // title text
@@ -67,6 +69,6 @@ struct PlaceholderView: View {
 
 struct PlaceholderView_Previews: PreviewProvider {
     static var previews: some View {
-        PlaceholderView(image: Constants.EmptyRidesView.image, title: Constants.EmptyRidesView.title, caption: Constants.EmptyRidesView.caption, needBackBtn: true)
+        PlaceholderView(image: Constants.EmptyView.image, title: Constants.EmptyView.title, caption: Constants.EmptyView.caption, needBackBtn: true)
     }
 }

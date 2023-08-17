@@ -69,6 +69,9 @@ struct AdditionalInfoView: View {
         }
         .frame(maxWidth: .infinity ,maxHeight: .infinity, alignment: .topLeading)
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $carPoolVM.publishApiSuccess) {
+            CompletedView(carPoolVM: carPoolVM, heading: Constants.Headings.ridePublished)
+        }
         
     }
 }

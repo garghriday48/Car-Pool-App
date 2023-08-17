@@ -13,6 +13,7 @@ struct BookedRideDetails: View {
     @EnvironmentObject var vm: SignInSignUpViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var myRidesVM: MyRidesViewModel
+    @EnvironmentObject var messageVM: MessagesViewModel
     
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
     
@@ -165,12 +166,19 @@ struct BookedRideDetails: View {
                     .frame(maxWidth: .infinity)
                     
                     if array.status == RideBookedType.CONFIRM.rawValue {
+                        
+                        Button {
+                            messageVM.chatRoomApiCall(method: .chatRoom, httpMethod: .POST, model: ChatRoomData(chat: ChatData(receiverID: array.ride.userID, publishID: array.ride.id)))
+                        } label: {
+                            ButtonView(buttonName: Constants.ButtonsTitle.message, border: true, color: .blue)
+                        }
+
+                        
                         Button {
                             myRidesVM.cancelRideData.id = array.bookingID
                             myRidesVM.cancelBooking.toggle()
                         } label: {
-                            Text(Constants.Headings.cancelBooking).bold().padding(.top)
-                                .font(.system(size: 20, design: .rounded))
+                            ButtonView(buttonName: Constants.Headings.cancelBooking, border: true)
                         }
                     }
                 }
@@ -182,8 +190,11 @@ struct BookedRideDetails: View {
             }
         }
         .navigationBarBackButtonHidden()
+        .navigationDestination(isPresented: $messageVM.toChatRoomFromRides) {
+            ChatRoomView()
+        }
         .navigationDestination(isPresented: $carPoolVM.bookApiSuccess, destination: {
-            BookedRideView(carPoolVM: carPoolVM)
+            CompletedView(carPoolVM: carPoolVM, heading: Constants.Headings.rideBooked)
         })
         .onAppear{
             vm.userId = array.ride.userID

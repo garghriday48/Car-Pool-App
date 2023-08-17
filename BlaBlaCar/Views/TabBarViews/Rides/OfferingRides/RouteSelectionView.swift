@@ -12,6 +12,7 @@ struct RouteSelectionView: View {
     
     @ObservedObject var mapVM: MapViewModel
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
+    @ObservedObject var myRidesVM: MyRidesViewModel
     @Environment (\.presentationMode) var presentationMode
     
    // let map: MKMapView?
@@ -37,6 +38,37 @@ struct RouteSelectionView: View {
                      destinationCoordinate: carPoolVM.destinationCoordinate,
                      mapVM: mapVM,
                      carPoolVM: carPoolVM)
+            .onTapGesture(perform: {location in
+                
+                // to get coordinate where the person touches the screen
+                let coordinate = mapVM.mapView.convert(location, toCoordinateFrom: nil)
+                
+                //to convert the coordinates of touched point to 2-D coordinates according to map lat-long.
+                let mappoint = MKMapPoint(coordinate)
+                
+                for route in (mapVM.mapRoutes ?? []){
+                    
+                     let polyline = route.polyline
+                        
+                    guard let renderer = mapVM.mapView.renderer(for: polyline) as? MKPolylineRenderer else { continue }
+                    let tapPoint = renderer.point(for: mappoint)
+                    
+                    // Checks if the required touch point is in the rendered area of that polyline
+                    if renderer.path.contains(tapPoint) {
+                        mapVM.isFirstRoute = true
+                        print("Tap was inside this polyline")
+                        myRidesVM.totalDistance = route
+                        carPoolVM.totalDistance = route
+                        //
+                        myRidesVM.estimatedTime = route.expectedTravelTime
+                        carPoolVM.estimatedTime = route.expectedTravelTime
+                        //break // If you have overlapping overlays then you'll need an array of overlays which the touch is in, so remove this line.
+                    }
+                    
+                    continue
+                    
+                }
+            })
 
             
             Spacer()
@@ -89,6 +121,6 @@ struct RouteSelectionView: View {
 
 struct RouteSelectionView_Previews: PreviewProvider {
     static var previews: some View {
-        RouteSelectionView(mapVM: MapViewModel(), carPoolVM: CarPoolRidesViewModel())
+        RouteSelectionView(mapVM: MapViewModel(), carPoolVM: CarPoolRidesViewModel(), myRidesVM: MyRidesViewModel())
     }
 }

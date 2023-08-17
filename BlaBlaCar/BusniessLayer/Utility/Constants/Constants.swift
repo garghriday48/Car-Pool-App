@@ -55,7 +55,7 @@ struct Constants {
         static var dobHeading = "What's your date of birth?"
         static var genderHeading = "What's your gender?"
         static var signUpPagesHeading = "Finish signing up"
-        static var welcome = "Welcome to ride share app"
+        static var welcome = "Welcome to Car Pool app"
         static var onBoardingPage = "Your pick of rides at low prices"
         static var signUpHeading = "How do you want to Sign up?"
         static var loginHeading = "How do you want to Log in?"
@@ -94,6 +94,7 @@ struct Constants {
         static var editVehicle = "Edit Vehicle Options"
         static var rideCreated = "Ride Created!!"
         static var rideBooked  = "Ride Booked!!"
+        static var ridePublished = "Ride Published!!"
         static var numOfSeats = "Number of seats"
         static var selectFromGallery = "Select from gallery"
         static var accountSettings = "Account settings"
@@ -219,12 +220,17 @@ struct Constants {
     }
     
     // MARK: - empty rides view
-    struct EmptyRidesView {
+    struct EmptyView {
         static let image    = "emptyRideImage"
+        static let myRideImage = "emptyMyRide"
+        static let noMsgImage = "emptyMail"
         static let title    = "Currently their are no rides present."
-        static let caption  = "Find the perfect ride from thousands of destinations, or publish to share your travel costs."
         static let noPublishedRides = "You have not published any ride."
         static let noBookedRides = "You have not booked any ride."
+        static let noInboxTitle = "No Inbox found"
+        static let caption  = "Find the perfect ride from thousands of destinations, or publish to share your travel costs."
+        static let checkAgain = "No messges found. Please book or publish ride to create an inbox."
+    
     }
     
     struct Description {

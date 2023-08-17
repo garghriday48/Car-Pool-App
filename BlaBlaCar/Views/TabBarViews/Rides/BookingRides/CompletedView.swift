@@ -7,11 +7,13 @@
 
 import SwiftUI
 
-struct BookedRideView: View {
+struct CompletedView: View {
     
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
     @EnvironmentObject var navigationVM: NavigationViewModel
     @Environment (\.presentationMode) var presentationMode
+    
+    var heading: String
     
     var body: some View {
         VStack{
@@ -24,7 +26,7 @@ struct BookedRideView: View {
                    .font(.system(size: 64))
                    .foregroundColor(Color(Color.redColor))
                
-                Text(Constants.Headings.rideBooked)
+                Text(heading)
                     .font(.system(size: 18, weight: .semibold ,design: .rounded))
                    .padding(.top, 10)
            }
@@ -44,6 +46,6 @@ struct BookedRideView: View {
 
 struct BookedRideView_Previews: PreviewProvider {
     static var previews: some View {
-        BookedRideView(carPoolVM: CarPoolRidesViewModel())
+        CompletedView(carPoolVM: CarPoolRidesViewModel(), heading: "")
     }
 }

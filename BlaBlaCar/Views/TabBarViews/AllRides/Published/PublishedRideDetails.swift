@@ -119,17 +119,21 @@ struct PublishedRideDetails: View {
                     .frame(maxWidth: .infinity)
                     
                     VStack(alignment: .leading){
-                        Text(Constants.Headings.passengers).font(.title2).fontWeight(.semibold)
-                        ForEach(myRidesVM.publishResponseWithId.passengers ?? [], id:\.userID){ data in
-                            NavigationLink {
-                                PassengerDetailsCard(array: data)
-                            } label: {
-                                PassengersCard(array: data)
+                        if myRidesVM.publishResponseWithId.passengers?.count != 0 {
+                            Text(Constants.Headings.passengers).font(.title2).fontWeight(.semibold)
+                            ForEach(myRidesVM.publishResponseWithId.passengers ?? [], id:\.userID){ data in
+                                NavigationLink {
+                                    PassengerDetailsCard(array: data)
+                                } label: {
+                                    PassengersCard(array: data)
+                                }
                             }
+                        } else {
+                            VStack{}
+                                .padding(.bottom, 10)
                         }
-                        DividerCapsule(height: 2, color: Color(.systemGray3))
                         
-                                            }
+                    }
                     .foregroundColor(.primary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
@@ -141,15 +145,17 @@ struct PublishedRideDetails: View {
                                 myRidesVM.toDismissEditView.toggle()
                                 
                             } label: {
-                                Text(Constants.Headings.editYourPublication).bold().padding(.top)
-                                    .font(.title3)
+                                ButtonView(buttonName: Constants.Headings.editYourPublication, border: true, color: .blue)
+//                                Text(Constants.Headings.editYourPublication).bold().padding(.top)
+//                                    .font(.title3)
                             }
                             Button {
                                 myRidesVM.cancelRideData.id = myRidesVM.publishResponseWithId.data.id
                                 myRidesVM.cancelBooking.toggle()
                             } label: {
-                                Text(Constants.Headings.cancelBooking).bold().padding(.top)
-                                    .font(.title3).foregroundColor(Color(Color.redColor))
+                                ButtonView(buttonName: Constants.Headings.cancelYOurRide, border: true)
+//                                Text(Constants.Headings.cancelYOurRide).bold().padding(.top)
+//                                    .font(.title3).foregroundColor(Color(Color.redColor))
                             }
                         }
                     }

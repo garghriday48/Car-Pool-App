@@ -33,7 +33,6 @@ struct Placemark {
                    mainLocationString += ", \(locality)"
                    locationString += ", \(locality)"
         }
-//            "Sector 7 Social, Sector 7C, Chandigarh, 160019, Chandigarh, India
         if let adminArea = item.administrativeArea,
             adminArea != item.locality {
                 locationString += ", \(adminArea)"

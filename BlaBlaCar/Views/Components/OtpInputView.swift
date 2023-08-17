@@ -27,6 +27,7 @@ struct OtpInputView: View {
                 ForEach(0..<4, id:\.self){ index in
                     VStack(spacing: 8) {
                         TextField("", text: $profileVM.otpFields[index])
+                            .tint(.clear)
                             .keyboardType(.numberPad)
                             .textContentType(.oneTimeCode)
                             .multilineTextAlignment(.center)
