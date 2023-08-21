@@ -11,6 +11,8 @@ struct PhoneVerificationView: View {
     
     @Environment (\.dismiss) var dismiss
     
+    @EnvironmentObject var vm: AuthViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     @ObservedObject var profileVM: ProfileViewModel
     
     
@@ -19,13 +21,13 @@ struct PhoneVerificationView: View {
             HStack{
                 BackButton(image: Constants.Images.cross) {
                     self.dismiss()
-                    profileVM.phoneVerificationSteps = .numberView
+                    vm.phoneVerificationSteps = .numberView
                 }
-                .font(.title)
+                .font(.title2)
                 .bold()
                 
                 Text(Constants.Headings.phoneVerification)
-                    .font(.title3)
+                    .font(.system(size: 18, design: .rounded))
                     .padding(.horizontal)
                     .frame(maxWidth: .infinity ,alignment: .topLeading)
             }
@@ -33,22 +35,35 @@ struct PhoneVerificationView: View {
             DividerCapsule(height: 4, color: Color(.systemGray3))
                 .padding(.bottom)
             
-            Text("Step \(Int(profileVM.phoneVerificationSteps.rawValue/50)) of 2")
-                .font(.headline)
+            Text("Step \(Int(vm.phoneVerificationSteps.rawValue/50)) of 2")
+                .font(.system(size: 14, weight: .bold))
                 .foregroundColor(Color(Color.redColor))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading)
             
-            ProgressBar(percent: profileVM.phoneVerificationSteps.rawValue)
-                .animation(.easeOut, value: profileVM.phoneVerificationSteps.rawValue)
+            ProgressBar(percent: vm.phoneVerificationSteps.rawValue)
+                .animation(.easeOut, value: vm.phoneVerificationSteps.rawValue)
             
-            switch profileVM.phoneVerificationSteps {
+            switch vm.phoneVerificationSteps {
             case .numberView : PhoneInputView(profileVM: profileVM)
             case .numberOtpView: OtpInputView()
             }
         }
         .frame(maxHeight: .infinity,alignment: .top)
         .padding(.vertical)
+        .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasResponseError, actions: {
+            Button(Constants.ErrorBox.okay, role: .cancel) {
+            }
+        }, message: {
+            Text(errorVM.errorMessage1)
+        })
+
+        .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasError, actions: {
+            Button(Constants.ErrorBox.okay, role: .cancel) {
+            }
+        }, message: {
+            Text(errorVM.errorMessage?.errorDescription ?? "")
+        })
     }
 }
 

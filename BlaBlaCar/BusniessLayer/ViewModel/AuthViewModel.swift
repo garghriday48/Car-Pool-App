@@ -8,32 +8,23 @@
 import Foundation
 import Combine
 
-class SignInSignUpViewModel: ObservableObject {
+class AuthViewModel: ObservableObject {
     
-    static var shared = SignInSignUpViewModel()
-    
+    static var shared = AuthViewModel()
     @Published var updateProfileDone = false
-    
     // to check if user needs to signIn or signUp
     @Published var isNewUser              = false
-    
     // to check whether picker is disable or not
     @Published var toShowPicker           = false
-    
     // to check whether the picker is datePicker or not
     @Published var isDatePicker           = true
-    
     // to check whether to go back to main page
     @Published var isGoingBackToMainPage  = false
-    
     // to display loading button
     @Published var isLoadingButton        = false
-    
     // to get different views based on selection
     @Published var signUpViews: SignUpViewsEnum = .emailPasswordView
-    
     @Published var userAuthData = UserAuthData(user: User(email: String(), password: String(), firstName: String(), lastName: String(), dob: String(), title: String()))
-    
     @Published var updatingUserArray: [EditProfileOptions] = []
     @Published var updateBio = String()
     
@@ -52,12 +43,11 @@ class SignInSignUpViewModel: ObservableObject {
     @Published var phoneNumValid    = String()
     
     @Published var phoneNum: String = ""
+    @Published var email: String = ""
     
     @Published var editPhotos = false
     @Published var openPhotosPicker = false
-    
     @Published var userId = Int()
-    
     // for changing of password
     @Published var changePassword = ChangePassword.initialize
     @Published var toShowChangePassword = false
@@ -68,10 +58,20 @@ class SignInSignUpViewModel: ObservableObject {
     @Published var forgotPassEmail = String()
     @Published var otp = String()
     
+    @Published var phnEmailVerificationResponse = PhnEmailVerificationResponse.initialize
+    @Published var phoneVerificationSteps = PhoneVerificationSteps.numberView
+    
+    @Published var toDisplayPhoneVerification = false
+    @Published var toDisplayEmailActivation = false
+    @Published var goToEmailActivation = false
+    
+    @Published var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
     @Published var toLogOut = false
     
     private var anyCancellable: AnyCancellable?
     private var anyCancellable1: AnyCancellable?
+    private var anyCancellable2: AnyCancellable?
     
     // MARK: variable to check for validations on email
     var emailPassBtnDisable: Bool {
@@ -133,6 +133,9 @@ class SignInSignUpViewModel: ObservableObject {
         case .forgotPassEmail: return Constants.Url.baseURL + Constants.Url.sendOtp
         case .otp: return Constants.Url.baseURL + Constants.Url.verifyOtp
         case .resetPassword: return Constants.Url.baseURL + Constants.Url.resetPassword
+        case .sentPhn: return Constants.Url.baseURL + Constants.Url.phone
+        case .verifyPhn: return Constants.Url.baseURL + Constants.Url.verify
+        case .emailActivation: return Constants.Url.baseURL + Constants.Url.emailActivation
         }
     }
     
@@ -143,162 +146,14 @@ class SignInSignUpViewModel: ObservableObject {
             // return false if not found
             return nil
         }
-
         let decoder = JSONDecoder()
-
         guard let resultData = try? decoder.decode(UserResponse.self, from: data) else {
             return nil
         }
-
         return resultData
     }
     
     
-    /// function to make api call for all different api methods that have same response as UserResponse
-    /// - Parameters:
-    ///   - method: ApiMethods that are used for authentication and profile updation
-    ///   - httpMethod: httpMethods like POST, PUT, etc.
-    ///   - data: This gives dictionaries based on different apimethods
-    func apiCall(method: ApiMethods, httpMethod: HttpMethod, data: [String:Any]?){
-        
-        let url = URL(string: toGetURL(method: method))
-        //let data = getData(method: method)
-        ResponseErrorViewModel.shared.isLoading = true
-        self.updateProfileDone = false
-        
-        anyCancellable = ApiManager.shared.apiAuthMethod(httpMethod: httpMethod, method: method, dataModel: data, url: url)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                    
-                case .failure(let error as ErrorResponse):
-                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
-                    
-                case .failure(let error):
-                    ResponseErrorViewModel.shared.toShowError(error: error)
-                    
-                case .finished:
-                    ResponseErrorViewModel.shared.isLoading = false
-                    self.updateProfileDone = true
-                    switch method {
-                    case .signUp:
-                        NavigationViewModel.navigationVM.paths = [.TabBarPage]
-                        NavigationViewModel.navigationVM.tabView = 0
-                        UserDefaults.standard.set(self.userAuthData.user.password, forKey: Constants.UserDefaultKeys.password)
-                        UserDefaults.standard.set(self.userResponse.status.data?.id, forKey: Constants.UserDefaultKeys.userId)
-                    case .signIn:
-                        NavigationViewModel.navigationVM.paths = [.TabBarPage]
-                        NavigationViewModel.navigationVM.tabView = 0
-                        UserDefaults.standard.set(self.userAuthData.user.password, forKey: Constants.UserDefaultKeys.password)
-                        UserDefaults.standard.set(self.userResponse.status.data?.id, forKey: Constants.UserDefaultKeys.userId)
-                    case .signOut:
-                        UserDefaults.standard.set("", forKey: Constants.UserDefaultKeys.session)
-                        NavigationViewModel.navigationVM.paths = []
-                    case .emailCheck:
-                        self.signUpViews = .fullNameView
-                    case .bioUpdate:
-                        print("done")
-                        self.updateProfileDone = true
-                    case .changePassword:
-                        UserDefaults.standard.set(self.changePassword.password, forKey: Constants.UserDefaultKeys.password)
-                        self.toShowChangePassword = false
-                    case .addImage:
-                        self.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])
-                    default: break
-                    }
-                }
-                
-            } receiveValue: { [weak self] data in
-                self?.userResponse = data ?? UserResponse.initializeData
-                print(self?.userResponse as Any)
-            }
-
-    }
-    
-    /// function to make api call for all different api methods that have same response as UserResponse
-    /// - Parameters:
-    ///   - method: ApiMethods that are used for authentication and profile updation
-    ///   - httpMethod: httpMethods like POST, PUT, etc.
-    ///   - data: This gives dictionaries based on different apimethods
-    func forgotPassApiCall(method: ApiMethods, httpMethod: HttpMethod, data: [String:Any]?){
-        
-        let url = URL(string: toGetURL(method: method))
-        //let data = getData(method: method)
-        ResponseErrorViewModel.shared.isLoading = true
-        
-        anyCancellable = ApiManager.shared.apiAuthMethod(httpMethod: httpMethod, method: method, dataModel: data, url: url)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                    
-                case .failure(let error as ForgotPasswordResponse):
-                    ResponseErrorViewModel.shared.isLoading = false
-                    ResponseErrorViewModel.shared.hasResponseError = true
-                    if error.error != nil {
-                        ResponseErrorViewModel.shared.errorMessage1 = error.error ?? ""
-                    } else if error.message != nil {
-                        ResponseErrorViewModel.shared.errorMessage1 = error.message ?? ""
-                    }
-                    
-                case .failure(let error):
-                    ResponseErrorViewModel.shared.toShowError(error: error)
-                    
-                case .finished:
-                    ResponseErrorViewModel.shared.isLoading = false
-                    self.updateProfileDone = true
-                    switch method {
-                    case .forgotPassEmail:
-                        self.otp = ""
-                        self.forgotPasswordView = .otp
-                        self.typeOfOtp = .forgotPassword
-                    case .otp:
-                        self.forgotPasswordView = .resetPassword
-                        
-                    case .resetPassword:
-                        NavigationViewModel.navigationVM.paths = []
-                        self.forgotPassEmail = ""
-                        self.emailValid = ""
-                        self.forgotPasswordView = .email
-                    default: break
-                    }
-                }
-            } receiveValue: { [weak self] data in
-                self?.forgotPasswordResponse = data ?? ForgotPasswordResponse.initialize
-                print(self?.forgotPasswordResponse as Any)
-            }
-    }
-
-    /// function to GET profile details
-    /// - Parameters:
-    ///   - method: ApiMethods
-    ///   - httpMethod: HttpMethod
-    ///   - data: for dictionaries
-    func getProfileApiCall(method: ApiMethods, httpMethod: HttpMethod, data: [String:Any]?){
-        
-        let url = URL(string: toGetURL(method: method))
-        //let data = getData(method: method)
-        ResponseErrorViewModel.shared.isLoading = true
-        self.updateProfileDone = false
-        
-        anyCancellable1 = ApiManager.shared.apiAuthMethod(httpMethod: httpMethod, method: method, dataModel: data, url: url)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                    
-                case .failure(let error as ErrorResponse):
-                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
-                    
-                case .failure(let error):
-                    ResponseErrorViewModel.shared.toShowError(error: error)
-                    
-                case .finished:
-                    ResponseErrorViewModel.shared.isLoading = false
-                    self.updateProfileDone = true
-                }
-            } receiveValue: { [weak self] data in
-                self?.profileResponse = data ?? ProfileDetails.initializeData
-            }
-    }
     // MARK: function to validate password
     func toValidatePassword(value: String){
         
@@ -316,7 +171,6 @@ class SignInSignUpViewModel: ObservableObject {
             self.passValid = Constants.ValidationsMsg.specialCh
             
         } else { self.passValid = "" }
-       
     }
     
     // MARK: function to validate name
@@ -369,5 +223,180 @@ class SignInSignUpViewModel: ObservableObject {
         if self.changePassword.password != self.changePassword.password_confirmation {
             self.confirmPass = Constants.ValidationsMsg.passSame
         } else { self.confirmPass = "" }
+    }
+}
+
+extension AuthViewModel {
+    
+    /// function to make api call for all different api methods that have same response as UserResponse
+    /// - Parameters:
+    ///   - method: ApiMethods that are used for authentication and profile updation
+    ///   - httpMethod: httpMethods like POST, PUT, etc.
+    ///   - data: This gives dictionaries based on different apimethods
+    func apiCall(method: ApiMethods, httpMethod: HttpMethod, data: [String:Any]?){
+        let url = URL(string: toGetURL(method: method))
+        ResponseErrorViewModel.shared.isLoading = true
+        self.updateProfileDone = false
+        
+        anyCancellable = ApiManager.shared.apiAuthMethod(httpMethod: httpMethod, method: method, dataModel: data, url: url)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                case .failure(let error):
+                    ResponseErrorViewModel.shared.toShowError(error: error)
+                    
+                case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
+                    self.updateProfileDone = true
+                    switch method {
+                    case .signUp:
+                        NavigationViewModel.navigationVM.paths = [.TabBarPage]
+                        NavigationViewModel.navigationVM.tabView = 0
+                        UserDefaults.standard.set(self.userAuthData.user.password, forKey: Constants.UserDefaultKeys.password)
+                        UserDefaults.standard.set(self.userResponse.status.data?.id, forKey: Constants.UserDefaultKeys.userId)
+                    case .signIn:
+                        NavigationViewModel.navigationVM.paths = [.TabBarPage]
+                        NavigationViewModel.navigationVM.tabView = 0
+                        UserDefaults.standard.set(self.userAuthData.user.password, forKey: Constants.UserDefaultKeys.password)
+                        UserDefaults.standard.set(self.userResponse.status.data?.id, forKey: Constants.UserDefaultKeys.userId)
+                    case .signOut:
+                        UserDefaults.standard.set("", forKey: Constants.UserDefaultKeys.session)
+                        NavigationViewModel.navigationVM.paths = []
+                    case .emailCheck: self.signUpViews = .fullNameView
+                    case .bioUpdate:
+                        print("done")
+                        self.updateProfileDone = true
+                    case .changePassword:
+                        UserDefaults.standard.set(self.changePassword.password, forKey: Constants.UserDefaultKeys.password)
+                        self.toShowChangePassword = false
+                    case .addImage: self.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])
+                    default: break
+                    }
+                }
+                
+            } receiveValue: { [weak self] data in
+                self?.userResponse = data ?? UserResponse.initializeData
+                print(self?.userResponse as Any)
+            }
+
+    }
+    
+    /// function to make api call for all forgot password api methods
+    /// - Parameters:
+    ///   - method: ApiMethods that are used for forgot password and reset password
+    ///   - httpMethod: httpMethods like POST, PUT, etc.
+    ///   - data: This gives dictionaries based on different apimethods
+    func forgotPassApiCall(method: ApiMethods, httpMethod: HttpMethod, data: [String:Any]?){
+        
+        let url = URL(string: toGetURL(method: method))
+        ResponseErrorViewModel.shared.isLoading = true
+        anyCancellable = ApiManager.shared.apiAuthMethod(httpMethod: httpMethod, method: method, dataModel: data, url: url)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                    
+                case .failure(let error as ForgotPasswordResponse):
+                    ResponseErrorViewModel.shared.isLoading = false
+                    ResponseErrorViewModel.shared.hasResponseError = true
+                    if error.error != nil {
+                        ResponseErrorViewModel.shared.errorMessage1 = error.error ?? ""
+                    } else if error.message != nil {
+                        ResponseErrorViewModel.shared.errorMessage1 = error.message ?? ""
+                    }
+                case .failure(let error):
+                    ResponseErrorViewModel.shared.toShowError(error: error)
+                case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
+                    self.updateProfileDone = true
+                    switch method {
+                    case .forgotPassEmail:
+                        self.otp = ""
+                        self.forgotPasswordView = .otp
+                        self.typeOfOtp = .forgotPassword
+                        self.timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+                    case .otp: self.forgotPasswordView = .resetPassword
+                    case .resetPassword:
+                        NavigationViewModel.navigationVM.paths = []
+                        self.forgotPassEmail = ""
+                        self.emailValid = ""
+                        self.forgotPasswordView = .email
+                    default: break
+                    }
+                }
+            } receiveValue: { [weak self] data in
+                self?.forgotPasswordResponse = data ?? ForgotPasswordResponse.initialize
+                print(self?.forgotPasswordResponse as Any)
+            }
+    }
+
+    /// function to make api call to verify phn number
+    /// - Parameters:
+    ///   - method: ApiMethods that are used for phn number verification
+    ///   - httpMethod: httpMethods like POST, PUT, etc.
+    ///   - data: This gives dictionaries based on different apimethods
+    func verifyPhnEmailApiCall(method: ApiMethods, httpMethod: HttpMethod, data: [String:Any]?){
+        
+        let url = URL(string: toGetURL(method: method))
+        ResponseErrorViewModel.shared.isLoading = true
+        
+        anyCancellable2 = ApiManager.shared.apiAuthMethod(httpMethod: httpMethod, method: method, dataModel: data, url: url)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                    
+                case .failure(let error):
+                    ResponseErrorViewModel.shared.toShowError(error: error)
+                case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
+                    self.updateProfileDone = true
+                    switch method {
+                    case .sentPhn:
+                        self.otp = ""
+                        self.phoneVerificationSteps = .numberOtpView
+                        self.typeOfOtp = .phoneVerification
+                        self.timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+                    case .verifyPhn:  self.toDisplayPhoneVerification.toggle()
+                    case .emailActivation: self.toDisplayEmailActivation.toggle()
+                    default: break
+                    }
+                }
+            } receiveValue: { [weak self] data in
+                self?.phnEmailVerificationResponse = data ?? PhnEmailVerificationResponse.initialize
+                print(self?.phnEmailVerificationResponse as Any)
+            }
+    }
+    
+    /// function to GET profile details
+    /// - Parameters:
+    ///   - method: ApiMethods
+    ///   - httpMethod: HttpMethod
+    ///   - data: for dictionaries
+    func getProfileApiCall(method: ApiMethods, httpMethod: HttpMethod, data: [String:Any]?){
+        
+        let url = URL(string: toGetURL(method: method))
+        //let data = getData(method: method)
+        ResponseErrorViewModel.shared.isLoading = true
+        self.updateProfileDone = false
+        
+        anyCancellable1 = ApiManager.shared.apiAuthMethod(httpMethod: httpMethod, method: method, dataModel: data, url: url)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error as ErrorResponse):
+                    ResponseErrorViewModel.shared.toShowResponseError(error: error)
+                case .failure(let error):
+                    ResponseErrorViewModel.shared.toShowError(error: error)
+                case .finished:
+                    ResponseErrorViewModel.shared.isLoading = false
+                    self.updateProfileDone = true
+                }
+            } receiveValue: { [weak self] data in
+                self?.profileResponse = data ?? ProfileDetails.initializeData
+                print(self?.profileResponse as Any)
+            }
     }
 }

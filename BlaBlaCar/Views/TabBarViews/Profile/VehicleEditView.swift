@@ -9,7 +9,7 @@ import SwiftUI
 
 struct VehicleEditView: View {
     
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     @ObservedObject var profileVM: ProfileViewModel
     @Environment (\.dismiss) var dismiss
     
@@ -100,6 +100,6 @@ struct VehicleEditView: View {
 
 struct VehicleEditView_Previews: PreviewProvider {
     static var previews: some View {
-        VehicleEditView(vm: SignInSignUpViewModel(), profileVM: ProfileViewModel())
+        VehicleEditView(vm: AuthViewModel(), profileVM: ProfileViewModel())
     }
 }

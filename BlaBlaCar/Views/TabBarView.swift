@@ -10,7 +10,7 @@ import SwiftUI
 struct TabBarView: View {
     
     @EnvironmentObject var navigationVM: NavigationViewModel
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var carPoolVM: CarPoolRidesViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var mapVM: MapViewModel
@@ -63,6 +63,9 @@ struct TabBarView: View {
                 Text(errorVM.errorMessage?.errorDescription ?? "")
             })
             .onAppear{
+                //profileVM.vehicleListApiCall(method: .vehicleList, data: [:], httpMethod: .GET)
+//                vm.userId = vm.userData?.status.data?.id ?? 0
+//                vm.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])
                 guard let id = UserDefaults.standard.value(forKey: Constants.UserDefaultKeys.userId) else {return}
                 messageVM.senderId = id as? Int ?? 0
             }

@@ -71,8 +71,7 @@ class ProfileViewModel: ObservableObject {
     
     @Published var toDismiss = false
     
-    @Published var phoneVerificationSteps = PhoneVerificationSteps.numberView
-    @Published var toDisplayPhoneVerification = false
+    
     
 
     
@@ -236,6 +235,7 @@ class ProfileViewModel: ObservableObject {
             } receiveValue: { [weak self] data in
                 self?.toDismiss.toggle()
                 self?.vehicleResponseList = data ?? VehicleResponseList.initialize
+                print(self?.vehicleResponseList as Any)
             }
 
     }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RideCard: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
     
     @Binding var array: DataArray

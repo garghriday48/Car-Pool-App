@@ -98,7 +98,8 @@ class ApiManager {
                     }
 
                     return try decoder.decode(T.self, from: data)
-                } catch { throw AuthenticateError.noData }
+                } catch {
+                    throw AuthenticateError.noData }
             } .eraseToAnyPublisher()
     }
     

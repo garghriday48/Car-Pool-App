@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var navigationVM: NavigationViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
@@ -49,7 +49,7 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(NavigationViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }

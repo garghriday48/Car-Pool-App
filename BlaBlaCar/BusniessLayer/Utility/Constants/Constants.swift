@@ -42,6 +42,7 @@ struct Constants {
         static var locationPointer = "location.north.circle.fill"
         static var rupeeSign = "indianrupeesign"
         static var crossFill = "multiply.circle.fill"
+        static var verificationCheckmark = "checkmark.seal.fill"
     }
     
     struct Headings {
@@ -100,6 +101,7 @@ struct Constants {
         static var accountSettings = "Account settings"
         static var vehicles = "Vehicles"
         static var phoneVerification = "Phone Verification"
+        static var emailVerification = "Email Verification"
         static var forgotPassword = "Forgot password?"
         static var miniBio = "Mini bio:"
         static var vehicleDetails = "Vehicle Details: "
@@ -115,8 +117,11 @@ struct Constants {
         static var passengers = "Passengers:"
         static var forgotPass = "Forgot password?"
         static var about = "About"
-        static var didntGetOtp = "Didn't get otp?"
+        static var didntReceiveOtp = "Didn't receive otp?"
+        static var timeRemaining = "Time Remaining:"
         static var changeEmail = "Want to change email?"
+        static var confirmEmail = "Confirm email"
+        static var confirmPhn = "Confirm phone number"
     }
     
     struct ButtonsTitle{
@@ -148,8 +153,8 @@ struct Constants {
         static var currentLocation = "Use current location"
         static var settings = "Settings"
         static var cancel = "Cancel"
-        static var resend = "Resend"
-        static var enterEmail = "Enter email"
+        static var resend = "Resend OTP"
+        static var changeEmail = "Change email"
         static var lowestPrice = "Lowest Price"
         static var earliestDeparture = "Earliest Departure"
         static var message = "Message"
@@ -270,6 +275,7 @@ struct Constants {
         static var rides = "rides"
         static var confirmed = "CONFIRMED"
         static var cancelled = "CANCELLED"
+        static var cancelByDriver = "DRIVER CANCELLED"
         static var completed = "COMPLETED"
         static var pending = "ACTIVE"
     }

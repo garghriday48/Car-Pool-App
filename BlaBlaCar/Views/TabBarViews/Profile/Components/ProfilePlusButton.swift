@@ -11,20 +11,24 @@ struct ProfilePlusButton: View {
     
     var image: String
     var name: String
+    var textColor: UIColor
+    
     
     var body: some View {
         HStack{
             Image(systemName: image)
+                .foregroundColor(Color(Color.redColor))
             Text(name)
+                .foregroundColor(Color(uiColor: textColor))
         }
         .font(.system(size: 16, design: .rounded))
         .frame(maxWidth: .infinity, alignment: .leading)
-        .foregroundColor(Color(Color.redColor))
+        
     }
 }
 
 struct ProfilePlusButton_Previews: PreviewProvider {
     static var previews: some View {
-        ProfilePlusButton(image: "plus.circle", name: "Confirm email")
+        ProfilePlusButton(image: "plus.circle", name: "Confirm email", textColor: .gray)
     }
 }

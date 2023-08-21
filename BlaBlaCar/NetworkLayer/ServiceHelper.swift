@@ -41,7 +41,7 @@ class ServiceHelper {
                 if key == "image" {
 
                     if let image = value as? UIImage {
-                        body.append(String(format: dataBodyStrings.imageContentDisposition, key, "\(SignInSignUpViewModel.shared.userData?.status.data?.first_name ?? "image").png"))
+                        body.append(String(format: dataBodyStrings.imageContentDisposition, key, "\(AuthViewModel.shared.userData?.status.data?.first_name ?? "image").png"))
                         body.append(String(format: dataBodyStrings.imageContentType, dataBodyStrings.imageMimePng))
 
                         if let data = image.jpegData(compressionQuality: 0.01) {
@@ -170,11 +170,15 @@ class ServiceHelper {
     }
     
     func checkNetworkError(error: Error) -> AuthenticateError{
-        if error.localizedDescription == Constants.APIConstants.sslError {
-            return AuthenticateError.networkError
-        } else if error.localizedDescription == Constants.APIConstants.wrongUrl {
-            return AuthenticateError.incorrectHostname
-        } else {  return AuthenticateError.unknown }
+        for nError in NetworkError.allCases where nError.rawValue == error.localizedDescription{
+            switch nError {
+            case .sslError: return AuthenticateError.networkError
+            case .wrongUrl: return AuthenticateError.incorrectHostname
+            case .cannotConnectServer:  return AuthenticateError.cannotConnectServer
+            case .unknown: return AuthenticateError.unknown
+            }
+        }
+        return AuthenticateError.unknown
     }
     
 }

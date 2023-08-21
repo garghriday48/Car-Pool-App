@@ -8,18 +8,20 @@
 import SwiftUI
 
 struct OtpInputView: View {
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     // MARK: textfield focusstate
     @FocusState var activeTextField: OTPField?
     
+    @State var timeRemaining = 30
+    @State var isFirstTime = true
+    
     var body: some View {
         VStack(alignment: .leading){
             Text(Constants.Headings.verification)
-                .font(.largeTitle)
-                .bold()
+                .font(.system(size: 24, weight: .bold, design: .rounded))
                 .padding(.bottom, 40)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             
@@ -47,7 +49,9 @@ struct OtpInputView: View {
 
             Button {
                 switch vm.typeOfOtp {
-                case .phoneVerification: break
+                case .phoneVerification:
+                    
+                    vm.verifyPhnEmailApiCall(method: .verifyPhn, httpMethod: .POST, data: [Constants.DictionaryForApiCall.phnNumber: vm.phoneNum, Constants.DictionaryForApiCall.passcode: vm.otp])
                 case .forgotPassword:
                     
                     vm.forgotPassApiCall(method: .otp, httpMethod: .POST, data: [Constants.DictionaryForApiCall.email : vm.forgotPassEmail, Constants.DictionaryForApiCall.otp: vm.otp])
@@ -63,20 +67,39 @@ struct OtpInputView: View {
             .padding(.vertical)
             
             HStack(spacing: 12) {
-                Text(Constants.Headings.didntGetOtp)
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                Button {
-                    switch vm.typeOfOtp {
-                    case .phoneVerification: break
-                    case .forgotPassword:
+                HStack{
+                    Text(isFirstTime ? Constants.Headings.didntReceiveOtp : Constants.Headings.timeRemaining)
+                        .font(.system(size: 14, weight: .none, design: .rounded))
+                    if !isFirstTime {
                         
+                        Text("00:\(timeRemaining < 10 ? "0" : "")\(timeRemaining)")
+                            .onReceive(vm.timer) { _ in
+                                if timeRemaining > 0 {
+                                    timeRemaining -= 1
+                                }
+                            }
+                        .font(.system(size: 16, weight: .none, design: .rounded))
+                    }
+                }
+                .foregroundColor(.gray)
+                Spacer()
+                Button {
+                    timeRemaining = 30
+                    isFirstTime = false
+                    
+                    switch vm.typeOfOtp {
+                    case .phoneVerification:
+                        vm.verifyPhnEmailApiCall(method: .sentPhn, httpMethod: .POST, data: [Constants.DictionaryForApiCall.phnNumber: vm.phoneNum])
+                        
+                    case .forgotPassword:
                         vm.forgotPassApiCall(method: .forgotPassEmail, httpMethod: .POST, data: [Constants.DictionaryForApiCall.email: vm.forgotPassEmail])
                     }
                 } label: {
                     Text(Constants.ButtonsTitle.resend)
-                        .font(.callout)
+                        .font(.system(size: 16, weight: .none, design: .rounded))
+                        .tint(Color(Color.redColor))
                 }
+                .disabled(!isFirstTime && timeRemaining != 0)
 
             }
             .padding(.bottom)
@@ -84,7 +107,7 @@ struct OtpInputView: View {
             if vm.typeOfOtp == .forgotPassword {
                 HStack(spacing: 12) {
                     Text(Constants.Headings.changeEmail)
-                        .font(.caption)
+                        .font(.system(size: 14, weight: .none, design: .rounded))
                         .foregroundColor(.gray)
                     Button {
                         switch vm.typeOfOtp {
@@ -94,8 +117,9 @@ struct OtpInputView: View {
                             vm.forgotPassEmail = vm.forgotPassEmail
                         }
                     } label: {
-                        Text(Constants.ButtonsTitle.enterEmail)
-                            .font(.callout)
+                        Text(Constants.ButtonsTitle.changeEmail)
+                            .font(.system(size: 16, weight: .none, design: .rounded))
+                            .tint(Color(Color.redColor))
                     }
                 }
                 .padding(.bottom)
@@ -139,7 +163,7 @@ struct OtpInputView: View {
 struct OtpInputView_Previews: PreviewProvider {
     static var previews: some View {
         OtpInputView()
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ProfileViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }

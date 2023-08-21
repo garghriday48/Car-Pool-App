@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainSignInSignUpView: View {
     
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     @EnvironmentObject var navigationVM: NavigationViewModel
     
     @Environment(\.presentationMode) var presentationMode
@@ -65,6 +65,6 @@ struct MainSignInSignUpView: View {
 
 struct MainSignInSignUpView_Previews: PreviewProvider {
     static var previews: some View {
-        MainSignInSignUpView(vm: SignInSignUpViewModel())
+        MainSignInSignUpView(vm: AuthViewModel())
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct VehicleListView: View {
     
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     @ObservedObject var profileVM: ProfileViewModel
     @Environment (\.dismiss) var dismiss
     
@@ -30,8 +30,8 @@ struct VehicleListView: View {
             DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 .padding(.bottom)
             ScrollView{
-                if profileVM.vehicleResponseList.data[0].id != 0{
-                    ForEach(profileVM.vehicleResponseList.data){data in
+                if profileVM.vehicleResponseList.data?.count != 0 {
+                    ForEach(profileVM.vehicleResponseList.data ?? []){data in
                         Button {
                             profileVM.isVehicleViewSelected.toggle()
                             profileVM.toSetVehicleOptions(data: data)
@@ -50,7 +50,7 @@ struct VehicleListView: View {
                     profileVM.isAddingNewVehicle = true
                     profileVM.toDismiss = false
                 }, label: {
-                    ProfilePlusButton(image: Constants.Images.plusCircle, name: Constants.ButtonsTitle.addVehicle)
+                    ProfilePlusButton(image: Constants.Images.plusCircle, name: Constants.ButtonsTitle.addVehicle, textColor: Color.redColor)
                         .foregroundColor(Color(Color.redColor))
                         .padding()
                 })
@@ -73,6 +73,6 @@ struct VehicleListView: View {
 
 struct VehicleListView_Previews: PreviewProvider {
     static var previews: some View {
-        VehicleListView(vm: SignInSignUpViewModel(), profileVM: ProfileViewModel())
+        VehicleListView(vm: AuthViewModel(), profileVM: ProfileViewModel())
     }
 }

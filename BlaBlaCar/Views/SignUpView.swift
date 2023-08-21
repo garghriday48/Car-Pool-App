@@ -11,7 +11,7 @@ struct SignUpView: View {
     
     var genderArray = ["Male", "Female", "Other"]
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var navigationVM: NavigationViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
@@ -92,7 +92,7 @@ struct SignUpView: View {
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView()
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(NavigationViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }

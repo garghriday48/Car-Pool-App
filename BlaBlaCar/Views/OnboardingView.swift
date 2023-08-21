@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     @EnvironmentObject var navigationVM: NavigationViewModel
     
     var body: some View {
@@ -57,6 +57,6 @@ struct OnboardingView: View {
 
 struct OnboardingView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingView(vm: SignInSignUpViewModel())
+        OnboardingView(vm: AuthViewModel())
     }
 }

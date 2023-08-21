@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountSettingsView: View {
     
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     @ObservedObject var profileVM: ProfileViewModel
     @Environment (\.dismiss) var dismiss
     
@@ -70,6 +70,6 @@ struct AccountSettingsView: View {
 
 struct AccountSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountSettingsView(vm: SignInSignUpViewModel(), profileVM: ProfileViewModel())
+        AccountSettingsView(vm: AuthViewModel(), profileVM: ProfileViewModel())
     }
 }

@@ -62,7 +62,7 @@ struct RouteSelectionView: View {
                         //
                         myRidesVM.estimatedTime = route.expectedTravelTime
                         carPoolVM.estimatedTime = route.expectedTravelTime
-                        //break // If you have overlapping overlays then you'll need an array of overlays which the touch is in, so remove this line.
+                        break // If you have overlapping overlays then you'll need an array of overlays which the touch is in, so remove this line.
                     }
                     
                     continue

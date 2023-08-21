@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RidesBookedCard: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var myRidesVM: MyRidesViewModel
     
     @State var bookingType: (String, Color) = ("", Color.white)
@@ -89,7 +89,7 @@ struct RidesBookedCard: View {
 struct RidesBookedCard_Previews: PreviewProvider {
     static var previews: some View {
         RidesBookedCard(array: RideElement(ride: GetPublishResponse.initialize, bookingID: 0, seat: 2, status: "confirm booking", reachTime: "", totalPrice: 0))
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(MyRidesViewModel())
     }
 }

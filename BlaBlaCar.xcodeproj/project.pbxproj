@@ -99,7 +99,7 @@
 		C99FB90C2A0B96D200D54DDA /* MainSignInSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99FB90B2A0B96D200D54DDA /* MainSignInSignUpView.swift */; };
 		C99FB90E2A0B97D400D54DDA /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99FB90D2A0B97D400D54DDA /* Colors.swift */; };
 		C99FB9162A0B9AB800D54DDA /* ResuabilityDataStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99FB9152A0B9AB800D54DDA /* ResuabilityDataStructs.swift */; };
-		C99FB91A2A0BABD400D54DDA /* SignInSignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99FB9192A0BABD400D54DDA /* SignInSignUpViewModel.swift */; };
+		C99FB91A2A0BABD400D54DDA /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99FB9192A0BABD400D54DDA /* AuthViewModel.swift */; };
 		C99FB91C2A0BAC1100D54DDA /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99FB91B2A0BAC1100D54DDA /* OnboardingView.swift */; };
 		C99FB91E2A0BB09300D54DDA /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99FB91D2A0BB09300D54DDA /* Buttons.swift */; };
 		C99FB9212A0BB57100D54DDA /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C99FB9202A0BB57100D54DDA /* SignUpView.swift */; };
@@ -141,6 +141,8 @@
 		C9FA90BE2A386AF000E59A54 /* RidesBookedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FA90BD2A386AF000E59A54 /* RidesBookedCard.swift */; };
 		C9FA90C02A38722100E59A54 /* MyRidesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FA90BF2A38722100E59A54 /* MyRidesViewModel.swift */; };
 		C9FA90C42A3876BA00E59A54 /* RidesPublishedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FA90C32A3876BA00E59A54 /* RidesPublishedCard.swift */; };
+		C9FA974C2A8F60DF006F8E85 /* Phone+EmailVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FA974B2A8F60DF006F8E85 /* Phone+EmailVerification.swift */; };
+		C9FA97502A8F8B57006F8E85 /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9FA974F2A8F8B57006F8E85 /* TimerView.swift */; };
 		E4792AB82A0C89C600881B04 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4792AB72A0C89C600881B04 /* ProgressBar.swift */; };
 		E4E141A22A2828F4004562B4 /* ServiceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E141A12A2828F4004562B4 /* ServiceHelper.swift */; };
 		E4E141A42A2AD6A4004562B4 /* PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E141A32A2AD6A4004562B4 /* PlaceholderView.swift */; };
@@ -244,7 +246,7 @@
 		C99FB90B2A0B96D200D54DDA /* MainSignInSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSignInSignUpView.swift; sourceTree = "<group>"; };
 		C99FB90D2A0B97D400D54DDA /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		C99FB9152A0B9AB800D54DDA /* ResuabilityDataStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResuabilityDataStructs.swift; sourceTree = "<group>"; };
-		C99FB9192A0BABD400D54DDA /* SignInSignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInSignUpViewModel.swift; sourceTree = "<group>"; };
+		C99FB9192A0BABD400D54DDA /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		C99FB91B2A0BAC1100D54DDA /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		C99FB91D2A0BB09300D54DDA /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		C99FB9202A0BB57100D54DDA /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
@@ -286,6 +288,8 @@
 		C9FA90BD2A386AF000E59A54 /* RidesBookedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RidesBookedCard.swift; sourceTree = "<group>"; };
 		C9FA90BF2A38722100E59A54 /* MyRidesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyRidesViewModel.swift; sourceTree = "<group>"; };
 		C9FA90C32A3876BA00E59A54 /* RidesPublishedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RidesPublishedCard.swift; sourceTree = "<group>"; };
+		C9FA974B2A8F60DF006F8E85 /* Phone+EmailVerification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Phone+EmailVerification.swift"; sourceTree = "<group>"; };
+		C9FA974F2A8F8B57006F8E85 /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		E4792AB72A0C89C600881B04 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		E4E141A12A2828F4004562B4 /* ServiceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceHelper.swift; sourceTree = "<group>"; };
 		E4E141A32A2AD6A4004562B4 /* PlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderView.swift; sourceTree = "<group>"; };
@@ -352,6 +356,7 @@
 				C90420C22A42FA7E00737AFE /* ForgotPasswordResponse.swift */,
 				C909F57D2A3753B8004ADCDE /* ProfileDetails.swift */,
 				C91B116B2A41E5F2006CAFB7 /* ChangePassword.swift */,
+				C9FA974B2A8F60DF006F8E85 /* Phone+EmailVerification.swift */,
 			);
 			path = AuthProfileData;
 			sourceTree = "<group>";
@@ -584,6 +589,7 @@
 			isa = PBXGroup;
 			children = (
 				C91B11672A41BD4D006CAFB7 /* OtpInputView.swift */,
+				C9FA974F2A8F8B57006F8E85 /* TimerView.swift */,
 				C9E97C6A2A8E4018007E2137 /* PasscodeField.swift */,
 				C9B6DDD82A14B63C00E2E7D8 /* SelectVehicleCellView.swift */,
 				C9066E212A0E4C2F00B8DA1C /* SocialLoginButton.swift */,
@@ -624,7 +630,7 @@
 			isa = PBXGroup;
 			children = (
 				C9029B492A0CE9D7001C63EC /* NavigationViewModel.swift */,
-				C99FB9192A0BABD400D54DDA /* SignInSignUpViewModel.swift */,
+				C99FB9192A0BABD400D54DDA /* AuthViewModel.swift */,
 				C95DA4032A149281008F7630 /* CarPoolRidesViewModel.swift */,
 				C9FA90BF2A38722100E59A54 /* MyRidesViewModel.swift */,
 				C9CF37CE2A1787D800865404 /* ProfileViewModel.swift */,
@@ -927,6 +933,7 @@
 				C91B116C2A41E5F2006CAFB7 /* ChangePassword.swift in Sources */,
 				C9C406BB2A455E8F0086D4BD /* ResponseErrorViewModel.swift in Sources */,
 				C99FB9162A0B9AB800D54DDA /* ResuabilityDataStructs.swift in Sources */,
+				C9FA97502A8F8B57006F8E85 /* TimerView.swift in Sources */,
 				C9FA90C02A38722100E59A54 /* MyRidesViewModel.swift in Sources */,
 				C9040BF32A4C1461008E304E /* PersonListCard.swift in Sources */,
 				C90420C32A42FA7E00737AFE /* ForgotPasswordResponse.swift in Sources */,
@@ -955,7 +962,7 @@
 				C90420BF2A42EBEA00737AFE /* EmailView.swift in Sources */,
 				C9FA90B02A3844F900E59A54 /* CompletedView.swift in Sources */,
 				C9CF37C72A177B1900865404 /* ProfileOptionsCellView.swift in Sources */,
-				C99FB91A2A0BABD400D54DDA /* SignInSignUpViewModel.swift in Sources */,
+				C99FB91A2A0BABD400D54DDA /* AuthViewModel.swift in Sources */,
 				C99FB91C2A0BAC1100D54DDA /* OnboardingView.swift in Sources */,
 				C99FB9272A0BB66D00D54DDA /* Constants.swift in Sources */,
 				C9066E162A0E1AB700B8DA1C /* EmailPasswordView.swift in Sources */,
@@ -972,6 +979,7 @@
 				C9FA90C42A3876BA00E59A54 /* RidesPublishedCard.swift in Sources */,
 				C9050C6B2A15F37400FA20DE /* FilterAndSortView.swift in Sources */,
 				C9F1080B2A83578F00253F41 /* ChatRoomData+Response.swift in Sources */,
+				C9FA974C2A8F60DF006F8E85 /* Phone+EmailVerification.swift in Sources */,
 				C9066E202A0E23C200B8DA1C /* LoginView.swift in Sources */,
 				C902CC962A3C20570044870C /* ItineraryDetailsView.swift in Sources */,
 				C9B6DDDD2A14DF0700E2E7D8 /* RecentSearchesView.swift in Sources */,

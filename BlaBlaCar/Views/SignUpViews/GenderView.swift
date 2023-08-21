@@ -11,7 +11,7 @@ struct GenderView: View {
     
     var genderArray = ["Male", "Female", "Other"]
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @ObservedObject var navigationVM: NavigationViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
@@ -91,7 +91,7 @@ struct GenderView: View {
 struct GenderView_Previews: PreviewProvider {
     static var previews: some View {
         GenderView(navigationVM: NavigationViewModel())
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }
 }

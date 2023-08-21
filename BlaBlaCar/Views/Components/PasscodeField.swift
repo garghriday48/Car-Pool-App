@@ -10,15 +10,11 @@ import SwiftUI
 
 public struct PasscodeField: View {
 
-var maxDigits: Int = 6
+var maxDigits: Int = 4
 var label = "Enter One Time Password"
 
 @State var pin: String = ""
 @State var showPin = true
-//@State var isDisabled = false
-
-
-//var handler: (String, (Bool) -> Void) -> Void
 
 public var body: some View {
     VStack{
@@ -38,34 +34,19 @@ public var body: some View {
 private var pinDots: some View {
     HStack {
         Spacer()
-        ForEach(0..<maxDigits) { index in
-            Image(systemName: self.getImageName(at: index))
-                .font(.system(size: 60))
-            Spacer()
-        }.frame(minWidth: 0, maxWidth: .infinity)
-        .padding(.trailing, -24)
+        ForEach(0..<4) { index in
+            ZStack{
+                Image(systemName: self.getImageName(at: index))
+                    .font(.system(size: 50))
+                Spacer()
+                Image(systemName: "square")
+                    .font(.system(size: 50))
+                    .foregroundColor(self.getImageName(at: index) != "square" ? Color(Color.redColor) : .black)
+            }
+            .frame(minWidth: 0, maxWidth: .infinity)
+        }
     }
 }
-//
-//private var backgroundField: some View {
-////    let boundPin = Binding<String>(get: { self.pin }, set: { newValue in
-////        self.pin = newValue
-////        self.submitPin()
-////    })
-//
-//    return
-  
-  // Introspect library can used to make the textField become first resonder on appearing
-  // if you decide to add the pod 'Introspect' and import it, comment #50 to #53 and uncomment #55 to #61
-  
-//       .accentColor(.clear)
-//       .foregroundColor(.clear)
-//       .keyboardType(.numberPad)
-       //.disabled(isDisabled)
-  
-
-//}
-
 
 private func submitPin() {
     
@@ -79,14 +60,10 @@ private func submitPin() {
 
 private func getImageName(at index: Int) -> String {
     if index >= self.pin.count {
-        return "circle"
+        return "square"
     }
     
-    if self.showPin {
-        return self.pin.digits[index].numberString + ".circle"
-    }
-    
-    return "circle.fill"
+    return self.pin.digits[index].numberString + ".square"
 }
 }
 

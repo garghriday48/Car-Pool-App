@@ -10,11 +10,14 @@ import _PhotosUI_SwiftUI
 
 struct ProfileView: View {
     
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     @ObservedObject var profileVM: ProfileViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     @State var photosPicker: [PhotosPickerItem] = []
+    
+    @State var phoneVerified = false
+    @State var emailVerified = false
     
     var body: some View {
             ZStack(alignment: .top){
@@ -121,14 +124,20 @@ struct ProfileView: View {
                                     .font(.system(size: 18, design: .rounded))
                                     .fontWeight(.semibold)
                                 
-                                ForEach(DataArrays.profilePlusButtonArray, id: \.self){button in
-                                    
-                                    Button {
-                                        profileVM.toDisplayPhoneVerification.toggle()
-                                    } label: {
-                                        ProfilePlusButton(image: button[0], name: button[1])
-                                    }
+                                Button {
+                                    vm.goToEmailActivation.toggle()
+                                    vm.email = vm.userData?.status.data?.email ?? ""
+                                } label: {
+                                    ProfilePlusButton(image: vm.profileResponse.user?.activated ?? false ? Constants.Images.verificationCheckmark : Constants.Images.plusCircle , name:  vm.profileResponse.user?.activated ?? false ? vm.profileResponse.user?.email ?? "" : Constants.Headings.confirmEmail, textColor: vm.profileResponse.user?.activated ?? false ? .gray : Color.redColor)
                                 }
+                                .disabled(emailVerified)
+                                
+                                Button {
+                                    vm.toDisplayPhoneVerification.toggle()
+                                } label: {
+                                    ProfilePlusButton(image: vm.profileResponse.user?.phone_verified ?? false ? Constants.Images.verificationCheckmark : Constants.Images.plusCircle, name:  vm.profileResponse.user?.phone_verified ?? false ? vm.profileResponse.user?.phone_number ?? "" : Constants.Headings.confirmPhn, textColor: vm.profileResponse.user?.phone_verified ?? false ? .gray : Color.redColor)
+                                }
+                                .disabled(phoneVerified)
                             }
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -144,7 +153,7 @@ struct ProfileView: View {
                                     BioView(vm: vm, profileVM: profileVM)
                                 } label: {
                                     if vm.userData?.status.data?.bio == nil {
-                                        ProfilePlusButton(image: Constants.Images.plusCircle, name: Constants.ButtonsTitle.addMiniBio)
+                                        ProfilePlusButton(image: Constants.Images.plusCircle, name: Constants.ButtonsTitle.addMiniBio, textColor: Color.redColor)
                                     } else {
                                         HStack{
                                             Image(systemName: Constants.Images.checkmarkFilled)
@@ -196,8 +205,15 @@ struct ProfileView: View {
                         .padding(.top)
                         .frame(maxHeight: .infinity, alignment: .top)
                     }
+                    .refreshable {
+                        //vm.userId = vm.userData?.status.data?.id ?? 0
+                        vm.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])
+                        phoneVerified = vm.profileResponse.user?.phone_verified ?? false
+                        emailVerified = vm.profileResponse.user?.activated ?? false
+                    }
                 }
             }
+            
             .confirmationDialog(Constants.Headings.logOutHeading, isPresented: $vm.toLogOut, actions: {
                 Button(Constants.ButtonsTitle.logOut, role: .destructive) {
                     vm.apiCall(method: .signOut, httpMethod: .GET, data: vm.getData(method: .signOut))
@@ -205,15 +221,22 @@ struct ProfileView: View {
             }, message: {
                 Text(Constants.Headings.logOutHeading)
             })
-            .fullScreenCover(isPresented: $profileVM.toDisplayPhoneVerification, content: {
+            .fullScreenCover(isPresented: $vm.toDisplayPhoneVerification, content: {
                 PhoneVerificationView(profileVM: profileVM)
+            })
+            .fullScreenCover(isPresented: $vm.goToEmailActivation, content: {
+                EmailView(emailViewType: .emailVerification)
             })
             .onAppear {
                 vm.userId = vm.userData?.status.data?.id ?? 0
                 vm.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])
-                profileVM.vehicleListArray = profileVM.vehicleResponseList.data
+                
+                profileVM.vehicleListArray = profileVM.vehicleResponseList.data ?? []
                 profileVM.isVehicleViewSelected = false
                 profileVM.isAddingNewVehicle = false
+                
+                phoneVerified = vm.profileResponse.user?.phone_verified ?? false
+                emailVerified = vm.profileResponse.user?.activated ?? false
             }
     }
 }
@@ -221,7 +244,7 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(vm: SignInSignUpViewModel(), profileVM: ProfileViewModel())
+        ProfileView(vm: AuthViewModel(), profileVM: ProfileViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }
 }

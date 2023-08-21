@@ -11,7 +11,7 @@ import Foundation
 // MARK: - Welcome
 struct VehicleResponseList: Codable {
     var code: Int
-    var  data: [VehicleData]
+    var  data: [VehicleData]?
 }
 
 extension VehicleResponseList{

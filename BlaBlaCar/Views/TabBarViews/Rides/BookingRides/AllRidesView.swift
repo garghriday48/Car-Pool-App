@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AllRidesView: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
     
     @Environment (\.presentationMode) var presentationMode
@@ -138,7 +138,7 @@ struct AllRidesView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
             AllRidesView(carPoolVM: CarPoolRidesViewModel())
-                .environmentObject(SignInSignUpViewModel())
+                .environmentObject(AuthViewModel())
         }
     }
 }

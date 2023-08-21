@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ResetPasswordView: View {
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
@@ -101,7 +101,7 @@ struct ResetPasswordView: View {
 struct ResetPasswordView_Previews: PreviewProvider {
     static var previews: some View {
         ResetPasswordView()
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ProfileViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }

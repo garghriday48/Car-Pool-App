@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EmailPasswordView: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @ObservedObject var navigationVM: NavigationViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
@@ -109,7 +109,7 @@ struct EmailPasswordView: View {
 struct EmailPasswordView_Previews: PreviewProvider {
     static var previews: some View {
         EmailPasswordView(navigationVM: NavigationViewModel())
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }
 }

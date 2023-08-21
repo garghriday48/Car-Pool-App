@@ -11,7 +11,7 @@ struct Navigation: View {
     
     @EnvironmentObject var navigationVM: NavigationViewModel
     
-    @StateObject var vm = SignInSignUpViewModel()
+    @StateObject var vm = AuthViewModel()
     @StateObject var carPoolVM = CarPoolRidesViewModel()
     @StateObject var mapVM = MapViewModel()
     @StateObject var profileVM = ProfileViewModel()

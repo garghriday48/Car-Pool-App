@@ -10,7 +10,7 @@ import SwiftUI
 struct ForgotPasswordView: View {
     @Environment (\.dismiss) var dismiss
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
@@ -41,7 +41,7 @@ struct ForgotPasswordView: View {
                 .animation(.easeOut, value: vm.forgotPasswordView.rawValue)
             
             switch vm.forgotPasswordView {
-            case .email : EmailView()
+            case .email : EmailView(emailViewType: .forgotPass)
             case .otp: OtpInputView()
             case .resetPassword:  ResetPasswordView()
             }
@@ -67,7 +67,7 @@ struct ForgotPasswordView: View {
 struct ForgotPasswordView_Previews: PreviewProvider {
     static var previews: some View {
         ForgotPasswordView()
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }
 }

@@ -41,6 +41,11 @@ extension Constants {
         static var chatRoom = "/chats"
         static var messageList = "/chats/"
         static var messages = "/messages"
+        
+        static var phone = "/phone"
+        static var verify = "/verify"
+        
+        static var emailActivation = "/account_activations"
     }
     
     struct APIConstants {
@@ -61,6 +66,7 @@ extension Constants {
         static var order = "order_by"
         static var sslError =  "An SSL error has occurred and a secure connection to the server cannot be made."
         static var wrongUrl = "A server with the specified hostname could not be found."
+        static var cannotConnectServer = "Could not connect to the server."
     }
     
     // MARK: - https header fields and values
@@ -108,6 +114,7 @@ extension Constants {
     struct DictionaryForApiCall {
         static var email = "email"
         static var otp = "otp"
+        static var passcode = "passcode"
         static var user = "user"
         static var password = "password"
         static var firstName = "first_name"
@@ -118,6 +125,7 @@ extension Constants {
         static var bio = "bio"
         static var currentPass = "current_password"
         static var passConfirmation = "password_confirmation"
+       
         
         static var publish = "publish"
         static var date = "date"

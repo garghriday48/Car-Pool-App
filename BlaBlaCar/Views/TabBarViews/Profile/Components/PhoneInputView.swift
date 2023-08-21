@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PhoneInputView: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @ObservedObject var profileVM: ProfileViewModel
     
     
@@ -17,7 +17,7 @@ struct PhoneInputView: View {
     var body: some View {
         VStack(alignment: .leading){
             Text(Constants.Headings.enterPhone)
-                .font(.largeTitle)
+                .font(.system(size: 24, weight: .bold, design: .rounded))
                 .bold()
                 .padding(.bottom, 40)
             
@@ -26,7 +26,8 @@ struct PhoneInputView: View {
                         isPassOrNot : false,
                         keyboardType: .numberPad,
                         capitalizationType: .never,
-                        borderColor: vm.phoneNum.isEmpty ? .gray.opacity(0.6) : .black)
+                        borderColor: vm.phoneNum.isEmpty ? .gray.opacity(0.6) : .black,
+                        isDisabled: true)
             
             HStack{
                 if !vm.phoneNumValid.isEmpty{
@@ -35,7 +36,7 @@ struct PhoneInputView: View {
                 Text(vm.phoneNumValid)
                     .font(.system(size: 15))
             }
-            .animation(.easeOut, value: profileVM.phoneVerificationSteps.rawValue)
+            .animation(.easeOut, value: vm.phoneVerificationSteps.rawValue)
             .padding(.leading)
             .foregroundColor(.red)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -43,8 +44,7 @@ struct PhoneInputView: View {
 
             Spacer()
             Button {
-                profileVM.phoneVerificationSteps = .numberOtpView
-                vm.typeOfOtp = .phoneVerification
+                vm.verifyPhnEmailApiCall(method: .sentPhn, httpMethod: .POST, data: [Constants.DictionaryForApiCall.phnNumber: vm.phoneNum])
             } label: {
                 ButtonView(buttonName   : Constants.ButtonsTitle.next,
                            border       : false)
@@ -70,6 +70,6 @@ struct PhoneInputView: View {
 struct PhoneInputView_Previews: PreviewProvider {
     static var previews: some View {
         PhoneInputView(profileVM: ProfileViewModel())
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
     }
 }

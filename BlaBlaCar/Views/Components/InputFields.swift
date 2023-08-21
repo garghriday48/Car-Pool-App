@@ -16,6 +16,7 @@ struct InputFields: View {
     var keyboardType: UIKeyboardType
     var capitalizationType: TextInputAutocapitalization
     var borderColor: Color
+    var isDisabled = false
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -32,9 +33,12 @@ struct InputFields: View {
                         if isSecured {
                             SecureField("", text: $text)
                                 .frame(height: 20)
+                                .disabled(isDisabled)
+                                
                         } else {
                             TextField("", text: $text)
                                 .frame(height: 20)
+                                .disabled(isDisabled)
                         }
                     }
                     .font(.system(size: 16, design: .rounded))
@@ -58,8 +62,9 @@ struct InputFields: View {
             } else {
                 ZStack(alignment: .trailing){
                     TextField("", text: $text)
+                        .disabled(isDisabled)
                         
-                    if !self.text.isEmpty {
+                    if !self.text.isEmpty && !isDisabled{
                         Button(action:
                         {
                             self.text = ""

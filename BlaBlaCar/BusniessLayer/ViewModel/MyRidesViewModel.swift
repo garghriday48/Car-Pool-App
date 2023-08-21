@@ -279,6 +279,7 @@ class MyRidesViewModel: ObservableObject {
             switch RideBookedType(rawValue: type){
             case .CONFIRM : rideType = (Constants.Description.confirmed, Color.green)
             case .CANCEL : rideType = (Constants.Description.cancelled, Color.red)
+            case .CancelByDriver : rideType = (Constants.Description.cancelByDriver, Color.red)
             case .none: break
             }
         } else {

@@ -10,7 +10,7 @@ import SwiftUI
 struct PublishedRideDetails: View {
     @Environment (\.presentationMode) var presentationMode
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var myRidesVM: MyRidesViewModel
     @EnvironmentObject var carPoolVM: CarPoolRidesViewModel
@@ -22,11 +22,11 @@ struct PublishedRideDetails: View {
                 BackButton(image: Constants.Images.backArrow) {
                     presentationMode.wrappedValue.dismiss()
                 }
-                .font(.title)
+                .font(.system(size: 20, weight: .semibold ,design: .rounded))
                 .bold()
                 Text(Constants.Headings.ridePlan)
                     .foregroundColor(.black)
-                    .font(.title2)
+                    .font(.system(size: 22, weight: .semibold ,design: .rounded))
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: 80 ,alignment: .leading)
@@ -35,8 +35,7 @@ struct PublishedRideDetails: View {
                 VStack(alignment: .leading){
                     Text(Constants.Headings.tripInfo)
                         .foregroundColor(.black)
-                        .font(.title2)
-                        .fontWeight(.semibold)
+                        .font(.system(size: 22, weight: .semibold ,design: .rounded))
                         .padding(.bottom)
                     VStack(alignment: .leading, spacing: 10){
                         HStack{
@@ -53,7 +52,7 @@ struct PublishedRideDetails: View {
                         }
                         .foregroundColor(Color(.darkGray))
                     }
-                    .font(.title2)
+                    .font(.system(size: 16, weight: .semibold ,design: .rounded))
                     .padding(.vertical)
                     
                     DividerCapsule(height: 2, color: Color(.systemGray3))
@@ -75,17 +74,17 @@ struct PublishedRideDetails: View {
                     .padding(.vertical)
                     .padding(.bottom, 70)
                     
-                    DividerCapsule(height: 2, color: Color(.systemGray3))
+                    DividerCapsule(height: 1, color: .gray.opacity(0.3))
                     
                         VStack(alignment: .leading){
                             
                             HStack{
                                 Text(Constants.Description.priceOneSeat)
-                                    .font(.title3)
+                                    .font(.system(size: 18, weight: .semibold ,design: .rounded))
                                     .foregroundColor(Color(.darkGray))
                                 Spacer()
                                 Text("Rs \(String(format: Constants.StringFormat.zeroDigit, myRidesVM.publishResponseWithId.data.setPrice))")
-                                    .font(.title2)
+                                    .font(.system(size: 20, weight: .semibold ,design: .rounded))
                                     .foregroundColor(.black)
                             }
                             .padding(.top, -10)
@@ -97,30 +96,31 @@ struct PublishedRideDetails: View {
                         }
                         .padding(.vertical, 30)
                         
-                        DividerCapsule(height: 2, color: Color(.systemGray3))
+                    DividerCapsule(height: 1, color: .gray.opacity(0.3))
                     
                     
 //                       
                     VStack(alignment: .leading) {
-                        Text(Constants.Headings.vehicleDetails).font(.title2).fontWeight(.semibold)
+                        Text(Constants.Headings.vehicleDetails).font(.system(size: 18, weight: .semibold ,design: .rounded))
                             .padding(.bottom)
-                        Text(profileVM.getVehicleData.vehicleBrand).font(.title3) +
+                        Text(profileVM.getVehicleData.vehicleBrand).font(.system(size: 16 ,design: .rounded)) +
                         Text(" ") +
                         Text(profileVM.getVehicleData.vehicleName)
-                            .font(.title3) +
-                        Text(Constants.Description.dash + profileVM.getVehicleData.vehicleType)
+                            .font(.system(size: 16 ,design: .rounded)) +
+                        Text(Constants.Description.dash + profileVM.getVehicleData.vehicleType).font(.system(size: 16 ,design: .rounded))
                         
                         Text(Constants.Description.number + profileVM.getVehicleData.vehicleNumber)
-                            .font(.subheadline)
-                        Text(Constants.Description.color + profileVM.getVehicleData.vehicleColor).font(.subheadline)
-                        DividerCapsule(height: 2, color: Color(.systemGray3))
+                            .font(.system(size: 14 ,design: .rounded))
+                        Text(Constants.Description.color + profileVM.getVehicleData.vehicleColor).font(.system(size: 14 ,design: .rounded))
+                        DividerCapsule(height: 1, color: .gray.opacity(0.3))
                         
                     }
                     .frame(maxWidth: .infinity)
                     
                     VStack(alignment: .leading){
-                        if myRidesVM.publishResponseWithId.passengers?.count != 0 {
+//                        if myRidesVM.publishResponseWithId.passengers?.count != 0 {
                             Text(Constants.Headings.passengers).font(.title2).fontWeight(.semibold)
+                        if myRidesVM.publishResponseWithId.passengers?.count != 0 {
                             ForEach(myRidesVM.publishResponseWithId.passengers ?? [], id:\.userID){ data in
                                 NavigationLink {
                                     PassengerDetailsCard(array: data)
@@ -129,10 +129,12 @@ struct PublishedRideDetails: View {
                                 }
                             }
                         } else {
-                            VStack{}
+                            Text("Currently there are no bookings.")
+                                .foregroundColor(Color(Color.redColor))
+                                .font(.system(size: 14, weight: .semibold ,design: .rounded))
+                                .padding(.top, 10)
                                 .padding(.bottom, 10)
                         }
-                        
                     }
                     .foregroundColor(.primary)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -194,7 +196,7 @@ struct PublishedRideDetails_Previews: PreviewProvider {
     static var previews: some View {
         PublishedRideDetails()
             .environmentObject(CarPoolRidesViewModel())
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ProfileViewModel())
             .environmentObject(MyRidesViewModel())
     }

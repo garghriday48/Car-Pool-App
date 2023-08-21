@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BioView: View {
     
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     @ObservedObject var profileVM: ProfileViewModel
     @Environment (\.dismiss) var dismiss
     
@@ -97,6 +97,6 @@ struct BioView: View {
 
 struct BioView_Previews: PreviewProvider {
     static var previews: some View {
-        BioView(vm: SignInSignUpViewModel(), profileVM: ProfileViewModel())
+        BioView(vm: AuthViewModel(), profileVM: ProfileViewModel())
     }
 }

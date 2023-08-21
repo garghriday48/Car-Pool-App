@@ -10,7 +10,7 @@ import _PhotosUI_SwiftUI
 
 struct EditProfileView: View {
     
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     @ObservedObject var profileVM: ProfileViewModel
     @Environment (\.dismiss) var dismiss
     
@@ -117,6 +117,6 @@ struct EditProfileView: View {
 
 struct EditProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        EditProfileView(vm: SignInSignUpViewModel(), profileVM: ProfileViewModel())
+        EditProfileView(vm: AuthViewModel(), profileVM: ProfileViewModel())
     }
 }

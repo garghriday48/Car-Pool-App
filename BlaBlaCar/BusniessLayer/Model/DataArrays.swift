@@ -34,10 +34,10 @@ class DataArrays {
         ["Account settings", "Notifications, passwords and more"],
         ["Vehicle", "Vehicle list and editing options"]
     ]
-    
+
     static var profilePlusButtonArray = [
-        ["plus.circle", "Confirm email"],
-        ["plus.circle", "Confirm phone number"]
+        ["plus.circle", "Confirm email", "checkmark.seal.fill"],
+        ["plus.circle", "Confirm phone number", "checkmark.seal.fill"]
     ]
     
     static var accountSettingsArray = ["Ratings", "Change password"]

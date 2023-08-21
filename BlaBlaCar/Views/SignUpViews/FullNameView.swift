@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FullNameView: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @ObservedObject var navigationVM: NavigationViewModel
     
     var body: some View {
@@ -91,6 +91,6 @@ struct FullNameView: View {
 struct FullNameView_Previews: PreviewProvider {
     static var previews: some View {
         FullNameView(navigationVM: NavigationViewModel())
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
     }
 }

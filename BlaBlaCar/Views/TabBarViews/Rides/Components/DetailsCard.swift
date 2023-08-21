@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DetailsCard: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
@@ -213,7 +213,7 @@ struct DetailsCard: View {
 struct DetailsCard_Previews: PreviewProvider {
     static var previews: some View {
         DetailsCard(carPoolVM: CarPoolRidesViewModel(), isRideDetails: .constant(true), isSeatSelected: .constant(false), NumOfSeatSelected: .constant(1), array: .constant(DataArray(id: 0, name: "", reachTime: "", imageURL: nil, averageRating: nil, aboutRide: "", publish: PublishResponse(id: 0, source: "rtyj yj yjwy jw jtwy jwtrj j wry jwry trh", destination: "jetyetjetje jtytejye etjy eyj etjy tyj tyj ", passengersCount: 0, addCity: "", date: "", time: "", setPrice: 0.0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: "", midSeat: "", selectRoute: SelectRoute(), status: "", estimateTime: "", addCityLongitude: 0.0, addCityLatitude: 0.0, distance: nil, bearing: nil))))
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ProfileViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }

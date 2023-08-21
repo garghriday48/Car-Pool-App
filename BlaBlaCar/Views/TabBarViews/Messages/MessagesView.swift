@@ -20,10 +20,9 @@ struct MessagesView: View {
                 .padding()
             
             DividerCapsule(height: 1, color: Color(.gray).opacity(0.5))
-            
-            if messageVM.chatRoomListResponse.chats[0].id == 0 {
-                PlaceholderView(image: Constants.EmptyView.noMsgImage, title: Constants.EmptyView.noInboxTitle, caption: Constants.EmptyView.checkAgain, needBackBtn: false, height: 150, width: 150)
-            } else {
+            if messageVM.chatRoomListResponse.chats.count == 0  {
+                    PlaceholderView(image: Constants.EmptyView.noMsgImage, title: Constants.EmptyView.noInboxTitle, caption: Constants.EmptyView.checkAgain, needBackBtn: false, height: 150, width: 150)
+                } else {
                 List(messageVM.chatRoomListResponse.chats, id: \.id){chat in
                     if chat.publish != nil {
                         Button {

@@ -11,7 +11,7 @@ struct MyRidesView: View {
     
     @EnvironmentObject var myRidesVM: MyRidesViewModel
     @EnvironmentObject var carpoolVM: CarPoolRidesViewModel
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     
     @State var searchBookedLocation = ""
     @State var searchPublishedLocation = ""
@@ -56,7 +56,7 @@ struct MyRidesView: View {
                     .padding()
                     
                     if myRidesVM.rideType == .booked {
-                        if myRidesVM.bookingListResponse.rides[0].ride.id == 0 {
+                        if myRidesVM.bookingListResponse.rides.count == 0 {
                             
                             /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
                             PlaceholderView(image: Constants.EmptyView.myRideImage,
@@ -91,7 +91,7 @@ struct MyRidesView: View {
                     
                     
                     if myRidesVM.rideType == .published {
-                        if myRidesVM.publishListResponse.data[0].id == 0{
+                        if myRidesVM.publishListResponse.data.count == 0{
                             
                             /// Placeholder view must be shown when their are no rides found on searching for a particular ride is done.
                             PlaceholderView(image: Constants.EmptyView.myRideImage,
@@ -184,6 +184,6 @@ struct MyRidesView_Previews: PreviewProvider {
     static var previews: some View {
         MyRidesView()
             .environmentObject(MyRidesViewModel())
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
     }
 }

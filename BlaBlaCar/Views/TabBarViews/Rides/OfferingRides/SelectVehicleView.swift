@@ -40,9 +40,9 @@ struct SelectVehicleView: View {
                 Divider()
             }
             .padding(.vertical)
-            if profileVM.vehicleResponseList.data[0].id != 0{
+            if profileVM.vehicleResponseList.data?.count != 0{
                 ScrollView{
-                    ForEach(profileVM.vehicleResponseList.data){data in
+                    ForEach(profileVM.vehicleResponseList.data ?? []){data in
                         SelectVehicleCellView(data: data)
                             .onTapGesture {
                                 carPoolVM.offerRideSelectorArray[0].text = data.vehicleBrand + " " + data.vehicleName

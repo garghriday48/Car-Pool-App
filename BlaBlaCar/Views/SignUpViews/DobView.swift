@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DobView: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @ObservedObject var navigationVM: NavigationViewModel
     
     var body: some View {
@@ -82,6 +82,6 @@ struct DobView: View {
 struct DobView_Previews: PreviewProvider {
     static var previews: some View {
         DobView(navigationVM: NavigationViewModel())
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
     }
 }

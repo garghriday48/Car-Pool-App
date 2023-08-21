@@ -54,6 +54,9 @@ enum ApiMethods: String {
     case forgotPassEmail = " POST"
     case otp = "  POST"
     case resetPassword = " POST "
+    case sentPhn = "POST  "
+    case verifyPhn = "  POST "
+    case emailActivation = " POST  "
     //case addVehicle = "POST  "
 }
 
@@ -120,6 +123,7 @@ enum RideBookedType: String {
     
     case CONFIRM = "confirm booking"
     case CANCEL = "cancel booking"
+    case CancelByDriver = "cancelled_by_driver"
 }
 
 enum RidePublishedType: String {
@@ -189,7 +193,12 @@ enum TypeOfOtp {
 enum ForgotPasswordViews: Float {
     case email = 33.33
     case otp = 66.66
-    case resetPassword = 99.99
+    case resetPassword = 99.9
+}
+
+enum ReuseEmailView {
+    case forgotPass
+    case emailVerification
 }
 
 enum MessageDirection {

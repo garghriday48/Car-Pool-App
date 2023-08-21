@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ChangePasswordView: View {
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var errorVM: ResponseErrorViewModel
     
     @ObservedObject var profileVM: ProfileViewModel
@@ -137,7 +137,7 @@ struct ChangePasswordView: View {
 struct ChangePasswordView_Previews: PreviewProvider {
     static var previews: some View {
         ChangePasswordView(profileVM: ProfileViewModel())
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ResponseErrorViewModel.shared)
     }
 }

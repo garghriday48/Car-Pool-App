@@ -10,7 +10,7 @@ import SwiftUI
 struct BookedRideDetails: View {
     @Environment (\.presentationMode) var presentationMode
     
-    @EnvironmentObject var vm: SignInSignUpViewModel
+    @EnvironmentObject var vm: AuthViewModel
     @EnvironmentObject var profileVM: ProfileViewModel
     @EnvironmentObject var myRidesVM: MyRidesViewModel
     @EnvironmentObject var messageVM: MessagesViewModel
@@ -214,7 +214,7 @@ struct BookedRideDetails: View {
 struct BookedRideDetails_Previews: PreviewProvider {
     static var previews: some View {
         BookedRideDetails(carPoolVM: CarPoolRidesViewModel(), array: RideElement(ride: GetPublishResponse(id: 0, source: "gwragar geGHEARGGREQBERGCWRQECQERW", destination: " gdgr hwthev ht j4thvt vt thv 4vtrvh trwb wth yv ", passengersCount: 0, addCity: nil, date: "", time: "", setPrice: 0, aboutRide: "", userID: 0, createdAt: "", updatedAt: "", sourceLatitude: 0.0, sourceLongitude: 0.0, destinationLatitude: 0.0, destinationLongitude: 0.0, vehicleID: 0, bookInstantly: nil, midSeat: nil, status: "", estimateTime: "", addCityLongitude: nil, addCityLatitude: nil), bookingID: 0, seat: 0, status: "", reachTime: "", totalPrice: 0))
-            .environmentObject(SignInSignUpViewModel())
+            .environmentObject(AuthViewModel())
             .environmentObject(ProfileViewModel())
             .environmentObject(MyRidesViewModel())
         

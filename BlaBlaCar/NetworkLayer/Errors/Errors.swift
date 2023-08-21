@@ -22,6 +22,7 @@ enum AuthenticateError: LocalizedError{
     case networkError
     case incorrectHostname
     case tryAgain
+    case cannotConnectServer
     
     // MARK: custom error description for errors
     var errorDescription: String?{
@@ -34,6 +35,8 @@ enum AuthenticateError: LocalizedError{
             return "Something went wrong, Please check"
         case .url(let error):
             return "\(error?.localizedDescription ?? "")"
+        case .cannotConnectServer:
+            return "Cannot connect to server,\nPlease try again later."
         case .unknown:
             return "Sorry, something went wrong."
         case .noData:
@@ -54,4 +57,11 @@ enum AuthenticateError: LocalizedError{
             return "Unable to respond currently.\nPlease try again later."
         }
     }
+}
+
+enum NetworkError: String, CaseIterable {
+    case sslError = "An SSL error has occurred and a secure connection to the server cannot be made."
+    case wrongUrl = "A server with the specified hostname could not be found."
+    case cannotConnectServer = "Could not connect to the server."
+    case unknown = "Sorry, something went wrong."
 }

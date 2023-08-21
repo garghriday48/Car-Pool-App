@@ -10,7 +10,7 @@ import SwiftUI
 struct ProfileTextField: View {
     
     @ObservedObject var profileVM: ProfileViewModel
-    @ObservedObject var vm: SignInSignUpViewModel
+    @ObservedObject var vm: AuthViewModel
     
     @Binding var textField: String
     
@@ -210,7 +210,7 @@ struct ProfileTextField: View {
 
 struct ProfileTextField_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileTextField(profileVM: ProfileViewModel(), vm: SignInSignUpViewModel(), textField: .constant(""), textFieldType: .dob, heading: "Name", keyboardType: .default, capitalizationType: .never)
+        ProfileTextField(profileVM: ProfileViewModel(), vm: AuthViewModel(), textField: .constant(""), textFieldType: .dob, heading: "Name", keyboardType: .default, capitalizationType: .never)
     }
 }
 
