@@ -179,7 +179,13 @@ struct DetailsCard: View {
                         .font(.system(size: 14 ,design: .rounded))
                     
                     Button {
-                        carPoolVM.bookRideApiCall(method: .bookRide, httpMethod: .POST)
+                        if vm.userResponse.status.data?.phone_number == "" {
+                            carPoolVM.noPhoneFound = true
+                        } else if !(vm.profileResponse.user?.phone_verified ?? false) {
+                            carPoolVM.isPhoneVerified = true
+                        } else {
+                            carPoolVM.bookRideApiCall(method: .bookRide, httpMethod: .POST)
+                        }
                     } label: {
                         ButtonView(buttonName: Constants.ButtonsTitle.confirmRide, border: false)
                             .background(Color(Color.redColor))
@@ -200,6 +206,20 @@ struct DetailsCard: View {
             carPoolVM.bookRideData.passenger.publishId = array.publish.id
             carPoolVM.bookRideData.passenger.seats = carPoolVM.numOfSeats
         }
+        .navigationDestination(isPresented: $vm.goToEditProfileView, destination: {
+            EditProfileView(vm: vm, profileVM: profileVM)
+        })
+        .fullScreenCover(isPresented: $vm.toDisplayPhoneVerification ){
+            PhoneVerificationView(profileVM: profileVM)
+        }
+        .alert(Constants.ErrorBox.confirmPhone, isPresented: $carPoolVM.isPhoneVerified, actions: {
+            Button(Constants.ErrorBox.okay, role: .cancel) { vm.toDisplayPhoneVerification = true }
+        }, message: { Text(Constants.ErrorBox.confirmPhnMsg) })
+        
+        .alert(Constants.ErrorBox.addPhone, isPresented: $carPoolVM.noPhoneFound, actions: {
+            Button(Constants.ErrorBox.okay, role: .cancel) { vm.goToEditProfileView = true }
+        }, message: { Text(Constants.ErrorBox.addPhnMsg) })
+        
         .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasResponseError, actions: {
             Button(Constants.ErrorBox.okay, role: .cancel) {
                 
@@ -207,6 +227,7 @@ struct DetailsCard: View {
         }, message: {
             Text(errorVM.errorMessage1)
         })
+        
     }
 }
 

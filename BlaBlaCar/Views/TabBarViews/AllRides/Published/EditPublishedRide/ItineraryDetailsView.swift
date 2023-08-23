@@ -18,14 +18,13 @@ struct ItineraryDetailsView: View {
     var body: some View {
         VStack {
             HStack(spacing: 20){
-                BackButton(image: Constants.Images.backArrow) {
+                BackButton(image: Constants.Images.backArrow, action: {
                     self.dismiss()
-                }
-                .font(.title)
-                .bold()
+                }, color: .white)
+                .font(.title3)
                 Text(Constants.Headings.itineraryDetails)
-                    .foregroundColor(.black)
-                    .font(.title2)
+                    .foregroundColor(.white)
+                    .font(.system(size: 20, weight: .semibold, design: .rounded))
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: 80 ,alignment: .leading)

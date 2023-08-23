@@ -38,6 +38,7 @@ struct RidesBookedCard: View {
                             RoundedRectangle(cornerRadius: 7)
                                 .fill(bookingType.1.opacity(0.2))
                         )
+                        .padding(.vertical, 3)
                 }
                 .foregroundColor(.black)
                 

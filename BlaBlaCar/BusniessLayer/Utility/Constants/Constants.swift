@@ -275,7 +275,7 @@ struct Constants {
         static var rides = "rides"
         static var confirmed = "CONFIRMED"
         static var cancelled = "CANCELLED"
-        static var cancelByDriver = "DRIVER CANCELLED"
+        static var cancelByDriver = "CANCELLED\nBY DRIVER"
         static var completed = "COMPLETED"
         static var pending = "ACTIVE"
     }

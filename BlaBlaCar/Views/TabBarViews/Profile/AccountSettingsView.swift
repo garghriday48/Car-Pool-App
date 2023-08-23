@@ -19,16 +19,15 @@ struct AccountSettingsView: View {
                 BackButton(image: Constants.Images.backArrow) {
                     self.dismiss()
                 }
-                .font(.title)
-                .bold()
+                .font(.title3)
                 
                 Text(Constants.Headings.accountSettings)
-                    .font(.title3)
+                    .font(.system(size: 18, design: .rounded))
                     .padding(.horizontal)
                     .frame(maxWidth: .infinity ,alignment: .topLeading)
             }
             .padding()
-            DividerCapsule(height: 4, color: Color(.systemGray3))
+            DividerCapsule(height: 1, color: .gray.opacity(0.5))
             
             ScrollView{
                 VStack(alignment: .leading){
@@ -54,9 +53,9 @@ struct AccountSettingsView: View {
                         .padding(.vertical)
                         
                     }
-                    DividerCapsule(height: 2, color: Color(.systemGray3))
+                    DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 }
-                .font(.title3)
+                .font(.system(size: 16, weight: .semibold, design: .rounded))
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

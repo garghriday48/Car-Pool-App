@@ -63,12 +63,13 @@ struct BackButton: View {
     
     var image: String
     let action: () -> Void
+    var color: Color = .primary
    
     
     var body: some View {
         Button(action: action) {
             Image(systemName: image)
-                .foregroundColor(.primary)
+                .foregroundColor(color)
         }
     }
 }

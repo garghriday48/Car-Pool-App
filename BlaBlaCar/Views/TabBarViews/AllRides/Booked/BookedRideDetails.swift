@@ -23,12 +23,13 @@ struct BookedRideDetails: View {
     var body: some View {
         VStack{
             HStack(spacing: 20){
-                BackButton(image: Constants.Images.backArrow) {
+                BackButton(image: Constants.Images.backArrow, action: {
                     presentationMode.wrappedValue.dismiss()
-                }
-                .font(.system(size: 20, weight: .semibold, design: .rounded))
+                }, color: .white)
+                .font(.system(size: 20, weight: .semibold ,design: .rounded))
+                .bold()
                 Text(Constants.Headings.ridePlan)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                     .font(.system(size: 22, weight: .semibold ,design: .rounded))
             }
             .padding()
@@ -170,7 +171,7 @@ struct BookedRideDetails: View {
                         Button {
                             messageVM.chatRoomApiCall(method: .chatRoom, httpMethod: .POST, model: ChatRoomData(chat: ChatData(receiverID: array.ride.userID, publishID: array.ride.id)))
                         } label: {
-                            ButtonView(buttonName: Constants.ButtonsTitle.message, border: true, color: .blue)
+                            ButtonView(buttonName: Constants.ButtonsTitle.message, border: true, color: .black)
                         }
 
                         

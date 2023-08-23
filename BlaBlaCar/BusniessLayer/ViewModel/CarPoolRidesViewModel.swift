@@ -82,6 +82,8 @@ class CarPoolRidesViewModel: ObservableObject {
     @Published var searchApiSuccess = false
     @Published var bookApiSuccess = false
     @Published var publishApiSuccess = false
+    @Published var isPhoneVerified = false
+    @Published var noPhoneFound = false
     
     @Published var navigateToMapRoute = false
     @Published var toShowSearchDetails = false

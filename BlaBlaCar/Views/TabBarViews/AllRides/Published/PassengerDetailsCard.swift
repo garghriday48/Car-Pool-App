@@ -18,10 +18,10 @@ struct PassengerDetailsCard: View {
     var body: some View {
         VStack {
             HStack(spacing: 20){
-                BackButton(image: Constants.Images.backArrow) {
+                BackButton(image: Constants.Images.backArrow, action: {
                     presentationMode.wrappedValue.dismiss()
-                }
-                .font(.title)
+                }, color: .white)
+                .font(.title3)
                 .bold()
             }
             .padding()
@@ -81,7 +81,7 @@ struct PassengerDetailsCard: View {
                 messageVM.chatRoomApiCall(method: .chatRoom, httpMethod: .POST, model: ChatRoomData(chat: ChatData(receiverID: array.userID, publishID: myRidesVM.publishId)))
                 
             } label: {
-                ButtonView(buttonName: Constants.ButtonsTitle.message, border: true, color: .blue)
+                ButtonView(buttonName: Constants.ButtonsTitle.message, border: true, color: .black)
                     .padding()
             }
 

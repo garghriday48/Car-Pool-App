@@ -20,11 +20,11 @@ struct ChatRoomView: View {
             ZStack{
                 VStack{
                     HStack {
-                        BackButton(image: Constants.Images.backArrow) {
+                        BackButton(image: Constants.Images.backArrow, action: {
                             self.dismiss()
                             messageVM.message = ""
-                        }
-                        .font(.title2)
+                        }, color: .white)
+                        .font(.title3)
                         .padding(.trailing)
                         
                         ImageView(size: 60,
@@ -34,13 +34,12 @@ struct ChatRoomView: View {
 
                         VStack(alignment: .leading, spacing: 4){
                             Text((messageVM.isSender ? messageVM.chatRoomWithIdResponse.chat.receiver.first_name : messageVM.chatRoomWithIdResponse.chat.sender.first_name) + " " + (messageVM.isSender ? messageVM.chatRoomWithIdResponse.chat.receiver.last_name : messageVM.chatRoomWithIdResponse.chat.sender.last_name))
-                                .foregroundColor(.black)
                                 .font(.system(size: 18, weight: .semibold, design: .rounded))
                             Text(messageVM.chatRoomWithIdResponse.chat.publish?.userID == messageVM.senderId ? "Passenger" : "Driver")
 //                                Text("\(Age.shared.calcAge(birthday: messageVM.chatRoomWithIdResponse.chat.sender.dob)) y/o")
                                 .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                .foregroundColor(.black)
                         }
+                        .foregroundColor(.white)
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -55,7 +54,8 @@ struct ChatRoomView: View {
                     Text(messageVM.chatRoomWithIdResponse.chat.publish?.destination ?? "")
                         
                 }
-                .font(.system(size: 14, weight: .none, design: .rounded))
+                .foregroundColor(.white)
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(2)
                 
@@ -65,7 +65,7 @@ struct ChatRoomView: View {
                 }
             }
             .font(.system(size: 12, weight: .semibold, design: .rounded))
-            .foregroundColor(Color(.black))
+            .foregroundColor(.white)
             .padding(.horizontal)
             
             VStack{

@@ -48,6 +48,7 @@ struct ImageView: View {
         .clipShape(Circle())
         .overlay {
             Circle().stroke(lineWidth: 1)
+                .foregroundColor(.black)
         }
         .onAppear{
             DispatchQueue.main.asyncAfter(deadline: .now() + 5){

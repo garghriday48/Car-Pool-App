@@ -32,7 +32,7 @@ struct PhoneVerificationView: View {
                     .frame(maxWidth: .infinity ,alignment: .topLeading)
             }
             .padding()
-            DividerCapsule(height: 4, color: Color(.systemGray3))
+            DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 .padding(.bottom)
             
             Text("Step \(Int(vm.phoneVerificationSteps.rawValue/50)) of 2")
@@ -49,6 +49,7 @@ struct PhoneVerificationView: View {
             case .numberOtpView: OtpInputView()
             }
         }
+        .toolbar(.hidden)
         .frame(maxHeight: .infinity,alignment: .top)
         .padding(.vertical)
         .alert(Constants.ErrorBox.error, isPresented: $errorVM.hasResponseError, actions: {

@@ -21,11 +21,10 @@ struct EditProfileView: View {
     var body: some View {
         VStack{
                 HStack{
-                    BackButton(image: Constants.Images.cross) {
+                    BackButton(image: Constants.Images.backArrow) {
                         profileVM.isGoingBack = true
                     }
-                    .font(.title2)
-                    .bold()
+                    .font(.title3)
                     
                     Text(Constants.Headings.editProfile)
                         .font(.system(size: 18, design: .rounded))

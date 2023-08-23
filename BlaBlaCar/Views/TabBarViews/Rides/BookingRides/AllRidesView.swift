@@ -28,9 +28,9 @@ struct AllRidesView: View {
             /// to show the view consisting of all the rides that matches the searching parameters.
             VStack {
                 HStack{
-                    BackButton(image: Constants.Images.backArrow) {
+                    BackButton(image: Constants.Images.backArrow, action: {
                         presentationMode.wrappedValue.dismiss()
-                    }
+                    }, color: .white)
                     .font(.title2)
                     VStack(alignment: .leading, spacing: 7){
                         HStack{
@@ -40,13 +40,14 @@ struct AllRidesView: View {
                         }
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
-                        .font(.system(size: 18, design: .rounded))
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
                         Text(carPoolVM.rideMethod == .bookingRide ? carPoolVM.departureDate.formatted(date: .omitted, time: .shortened) : "")
                             .font(.system(size: 14, design: .rounded))
                     }
                 }
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: 80 ,alignment: .leading)
+                .foregroundColor(.white)
                 .background(Color(Color.redColor))
                 
                 

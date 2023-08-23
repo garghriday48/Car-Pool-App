@@ -18,17 +18,17 @@ struct RideDetailsView: View {
     var body: some View {
         VStack {
             HStack(spacing: 20){
-                BackButton(image: Constants.Images.backArrow) {
+                BackButton(image: Constants.Images.backArrow, action: {
                     presentationMode.wrappedValue.dismiss()
-                }
+                }, color: .white)
                 .font(.system(size: 20, weight: .semibold ,design: .rounded))
                 Text(Constants.Headings.rideDetails)
-                    .foregroundColor(.black)
                     .font(.system(size: 22, weight: .semibold ,design: .rounded))
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: 80 ,alignment: .leading)
             .background(Color(Color.redColor))
+            .foregroundColor(.white)
             
             DetailsCard(carPoolVM: carPoolVM, isRideDetails: $carPoolVM.isRideDetails, isSeatSelected: $carPoolVM.isSeatSelected, NumOfSeatSelected: $carPoolVM.numOfSeats, array: $array)
             

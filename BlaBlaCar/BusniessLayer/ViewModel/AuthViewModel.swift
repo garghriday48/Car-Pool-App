@@ -64,6 +64,7 @@ class AuthViewModel: ObservableObject {
     @Published var toDisplayPhoneVerification = false
     @Published var toDisplayEmailActivation = false
     @Published var goToEmailActivation = false
+    @Published var goToEditProfileView = false
     
     @Published var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -352,14 +353,15 @@ extension AuthViewModel {
                     ResponseErrorViewModel.shared.toShowError(error: error)
                 case .finished:
                     ResponseErrorViewModel.shared.isLoading = false
-                    self.updateProfileDone = true
                     switch method {
                     case .sentPhn:
                         self.otp = ""
                         self.phoneVerificationSteps = .numberOtpView
                         self.typeOfOtp = .phoneVerification
                         self.timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-                    case .verifyPhn:  self.toDisplayPhoneVerification.toggle()
+                    case .verifyPhn:
+                        self.toDisplayPhoneVerification.toggle()
+                        self.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])
                     case .emailActivation: self.toDisplayEmailActivation.toggle()
                     default: break
                     }

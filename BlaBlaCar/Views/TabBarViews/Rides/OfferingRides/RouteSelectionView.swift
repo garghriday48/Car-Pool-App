@@ -13,6 +13,9 @@ struct RouteSelectionView: View {
     @ObservedObject var mapVM: MapViewModel
     @ObservedObject var carPoolVM: CarPoolRidesViewModel
     @ObservedObject var myRidesVM: MyRidesViewModel
+    
+    @EnvironmentObject var vm: AuthViewModel
+    
     @Environment (\.presentationMode) var presentationMode
     
    // let map: MKMapView?
@@ -20,17 +23,18 @@ struct RouteSelectionView: View {
     var body: some View {
         VStack{
             HStack{
-                BackButton(image: Constants.Images.backArrow) {
+                BackButton(image: Constants.Images.backArrow, action:  {
                     presentationMode.wrappedValue.dismiss()
                     mapVM.mapView.removeAnnotations(mapVM.mapView.annotations)
                     mapVM.mapView.removeOverlays(mapVM.mapView.overlays)
-                }
-                .font(.title)
+                }, color: .white)
+                .font(.title3)
                 Text(Constants.Headings.routeSelection)
-                    .font(.system(size: 18 ,design: .rounded))
+                    .font(.system(size: 18 ,weight: .semibold, design: .rounded))
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: 80 ,alignment: .leading)
+            .foregroundColor(.white)
             .background(Color(Color.redColor))
             
             /// to show map with polyline that connects source and destination when the ride is being published.
@@ -100,6 +104,8 @@ struct RouteSelectionView: View {
                 
                 Button {
                     carPoolVM.navigateToMapRoute.toggle()
+                    vm.userId = vm.userData?.status.data?.id ?? 0
+                    vm.getProfileApiCall(method: .getDetails, httpMethod: .GET, data: [:])
                 } label: {
                     ButtonView(buttonName: Constants.ButtonsTitle.proceed, border: true)
                 }

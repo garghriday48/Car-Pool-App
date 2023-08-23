@@ -21,21 +21,21 @@ struct BioView: View {
                     BackButton(image: Constants.Images.cross) {
                         profileVM.isGoingBack.toggle()
                     }
-                    .font(.title)
+                    .font(.title3)
                     .bold()
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .topLeading)
-                DividerCapsule(height: 4, color: Color(.systemGray3))
+                DividerCapsule(height: 1, color: .gray.opacity(0.5))
                 
             }
             VStack(alignment: .leading){
                 Text(Constants.Headings.miniBio)
-                    .font(.title.bold())
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
                     .padding(.bottom)
 
                 Text(Constants.Description.bioDescription)
-                    .font(.subheadline)
+                    .font(.system(size: 14, weight: .none, design: .rounded))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()

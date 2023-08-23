@@ -19,13 +19,13 @@ struct PublishedRideDetails: View {
     var body: some View {
         VStack {
             HStack(spacing: 20){
-                BackButton(image: Constants.Images.backArrow) {
+                BackButton(image: Constants.Images.backArrow, action: {
                     presentationMode.wrappedValue.dismiss()
-                }
+                }, color: .white)
                 .font(.system(size: 20, weight: .semibold ,design: .rounded))
                 .bold()
                 Text(Constants.Headings.ridePlan)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                     .font(.system(size: 22, weight: .semibold ,design: .rounded))
             }
             .padding()
@@ -147,7 +147,7 @@ struct PublishedRideDetails: View {
                                 myRidesVM.toDismissEditView.toggle()
                                 
                             } label: {
-                                ButtonView(buttonName: Constants.Headings.editYourPublication, border: true, color: .blue)
+                                ButtonView(buttonName: Constants.Headings.editYourPublication, border: true, color: .black)
 //                                Text(Constants.Headings.editYourPublication).bold().padding(.top)
 //                                    .font(.title3)
                             }

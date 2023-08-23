@@ -10,6 +10,7 @@ import SwiftUI
 struct PhoneInputView: View {
     
     @EnvironmentObject var vm: AuthViewModel
+    @EnvironmentObject var errorVM: ResponseErrorViewModel
     @ObservedObject var profileVM: ProfileViewModel
     
     

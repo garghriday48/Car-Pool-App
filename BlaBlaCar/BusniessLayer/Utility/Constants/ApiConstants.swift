@@ -109,6 +109,10 @@ extension Constants {
         static var cancelRide = "Are you sure you want to cancel Ride booking?"
         static var cancelPublishedRide = "Are you sure you want to cancel your published ride?"
         static var rideUpdated = "Your ride has been successfully updated"
+        static var confirmPhone = "Confirm Phone"
+        static var confirmPhnMsg = "Please verify your phone number to proceed."
+        static var addPhone = "Add Phone"
+        static var addPhnMsg = "Please add phone number to proceed."
     }
     
     struct DictionaryForApiCall {
